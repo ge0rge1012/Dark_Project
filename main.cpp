@@ -106,6 +106,7 @@ public:
 
 private:
 	bool isPassable = false;
+	bool isFunct = false;
 	sf::Vector2f coordinates;
 	sf::Sprite block;
 };
