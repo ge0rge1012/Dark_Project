@@ -27,8 +27,8 @@ TextureHolder modifiing:
 */
 
 #include <SFML/Graphics.hpp>
-#include <iostream>
-#include <cmath>
+#include <iostream> // iostream library
+#include <cmath> //cmath lib
 #include <vector>
 #include <array>
 #include <map>
@@ -106,6 +106,7 @@ public:
 
 private:
 	bool isPassable = false;
+	bool isFunct = false;
 	sf::Vector2f coordinates;
 	sf::Sprite block;
 };
