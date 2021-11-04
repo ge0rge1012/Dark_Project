@@ -27,8 +27,8 @@ TextureHolder modifiing:
 */
 
 #include <SFML/Graphics.hpp>
-#include <iostream> // iostream library
-#include <cmath> //cmath lib
+#include <iostream>
+#include <cmath>
 #include <vector>
 #include <array>
 #include <map>
