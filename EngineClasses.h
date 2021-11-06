@@ -6,6 +6,7 @@
 #include <array>
 #include <map>
 #include <memory>
+#include "settings.h"
 
 // a little bit of shitcode (let it be) for fixed time steps realisation - my proud
 // it gives about 60 fps, but work (may be) more stable, then standart function
@@ -109,8 +110,8 @@ private:
 	Game();                     // private constructor for the easiest realisation of singleton pattern
 	static Game* game_ptr;
 	sf::RenderWindow g_window;
-	const int WINDOW_WIDTH = 640;
-	const int WINDOW_HEIGHT = 480;
+	const int WINDOW_WIDTH = 1600;
+	const int WINDOW_HEIGHT = 900;
 
 	// can be vectors of different objects
 	Player* player;
