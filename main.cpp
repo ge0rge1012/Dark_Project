@@ -25,6 +25,7 @@ TextureHolder modifiing:
 2) textures loading should be a separate step - not at the beginnig of Game::start_game()
 
 */
+#include "EngineClasses.h"
 
 int main()
 {
