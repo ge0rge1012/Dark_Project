@@ -110,8 +110,6 @@ private:
 	Game();                     // private constructor for the easiest realisation of singleton pattern
 	static Game* game_ptr;
 	sf::RenderWindow g_window;
-	const int WINDOW_WIDTH = 1600;
-	const int WINDOW_HEIGHT = 900;
 
 	// can be vectors of different objects
 	Player* player;
