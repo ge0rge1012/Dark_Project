@@ -11,6 +11,8 @@
 *   Moreover, it would be better to create main parent class - ResureHolder (for music, images, fonts and etc.)
 */
 
+settings mysetts;
+
 TextureHolder::TextureHolder() { }
 
 void TextureHolder::load(Textures::ID id, const std::string& filename)
@@ -81,7 +83,7 @@ Player::Player()
 {
 	sf::Texture& texture = texture_holder.get(Textures::VAMPIRE);
 	character.setTexture(texture);
-	player_position = sf::Vector2f(50.f, 50.f);
+	player_position = sf::Vector2f(200.f, 390.f);
 	character.setPosition(player_position);
 }
 
@@ -216,7 +218,6 @@ void Player::screen_collision(int win_width, int win_height)
 
 Game* Game::game_ptr = nullptr;  // because we can't initialize static nonconst variables inside of a class
 
-
 Game::~Game() { delete game_ptr;  game_ptr = nullptr; }
 
 Game* Game::get_game_object()
@@ -266,13 +267,13 @@ void Game::start_game()
 	texture_holder.load(Textures::VAMPIRE, "media/textures/animals/penisman.png");
 	texture_holder.load(Textures::BLOCKS, "media/textures/blocks/ground.png");
 
-	Game* game = get_game_object();
+	Game* game = get_game_object(); //?????????
 
 	game->run();
 }
 
 // is needed to make configurating constructors in future 
-Game::Game() : g_window(sf::VideoMode(640, 480), "game_project")
+Game::Game() : g_window(sf::VideoMode(mysetts.get_width(), mysetts.get_height()), "game_project")
 {
 	player = new Player();
 
@@ -345,7 +346,7 @@ void Game::process_events()
 
 void Game::update(const sf::Time delta_time)
 {
-	player->screen_collision(WINDOW_WIDTH, WINDOW_HEIGHT);
+	player->screen_collision(mysetts.get_width(), mysetts.get_height());
 	player->update_statement(delta_time, chunk);
 }
 
