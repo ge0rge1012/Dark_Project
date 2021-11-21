@@ -83,7 +83,7 @@ Player::Player()
 {
 	sf::Texture& texture = texture_holder.get(Textures::VAMPIRE);
 	character.setTexture(texture);
-	player_position = sf::Vector2f(200.f, 390.f);
+	player_position = sf::Vector2f(50.f, 390.f);
 	character.setPosition(player_position);
 }
 
@@ -106,6 +106,36 @@ void Player::update_statement(const sf::Time delta_time, const Chunk& chunk)
 	sf::FloatRect nextPos;
 	bool jump = false;
 
+
+	// should be done with calcing bottom block, just palliative
+	bool smth_is_under = false;
+	for (int i = 0; i < CHUNK_HEIGHT; ++i)
+		for (int j = 0; j < CHUNK_WIDTH; ++j)
+		{
+			if (chunk.tilemap[i][j] != nullptr && !(chunk.tilemap[i][j]->passable())) {
+				sf::FloatRect characterBounds = character.getGlobalBounds();
+				sf::FloatRect blockBounds = chunk.tilemap[i][j]->getGlobalBound();
+
+				nextPos = characterBounds;
+				nextPos.top += gravity;
+
+
+				if (blockBounds.intersects(nextPos)) {
+
+					// bottom collision
+					if (characterBounds.top < blockBounds.top
+						&& characterBounds.top + characterBounds.height < blockBounds.top + blockBounds.height
+						&& characterBounds.left < blockBounds.left + blockBounds.width
+						&& characterBounds.left + characterBounds.width > blockBounds.left
+						)
+					{
+						smth_is_under = true;
+					}
+				}
+			}
+		}
+	if (!smth_is_under) onGround = false;
+
 	// if (isMovingUp)    movement.y -= player_speed;   // isn't needed untill we have vertical stairs, jumping by negative gravity
 	// if (isMovingDown)  movement.y += player_speed;   // going down by pressing keys, when we have gravity? lol
 	if (isMovingLeft)  movement.x -= player_speed;
@@ -122,6 +152,7 @@ void Player::update_statement(const sf::Time delta_time, const Chunk& chunk)
 			jump = true;
 		}
 	}
+
 
 	for (int i = 0; i < CHUNK_HEIGHT; ++i)
 		for (int j = 0; j < CHUNK_WIDTH; ++j)
@@ -145,6 +176,7 @@ void Player::update_statement(const sf::Time delta_time, const Chunk& chunk)
 						)
 					{
 						onGround = true;
+						std::cout << " BOTCOL ";
 						if (!jump) movement.y = 0.f;
 						if (jump) { jump = false; }
 						character.setPosition(characterBounds.left, blockBounds.top - characterBounds.height);
@@ -157,10 +189,9 @@ void Player::update_statement(const sf::Time delta_time, const Chunk& chunk)
 						&& characterBounds.left + characterBounds.width > blockBounds.left
 						)
 					{
-						std::cout << "topcol ";
 						movement.y = 0.f;
 						gravityAccum = 0;
-						character.setPosition(characterBounds.left, blockBounds.top - blockBounds.height);
+						character.setPosition(characterBounds.left, blockBounds.top + blockBounds.height);
 					}
 
 					// right collision
@@ -187,6 +218,7 @@ void Player::update_statement(const sf::Time delta_time, const Chunk& chunk)
 				}
 			}
 		}
+
 
 	if (jump) {
 		movement.y += gravityAccum;
@@ -297,6 +329,34 @@ Game::Game() : g_window(sf::VideoMode(mysetts.get_width(), mysetts.get_height())
 
 	chunk.tilemap[11][17] = new Block;
 	chunk.tilemap[11][17]->set_coordinates(sf::Vector2f(17 * 32.f, 11 * 32.f));
+
+	chunk.tilemap[9][14] = new Block;
+	chunk.tilemap[9][14]->set_coordinates(sf::Vector2f(14 * 32.f, 9 * 32.f));
+
+	chunk.tilemap[13][19] = new Block;
+	chunk.tilemap[13][19]->set_coordinates(sf::Vector2f(19 * 32.f, 13 * 32.f));
+
+	chunk.tilemap[9][12] = new Block;
+	chunk.tilemap[9][12]->set_coordinates(sf::Vector2f(12 * 32.f, 9 * 32.f));
+
+	chunk.tilemap[9][10] = new Block;
+	chunk.tilemap[9][10]->set_coordinates(sf::Vector2f(10 * 32.f, 9 * 32.f));
+
+	chunk.tilemap[10][19] = new Block;
+	chunk.tilemap[10][19]->set_coordinates(sf::Vector2f(19 * 32.f, 10 * 32.f));
+
+	chunk.tilemap[10][9] = new Block;
+	chunk.tilemap[10][9]->set_coordinates(sf::Vector2f(9 * 32.f, 10 * 32.f));
+
+	chunk.tilemap[11][7] = new Block;
+	chunk.tilemap[11][7]->set_coordinates(sf::Vector2f(7 * 32.f, 11 * 32.f));
+
+	chunk.tilemap[12][6] = new Block;
+	chunk.tilemap[12][6]->set_coordinates(sf::Vector2f(6 * 32.f, 12 * 32.f));
+
+	chunk.tilemap[13][5] = new Block;
+	chunk.tilemap[13][5]->set_coordinates(sf::Vector2f(5 * 32.f, 13 * 32.f));
+
 }
 
 void Game::run()
