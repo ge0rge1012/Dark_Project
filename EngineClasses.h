@@ -5,6 +5,7 @@
 #include <vector>
 #include <array>
 #include <map>
+#include <string>
 #include <memory>
 #include "settings.h"
 
@@ -13,6 +14,35 @@
 const sf::Time TimePerFrame = sf::seconds(1.f / 60.f);
 const int CHUNK_WIDTH = 20;
 const int CHUNK_HEIGHT = 15;
+
+class NickName
+{
+private:
+	sf::Text text;
+	int nick_length;
+
+public:
+	NickName();
+	void set_coordinates(float x, float y);
+	void set_string(std::string nick);
+	void drawU(sf::RenderWindow& window);
+
+};
+
+class UserInput
+{
+private:
+	std::string inp;
+	sf::Text text;
+
+public:
+	UserInput();
+	void set_size(int size);
+	void set_coordinates(float x, float y);
+	std::string inputting(sf::RenderWindow& window);
+	std::string get_input();
+
+};
 
 namespace Textures
 {
@@ -29,6 +59,23 @@ public:
 	void load(Textures::ID id, const std::string& filename);
 	sf::Texture& get(Textures::ID id);
 	const sf::Texture& get(Textures::ID id) const;
+};
+
+namespace Fonts
+{
+	enum ID { OLD };
+}
+
+class FontHolder
+{
+private:
+	std::map<Fonts::ID, std::unique_ptr<sf::Font>> gFontMap;
+
+public:
+	FontHolder();
+	void load(Fonts::ID id, const std::string& filename);
+	sf::Font& get(Fonts::ID id);
+	const sf::Font& get(Fonts::ID id) const;
 };
 
 class Block
@@ -79,6 +126,8 @@ public:
 	void key_reaction(sf::Keyboard::Key key, bool isPressed);
 	void update_statement(const sf::Time delta_time, const Chunk& chunk);
 	void screen_collision(int win_width, int win_height);
+	float getplayercoordinateX();
+	float getplayercoordinateY();
 };
 
 class Game
@@ -110,6 +159,8 @@ private:
 	Game();                     // private constructor for the easiest realisation of singleton pattern
 	static Game* game_ptr;
 	sf::RenderWindow g_window;
+	std::string nick = "";
+	NickName nick_under_head;
 
 	// can be vectors of different objects
 	Player* player;
