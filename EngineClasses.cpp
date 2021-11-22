@@ -40,6 +40,33 @@ TextureHolder texture_holder;
 
 //____________________________________________________________________
 
+FontHolder::FontHolder() { }
+
+void FontHolder::load(Fonts::ID id, const std::string& filename)
+{
+	std::unique_ptr<sf::Font> font(new sf::Font());
+	font->loadFromFile(filename);
+
+	gFontMap.insert(std::make_pair(id, std::move(font)));
+}
+
+sf::Font& FontHolder::get(Fonts::ID id)
+{
+	auto found = gFontMap.find(id);
+	return *found->second;
+}
+
+const sf::Font& FontHolder::get(Fonts::ID id) const
+{
+	auto found = gFontMap.find(id);
+	return *found->second;
+}
+
+// in future make by singleton/think about better decision
+FontHolder font_holder;
+
+//____________________________________________________________________
+
 bool Block::passable()
 {
 	return isPassable;
@@ -90,6 +117,14 @@ Player::Player()
 void Player::drawU(sf::RenderWindow& window)
 {
 	window.draw(character);
+}
+
+float Player::getplayercoordinateX() {
+	return player_position.x;
+}
+
+float Player::getplayercoordinateY() {	
+	return player_position.y;
 }
 
 void Player::key_reaction(sf::Keyboard::Key key, bool isPressed)
@@ -219,7 +254,6 @@ void Player::update_statement(const sf::Time delta_time, const Chunk& chunk)
 			}
 		}
 
-
 	if (jump) {
 		movement.y += gravityAccum;
 		onGround = false;
@@ -260,10 +294,19 @@ Game* Game::get_game_object()
 
 void Game::boot_screen()
 {
+	sf::Font& font = font_holder.get(Fonts::OLD);
+	sf::Text text("", font, 20);
+	//text.setOutlineColor(sf::Color::Red);
+	text.setFillColor(sf::Color::Red);
+	text.setStyle(sf::Text::Bold);
+	text.setString("Добро пожаловать в нашу игру!\nPress SPACE to start:)");
+	text.setPosition(mysetts.get_width()/3, mysetts.get_height()/2.5);
+	
+
 	while (g_window.isOpen())
 	{
-		// dont do this, just example
-		sf::Image booting;
+		// dont do this, just example of using image
+		/*sf::Image booting;
 		booting.loadFromFile("media/images/booter.png");
 		sf::Texture bt;
 		bt.loadFromImage(booting);
@@ -274,6 +317,10 @@ void Game::boot_screen()
 
 		g_window.clear();
 		g_window.draw(sprbt);
+		g_window.display();*/
+
+		g_window.clear();
+		g_window.draw(text);
 		g_window.display();
 
 		bool space = false;
@@ -298,8 +345,9 @@ void Game::start_game()
 	// so main menu will be opened here in future
 	texture_holder.load(Textures::VAMPIRE, "media/textures/animals/penisman.png");
 	texture_holder.load(Textures::BLOCKS, "media/textures/blocks/ground.png");
+	font_holder.load(Fonts::OLD, "media/fonts/CyrilicOld.ttf");
 
-	Game* game = get_game_object(); //?????????
+	Game* game = get_game_object();
 
 	game->run();
 }

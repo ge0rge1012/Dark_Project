@@ -31,6 +31,23 @@ public:
 	const sf::Texture& get(Textures::ID id) const;
 };
 
+namespace Fonts
+{
+	enum ID { OLD };
+}
+
+class FontHolder
+{
+private:
+	std::map<Fonts::ID, std::unique_ptr<sf::Font>> gFontMap;
+
+public:
+	FontHolder();
+	void load(Fonts::ID id, const std::string& filename);
+	sf::Font& get(Fonts::ID id);
+	const sf::Font& get(Fonts::ID id) const;
+};
+
 class Block
 {
 public:
@@ -79,6 +96,8 @@ public:
 	void key_reaction(sf::Keyboard::Key key, bool isPressed);
 	void update_statement(const sf::Time delta_time, const Chunk& chunk);
 	void screen_collision(int win_width, int win_height);
+	float getplayercoordinateX();
+	float getplayercoordinateY();
 };
 
 class Game
