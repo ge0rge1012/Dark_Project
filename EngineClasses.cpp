@@ -422,6 +422,7 @@ void Player::update_statement(const sf::Time delta_time, const Chunk& chunk)
 			}
 		}
 
+
 	if (jump) {
 		movement.y += gravityAccum;
 		onGround = false;
@@ -468,7 +469,7 @@ void Game::boot_screen()
 	//text.setOutlineColor(sf::Color::Red);
 	text.setFillColor(sf::Color::Red);
 	text.setStyle(sf::Text::Bold);
-	text.setString("Добро пожаловать в нашу игру!\nPress SPACE to start:)");
+	text.setString("пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ!\nPress SPACE to start:)");
 	text.setPosition(mysetts.get_width()/4.5f, mysetts.get_height()/2.4f);
 	
 
