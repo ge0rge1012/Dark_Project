@@ -12,6 +12,7 @@
 */
 
 settings mysetts;
+sf::View g_view;
 
 TextureHolder::TextureHolder() { }
 
@@ -99,8 +100,8 @@ sf::FloatRect Block::getGlobalBound()
 
 Chunk::Chunk()
 {
-	for (int i = 0; i < 15; ++i)
-		for (int j = 0; j < 20; ++j)
+	for (int i = 0; i < CHUNK_HEIGHT; ++i)
+		for (int j = 0; j < CHUNK_WIDTH; ++j)
 			tilemap[i][j] = nullptr;
 }
 
@@ -274,6 +275,11 @@ std::string UserInput::get_input()
 
 //____________________________________________________________________
 
+void set_view(float x, float y)
+{
+	g_view.setCenter(x + 100, y);
+}
+
 Player::Player()
 {
 	sf::Texture& texture = texture_holder.get(Textures::VAMPIRE);
@@ -412,7 +418,7 @@ void Player::update_statement(const sf::Time delta_time, const Chunk& chunk)
 						)
 					{
 						movement.x = 0.f;
-						character.setPosition(blockBounds.left - characterBounds.width - 4, characterBounds.top);
+						character.setPosition(blockBounds.left - characterBounds.width - x_crop/2, characterBounds.top);
 					}
 
 					// left collision
@@ -423,7 +429,7 @@ void Player::update_statement(const sf::Time delta_time, const Chunk& chunk)
 						)
 					{
 						movement.x = 0.f;
-						character.setPosition(blockBounds.left + blockBounds.width + 2, characterBounds.top);
+						character.setPosition(blockBounds.left + blockBounds.width - x_crop/2, characterBounds.top);
 					}
 				}
 			}
@@ -437,6 +443,8 @@ void Player::update_statement(const sf::Time delta_time, const Chunk& chunk)
 	character.move(movement * delta_time.asSeconds());
 	player_position.x = character.getGlobalBounds().left;
 	player_position.y = character.getGlobalBounds().top;
+
+	set_view(player_position.x, player_position.y);
 }
 
 void Player::screen_collision(int win_width, int win_height)
@@ -447,12 +455,12 @@ void Player::screen_collision(int win_width, int win_height)
 	if (character.getPosition().y < 0)
 		character.setPosition(character.getPosition().x, 0);
 
-	if (character.getPosition().x + character.getGlobalBounds().width > win_width)
-		character.setPosition(win_width - character.getGlobalBounds().width, character.getPosition().y);
+	if (character.getPosition().x + character.getGlobalBounds().width > CHUNK_WIDTH*32)
+		character.setPosition(CHUNK_WIDTH*32 - character.getGlobalBounds().width, character.getPosition().y);
 
-	if (character.getPosition().y + character.getGlobalBounds().height > win_height)
+	if (character.getPosition().y + character.getGlobalBounds().height > CHUNK_HEIGHT*32)
 	{
-		character.setPosition(character.getPosition().x, win_height - character.getGlobalBounds().height);
+		character.setPosition(character.getPosition().x, CHUNK_HEIGHT*32 - character.getGlobalBounds().height);
 	}
 }
 
@@ -532,12 +540,13 @@ void Game::start_game()
 Game::Game() : g_window(sf::VideoMode(mysetts.get_width(), mysetts.get_height()), "game_project")
 {
 	player = new Player();
+	g_view.reset(sf::FloatRect(0, 0, 640, 480));
 
 	// generating map for tests
 	// of course, it wouldnt be here
 
-	for (int i = 14; i < 15; ++i)
-		for (int j = 0; j < 20; ++j)
+	for (int i = 14; i < CHUNK_HEIGHT; ++i)
+		for (int j = 0; j < CHUNK_WIDTH; ++j)
 		{
 			chunk.tilemap[i][j] = new Block;
 			chunk.tilemap[i][j]->set_coordinates(sf::Vector2f(j * 32.f, i * 32.f));
@@ -644,6 +653,7 @@ void Game::update(const sf::Time delta_time)
 
 void Game::render()
 {
+	g_window.setView(g_view);
 	g_window.clear();                  // making black (without anything)
 	draw_objects();                    // drawing objects (for now only one)
 	g_window.display();                // drawing display (screen)
@@ -663,8 +673,8 @@ void Game::draw_objects()              // so here we can order for all objects t
 	player->drawU(g_window);
 
 	// this shit is needed to be drawed not here
-	for (int i = 0; i < 15; ++i)
-		for (int j = 0; j < 20; ++j)
+	for (int i = 0; i < CHUNK_HEIGHT; ++i)
+		for (int j = 0; j < CHUNK_WIDTH; ++j)
 			if (chunk.tilemap[i][j] != nullptr)
 				chunk.tilemap[i][j]->drawU(g_window);
 

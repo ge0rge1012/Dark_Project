@@ -12,8 +12,10 @@
 // a little bit of shitcode (let it be) for fixed time steps realisation - my proud
 // it gives about 60 fps, but work (may be) more stable, then standart function
 const sf::Time TimePerFrame = sf::seconds(1.f / 60.f);
-const int CHUNK_WIDTH = 20;
+const int CHUNK_WIDTH = 30;
 const int CHUNK_HEIGHT = 15;
+
+void set_view(float x, float y);
 
 class NickName
 {
@@ -99,7 +101,7 @@ class Chunk
 public:
 	Chunk();
 
-	std::array<std::array<Block*, 20>, 15> tilemap;
+	std::array<std::array<Block*, CHUNK_WIDTH>, CHUNK_HEIGHT> tilemap;
 };
 
 class Player
