@@ -19,7 +19,7 @@ class NickName
 {
 private:
 	sf::Text text;
-	int nick_length;
+	int nick_length = 0;
 
 public:
 	NickName();
