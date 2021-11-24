@@ -22,7 +22,7 @@ void TextureHolder::load(Textures::ID id, const std::string& filename)
 
 	gTextureMap.insert(std::make_pair(id, std::move(texture)));
 }
-
+//elencomment
 sf::Texture& TextureHolder::get(Textures::ID id)
 {
 	auto found = gTextureMap.find(id);
@@ -513,7 +513,7 @@ void Game::start_game()
 {
 	// make configurations: game mode, choose character model and etc.
 	// so main menu will be opened here in future
-	texture_holder.load(Textures::VAMPIRE, "media/textures/animals/penisman.png");
+	texture_holder.load(Textures::VAMPIRE, "media/textures/animals/gg_32_64.png"); //changed texture
 	texture_holder.load(Textures::BLOCKS, "media/textures/blocks/ground.png");
 	font_holder.load(Fonts::OLD, "media/fonts/CyrilicOld.ttf");
 
