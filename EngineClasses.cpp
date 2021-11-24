@@ -651,13 +651,14 @@ void Game::handle_events(sf::Keyboard::Key key, bool isPressed)
 void Game::draw_objects()              // so here we can order for all objects to draw themselves
 {
 	player->drawU(g_window);
-	nick_under_head.drawU(g_window);
 
 	// this shit is needed to be drawed not here
 	for (int i = 0; i < 15; ++i)
 		for (int j = 0; j < 20; ++j)
 			if (chunk.tilemap[i][j] != nullptr)
 				chunk.tilemap[i][j]->drawU(g_window);
+
+	nick_under_head.drawU(g_window);
 }
 
 //______________________________________________________________________________________________________
