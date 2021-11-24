@@ -118,6 +118,7 @@ private:
 	float player_speed = 200;      // just speed of character, stable and must not (in theory) depend on processor
 	float jumpVelocity = 230;
 	sf::Vector2f player_position;
+	sf::FloatRect p_hitbox;
 
 public:
 	Player();

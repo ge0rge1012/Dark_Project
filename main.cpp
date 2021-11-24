@@ -19,16 +19,19 @@ here should be abilities to save and load progress
 3) game process
 when game is paused, process of game is stopped, but not closed (of course)
 
+
+
 TextureHolder modifiing:
 1) make it look not so palliative (may be make an hierarchy)
 2) textures loading should be a separate step - not at the beginnig of Game::start_game()
 
 */
+
 #include "EngineClasses.h"
 
 int main()
 {
-	Game::start_game(); // start game
+	Game::start_game();
 
 	return 0;
 }

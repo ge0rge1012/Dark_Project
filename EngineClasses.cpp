@@ -280,6 +280,8 @@ Player::Player()
 	character.setTexture(texture);
 	player_position = sf::Vector2f(50.f, 390.f);
 	character.setPosition(player_position);
+
+	//p_hitbox = sf::FloatRect();
 }
 
 void Player::drawU(sf::RenderWindow& window)
@@ -308,6 +310,7 @@ void Player::update_statement(const sf::Time delta_time, const Chunk& chunk)
 	sf::Vector2f movement(0.f, 0.f);
 	sf::FloatRect nextPos;
 	bool jump = false;
+	const float x_crop = 8.f;
 
 
 	// should be done with calcing bottom block, just palliative
@@ -316,8 +319,11 @@ void Player::update_statement(const sf::Time delta_time, const Chunk& chunk)
 		for (int j = 0; j < CHUNK_WIDTH; ++j)
 		{
 			if (chunk.tilemap[i][j] != nullptr && !(chunk.tilemap[i][j]->passable())) {
-				sf::FloatRect characterBounds = character.getGlobalBounds();
+				sf::FloatRect characterBounds1 = character.getGlobalBounds();
+				sf::FloatRect characterBounds(characterBounds1.left + x_crop/2, characterBounds1.top, characterBounds1.width-x_crop, characterBounds1.height);
 				sf::FloatRect blockBounds = chunk.tilemap[i][j]->getGlobalBound();
+
+				//std::cout << characterBounds.width << " " << characterBounds.height;
 
 				nextPos = characterBounds;
 				nextPos.top += gravity;
@@ -361,7 +367,8 @@ void Player::update_statement(const sf::Time delta_time, const Chunk& chunk)
 		for (int j = 0; j < CHUNK_WIDTH; ++j)
 		{
 			if (chunk.tilemap[i][j] != nullptr && !(chunk.tilemap[i][j]->passable())) {
-				sf::FloatRect characterBounds = character.getGlobalBounds();
+				sf::FloatRect characterBounds1 = character.getGlobalBounds();
+				sf::FloatRect characterBounds(characterBounds1.left + x_crop / 2, characterBounds1.top, characterBounds1.width - x_crop, characterBounds1.height);
 				sf::FloatRect blockBounds = chunk.tilemap[i][j]->getGlobalBound();
 
 				nextPos = characterBounds;
@@ -369,7 +376,7 @@ void Player::update_statement(const sf::Time delta_time, const Chunk& chunk)
 				nextPos.top += movement.y * delta_time.asSeconds();
 
 				if (blockBounds.intersects(nextPos)) {
-					std::cout << "Collision! ";
+					// std::cout << "Collision! ";
 
 					// bottom collision
 					if (characterBounds.top < blockBounds.top
@@ -379,10 +386,10 @@ void Player::update_statement(const sf::Time delta_time, const Chunk& chunk)
 						)
 					{
 						onGround = true;
-						std::cout << " BOTCOL ";
+						// std::cout << " BOTCOL ";
 						if (!jump) movement.y = 0.f;
 						if (jump) { jump = false; }
-						character.setPosition(characterBounds.left, blockBounds.top - characterBounds.height);
+						character.setPosition(characterBounds.left - x_crop / 2, blockBounds.top - characterBounds.height);
 					}
 
 					// top collision
@@ -394,7 +401,7 @@ void Player::update_statement(const sf::Time delta_time, const Chunk& chunk)
 					{
 						movement.y = 0.f;
 						gravityAccum = 0;
-						character.setPosition(characterBounds.left, blockBounds.top + blockBounds.height);
+						character.setPosition(characterBounds.left - x_crop / 2, blockBounds.top + blockBounds.height);
 					}
 
 					// right collision
@@ -405,7 +412,7 @@ void Player::update_statement(const sf::Time delta_time, const Chunk& chunk)
 						)
 					{
 						movement.x = 0.f;
-						character.setPosition(blockBounds.left - characterBounds.width, characterBounds.top);
+						character.setPosition(blockBounds.left - characterBounds.width - 4, characterBounds.top);
 					}
 
 					// left collision
@@ -416,7 +423,7 @@ void Player::update_statement(const sf::Time delta_time, const Chunk& chunk)
 						)
 					{
 						movement.x = 0.f;
-						character.setPosition(blockBounds.left + blockBounds.width, characterBounds.top);
+						character.setPosition(blockBounds.left + blockBounds.width + 2, characterBounds.top);
 					}
 				}
 			}
@@ -573,16 +580,19 @@ Game::Game() : g_window(sf::VideoMode(mysetts.get_width(), mysetts.get_height())
 
 	chunk.tilemap[13][5] = new Block;
 	chunk.tilemap[13][5]->set_coordinates(sf::Vector2f(5 * 32.f, 13 * 32.f));
+
+	chunk.tilemap[13][0] = new Block;
+	chunk.tilemap[13][0]->set_coordinates(sf::Vector2f(0 * 32.f, 13 * 32.f));
 }
 
 void Game::run()
 {
-	boot_screen();
+	/*boot_screen();
 
 	UserInput inp;
 	nick = inp.inputting(g_window);
 	nick_under_head.set_string(nick);
-	nick_under_head.set_coordinates(player->getplayercoordinateX(), player->getplayercoordinateY());
+	nick_under_head.set_coordinates(player->getplayercoordinateX(), player->getplayercoordinateY());*/
 
 	sf::Clock clock;
 	sf::Time timeSinceLastUpdate = sf::Time::Zero;
