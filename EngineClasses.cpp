@@ -468,7 +468,7 @@ void Game::boot_screen()
 	//text.setOutlineColor(sf::Color::Red);
 	text.setFillColor(sf::Color::Red);
 	text.setStyle(sf::Text::Bold);
-	text.setString("Добро пожаловать в нашу игру!\nPress SPACE to start:)");
+	text.setString("Welcome to our game!\nPress SPACE to start:)");
 	text.setPosition(mysetts.get_width()/4.5f, mysetts.get_height()/2.4f);
 	
 
