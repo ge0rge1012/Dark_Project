@@ -468,7 +468,7 @@ void Game::boot_screen()
 	//text.setOutlineColor(sf::Color::Red);
 	text.setFillColor(sf::Color::Red);
 	text.setStyle(sf::Text::Bold);
-	text.setString("Welcome to our game!\nPress SPACE to start:)");
+	text.setString("Добро пожаловать в нашу игру!\nPress SPACE to start:)");
 	text.setPosition(mysetts.get_width()/4.5f, mysetts.get_height()/2.4f);
 	
 
@@ -512,8 +512,8 @@ void Game::start_game()
 {
 	// make configurations: game mode, choose character model and etc.
 	// so main menu will be opened here in future
-	texture_holder.load(Textures::VAMPIRE, "media/textures/animals/penisman.png");
-	texture_holder.load(Textures::BLOCKS, "media/textures/blocks/ground.png");
+	texture_holder.load(Textures::VAMPIRE, "media/textures/animals/gg_32_64.png"); //changed texture
+	texture_holder.load(Textures::BLOCKS, "media/textures/blocks/ground_orange.png");
 	font_holder.load(Fonts::OLD, "media/fonts/CyrilicOld.ttf");
 
 	Game* game = get_game_object();
