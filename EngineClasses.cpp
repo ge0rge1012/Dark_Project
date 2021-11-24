@@ -514,7 +514,7 @@ void Game::start_game()
 	// make configurations: game mode, choose character model and etc.
 	// so main menu will be opened here in future
 	texture_holder.load(Textures::VAMPIRE, "media/textures/animals/gg_32_64.png"); //changed texture
-	texture_holder.load(Textures::BLOCKS, "media/textures/blocks/ground.png");
+	texture_holder.load(Textures::BLOCKS, "media/textures/blocks/ground_orange.png");
 	font_holder.load(Fonts::OLD, "media/fonts/CyrilicOld.ttf");
 
 	Game* game = get_game_object();
