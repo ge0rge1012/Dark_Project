@@ -22,7 +22,7 @@ void TextureHolder::load(Textures::ID id, const std::string& filename)
 
 	gTextureMap.insert(std::make_pair(id, std::move(texture)));
 }
-
+//elencomment
 sf::Texture& TextureHolder::get(Textures::ID id)
 {
 	auto found = gTextureMap.find(id);
