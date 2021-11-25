@@ -1,19 +1,16 @@
 #pragma once
-#include <SFML/Graphics.hpp>
 #include <iostream>
 #include <cmath>
 #include <vector>
-#include <array>
 #include <map>
 #include <string>
 #include <memory>
 #include "settings.h"
+#include "WorldClass.h"
 
 // a little bit of shitcode (let it be) for fixed time steps realisation - my proud
 // it gives about 60 fps, but work (may be) more stable, then standart function
 const sf::Time TimePerFrame = sf::seconds(1.f / 60.f);
-const int CHUNK_WIDTH = 40;
-const int CHUNK_HEIGHT = 25;
 
 void set_view(float x, float y);
 
@@ -46,22 +43,7 @@ public:
 
 };
 
-namespace Textures
-{
-	enum ID { VAMPIRE, BLOCKS, ITEMS };
-}
 
-class TextureHolder
-{
-private:
-	std::map<Textures::ID, std::unique_ptr<sf::Texture>> gTextureMap;
-
-public:
-	TextureHolder();
-	void load(Textures::ID id, const std::string& filename);
-	sf::Texture& get(Textures::ID id);
-	const sf::Texture& get(Textures::ID id) const;
-};
 
 namespace Fonts
 {
@@ -78,30 +60,6 @@ public:
 	void load(Fonts::ID id, const std::string& filename);
 	sf::Font& get(Fonts::ID id);
 	const sf::Font& get(Fonts::ID id) const;
-};
-
-class Block
-{
-public:
-	Block();
-	void drawU(sf::RenderWindow& window);
-	void set_coordinates(const sf::Vector2f& coord);
-	sf::FloatRect getGlobalBound();
-	bool passable();
-
-
-private:
-	bool isPassable = false;
-	sf::Vector2f coordinates;
-	sf::Sprite block;
-};
-
-class Chunk
-{
-public:
-	Chunk();
-
-	std::array<std::array<Block*, CHUNK_WIDTH>, CHUNK_HEIGHT> tilemap;
 };
 
 class Player
@@ -127,7 +85,7 @@ public:
 
 	void drawU(sf::RenderWindow& window);
 	void key_reaction(sf::Keyboard::Key key, bool isPressed);
-	void update_statement(const sf::Time delta_time, const Chunk& chunk);
+	void update_statement(const sf::Time delta_time, const World& chunk);
 	void screen_collision(int win_width, int win_height);
 	float getplayercoordinateX();
 	float getplayercoordinateY();
@@ -167,5 +125,5 @@ private:
 
 	// can be vectors of different objects
 	Player* player;
-	Chunk chunk;
+	World chunk;
 };
