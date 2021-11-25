@@ -1,5 +1,4 @@
 #include "EngineClasses.h"
-
 //____________________________________________________________________
 
 /** Textures chould be an hierarchy, like
@@ -13,30 +12,6 @@
 
 settings mysetts;
 sf::View g_view;
-
-TextureHolder::TextureHolder() { }
-
-void TextureHolder::load(Textures::ID id, const std::string& filename)
-{
-	std::unique_ptr<sf::Texture> texture(new sf::Texture());
-	texture->loadFromFile(filename);
-
-	gTextureMap.insert(std::make_pair(id, std::move(texture)));
-}
-
-sf::Texture& TextureHolder::get(Textures::ID id)
-{
-	auto found = gTextureMap.find(id);
-	return *found->second;
-}
-
-const sf::Texture& TextureHolder::get(Textures::ID id) const
-{
-	auto found = gTextureMap.find(id);
-	return *found->second;
-}
-
-// in future make by singleton/think about better decision
 TextureHolder texture_holder;
 
 //____________________________________________________________________
@@ -68,44 +43,6 @@ FontHolder font_holder;
 
 //____________________________________________________________________
 
-bool Block::passable()
-{
-	return isPassable;
-}
-
-Block::Block()
-{
-	sf::Texture& texture = texture_holder.get(Textures::BLOCKS);
-	block.setTexture(texture);
-}
-
-void Block::drawU(sf::RenderWindow& window)
-{
-	block.setPosition(coordinates);
-	window.draw(block);
-	//std::cout << coordinates.x << " " << coordinates.y << std::endl;
-}
-
-void Block::set_coordinates(const sf::Vector2f& coord)
-{
-	coordinates = coord;
-}
-
-sf::FloatRect Block::getGlobalBound()
-{
-	return block.getGlobalBounds();
-}
-
-//____________________________________________________________________
-
-Chunk::Chunk()
-{
-	for (int i = 0; i < CHUNK_HEIGHT; ++i)
-		for (int j = 0; j < CHUNK_WIDTH; ++j)
-			tilemap[i][j] = nullptr;
-}
-
-//____________________________________________________________________
 
 NickName::NickName()
 {
@@ -311,7 +248,7 @@ void Player::key_reaction(sf::Keyboard::Key key, bool isPressed)
 	else if (key == sf::Keyboard::D)   isMovingRigth = isPressed;
 }
 
-void Player::update_statement(const sf::Time delta_time, const Chunk& chunk)
+void Player::update_statement(const sf::Time delta_time, const World& chunk)
 {
 	sf::Vector2f movement(0.f, 0.f);
 	sf::FloatRect nextPos;
@@ -321,8 +258,8 @@ void Player::update_statement(const sf::Time delta_time, const Chunk& chunk)
 
 	// should be done with calcing bottom block, just palliative
 	bool smth_is_under = false;
-	for (int i = 0; i < CHUNK_HEIGHT; ++i)
-		for (int j = 0; j < CHUNK_WIDTH; ++j)
+	for (int i = 0; i < WORLD_HEIGHT; ++i)
+		for (int j = 0; j < WORLD_WIDTH; ++j)
 		{
 			if (chunk.tilemap[i][j] != nullptr && !(chunk.tilemap[i][j]->passable())) {
 				sf::FloatRect characterBounds1 = character.getGlobalBounds();
@@ -369,8 +306,8 @@ void Player::update_statement(const sf::Time delta_time, const Chunk& chunk)
 	}
 
 
-	for (int i = 0; i < CHUNK_HEIGHT; ++i)
-		for (int j = 0; j < CHUNK_WIDTH; ++j)
+	for (int i = 0; i < WORLD_HEIGHT; ++i)
+		for (int j = 0; j < WORLD_WIDTH; ++j)
 		{
 			if (chunk.tilemap[i][j] != nullptr && !(chunk.tilemap[i][j]->passable())) {
 				sf::FloatRect characterBounds1 = character.getGlobalBounds();
@@ -455,12 +392,12 @@ void Player::screen_collision(int win_width, int win_height)
 	if (character.getPosition().y < 0)
 		character.setPosition(character.getPosition().x, 0);
 
-	if (character.getPosition().x + character.getGlobalBounds().width > CHUNK_WIDTH*32)
-		character.setPosition(CHUNK_WIDTH*32 - character.getGlobalBounds().width, character.getPosition().y);
+	if (character.getPosition().x + character.getGlobalBounds().width > WORLD_WIDTH*32)
+		character.setPosition(WORLD_WIDTH*32 - character.getGlobalBounds().width, character.getPosition().y);
 
-	if (character.getPosition().y + character.getGlobalBounds().height > CHUNK_HEIGHT*32)
+	if (character.getPosition().y + character.getGlobalBounds().height > WORLD_HEIGHT*32)
 	{
-		character.setPosition(character.getPosition().x, CHUNK_HEIGHT*32 - character.getGlobalBounds().height);
+		character.setPosition(character.getPosition().x, WORLD_HEIGHT*32 - character.getGlobalBounds().height);
 	}
 }
 
@@ -545,11 +482,10 @@ Game::Game() : g_window(sf::VideoMode(mysetts.get_width(), mysetts.get_height())
 	// generating map for tests
 	// of course, it wouldnt be here
 
-	for (int i = 14; i < CHUNK_HEIGHT; ++i)
-		for (int j = 0; j < CHUNK_WIDTH; ++j)
+	for (int i = 14; i < WORLD_HEIGHT; ++i)
+		for (int j = 0; j < WORLD_WIDTH; ++j)
 		{
-			chunk.tilemap[i][j] = new Block;
-			chunk.tilemap[i][j]->set_coordinates(sf::Vector2f(j * 32.f, i * 32.f));
+			chunk.set_block(i, j, 0);
 		}
 	chunk.tilemap[13][15] = new Block;
 	chunk.tilemap[13][15]->set_coordinates(sf::Vector2f(15 * 32.f, 13 * 32.f));
@@ -673,8 +609,8 @@ void Game::draw_objects()              // so here we can order for all objects t
 	player->drawU(g_window);
 
 	// this shit is needed to be drawed not here
-	for (int i = 0; i < CHUNK_HEIGHT; ++i)
-		for (int j = 0; j < CHUNK_WIDTH; ++j)
+	for (int i = 0; i < WORLD_HEIGHT; ++i)
+		for (int j = 0; j < WORLD_WIDTH; ++j)
 			if (chunk.tilemap[i][j] != nullptr)
 				chunk.tilemap[i][j]->drawU(g_window);
 
