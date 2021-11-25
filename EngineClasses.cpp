@@ -487,49 +487,34 @@ Game::Game() : g_window(sf::VideoMode(mysetts.get_width(), mysetts.get_height())
 		{
 			chunk.set_block(i, j, 0);
 		}
-	chunk.tilemap[13][15] = new Block;
-	chunk.tilemap[13][15]->set_coordinates(sf::Vector2f(15 * 32.f, 13 * 32.f));
+	chunk.set_block(13, 15, 0);
 
-	chunk.tilemap[13][16] = new Block;
-	chunk.tilemap[13][16]->set_coordinates(sf::Vector2f(16 * 32.f, 13 * 32.f));
+	chunk.set_block(13, 16, 0);
 
-	chunk.tilemap[12][16] = new Block;
-	chunk.tilemap[12][16]->set_coordinates(sf::Vector2f(16 * 32.f, 12 * 32.f));
+	chunk.set_block(12, 15, 0);
 
-	chunk.tilemap[11][17] = new Block;
-	chunk.tilemap[11][17]->set_coordinates(sf::Vector2f(17 * 32.f, 11 * 32.f));
+	chunk.set_block(11, 17, 0);
 
-	chunk.tilemap[9][14] = new Block;
-	chunk.tilemap[9][14]->set_coordinates(sf::Vector2f(14 * 32.f, 9 * 32.f));
+	chunk.set_block(9, 14, 0);
 
-	chunk.tilemap[13][19] = new Block;
-	chunk.tilemap[13][19]->set_coordinates(sf::Vector2f(19 * 32.f, 13 * 32.f));
+	chunk.set_block(13, 19, 0);
 
-	chunk.tilemap[9][12] = new Block;
-	chunk.tilemap[9][12]->set_coordinates(sf::Vector2f(12 * 32.f, 9 * 32.f));
+	chunk.set_block(9, 12, 0);
 
-	chunk.tilemap[9][10] = new Block;
-	chunk.tilemap[9][10]->set_coordinates(sf::Vector2f(10 * 32.f, 9 * 32.f));
+	chunk.set_block(9, 10, 0);
 
-	chunk.tilemap[10][19] = new Block;
-	chunk.tilemap[10][19]->set_coordinates(sf::Vector2f(19 * 32.f, 10 * 32.f));
+	chunk.set_block(10, 19, 0);
 
-	chunk.tilemap[10][9] = new Block;
-	chunk.tilemap[10][9]->set_coordinates(sf::Vector2f(9 * 32.f, 10 * 32.f));
+	chunk.set_block(10, 9, 0);
 
-	chunk.tilemap[11][7] = new Block;
-	chunk.tilemap[11][7]->set_coordinates(sf::Vector2f(7 * 32.f, 11 * 32.f));
+	chunk.set_block(11, 7, 0);
 
-	chunk.tilemap[12][6] = new Block;
-	chunk.tilemap[12][6]->set_coordinates(sf::Vector2f(6 * 32.f, 12 * 32.f));
+	chunk.set_block(12, 6, 0);
 
-	chunk.tilemap[13][5] = new Block;
-	chunk.tilemap[13][5]->set_coordinates(sf::Vector2f(5 * 32.f, 13 * 32.f));
+	chunk.set_block(13, 5, 0);
 
-	chunk.tilemap[13][0] = new Block;
-	chunk.tilemap[13][0]->set_coordinates(sf::Vector2f(0 * 32.f, 13 * 32.f));
+	chunk.set_block(13, 0, 0);
 }
-
 void Game::run()
 {
 	/*boot_screen();
