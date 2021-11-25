@@ -277,8 +277,15 @@ std::string UserInput::get_input()
 
 void set_view(float x, float y)
 {
+	if (x < 170) x = 170;
+	if (x > CHUNK_WIDTH * 32 - 370) x = CHUNK_WIDTH * 32 - 370;
+	//if (y < 240) y = 240;
+	//if (y > 554) y = 554;
+
 	g_view.setCenter(x + 100, y);
 }
+
+//____________________________________________________________________
 
 Player::Player()
 {
@@ -321,8 +328,73 @@ void Player::update_statement(const sf::Time delta_time, const Chunk& chunk)
 
 	// should be done with calcing bottom block, just palliative
 	bool smth_is_under = false;
-	for (int i = 0; i < CHUNK_HEIGHT; ++i)
-		for (int j = 0; j < CHUNK_WIDTH; ++j)
+
+	/*const int lit_chunk_size = 10;
+	std::array<std::array<Block*, lit_chunk_size>, lit_chunk_size> lit_chunk;
+	for (int i = 0; i < lit_chunk_size; ++i)
+		for (int j = 0; j < lit_chunk_size; ++j)
+			lit_chunk[i][j] = nullptr;*/
+
+	/*// getting left top coordinate of little chunk to check block collisions only there
+	// lots of validation
+	// a kind of optimisation
+	int i = player_position.x;
+	i = (i - (i % 32)) / 32;
+	int j = player_position.y;
+	j = (j - (j % 32)) / 32;
+
+
+	i -= 5;
+	j -= 5;
+	if (i < 0) i = 0;
+	if (i > CHUNK_WIDTH - 10) i = CHUNK_WIDTH - 10;
+	if (j < 0) j = 0;
+	if (j > CHUNK_HEIGHT - 10) j = CHUNK_HEIGHT - 10;
+
+
+	// swapping, because we need:)
+	int temp = i;
+	i = j;
+	j = temp;
+
+	if (i > CHUNK_HEIGHT - 5) i = CHUNK_HEIGHT - 5;
+	if (j > CHUNK_WIDTH - 5) j = CHUNK_WIDTH - 5;
+
+	std::cout << i << "h " << j << "w ";
+
+	for (int i1 = 0; i1 < lit_chunk_size; ++i, ++i1)
+		for (int j1 = 0; j1 < lit_chunk_size; ++j, ++j1)
+		{
+			//std::cout << i1 << " " << j1 << " ";
+			lit_chunk[i1][j1] = chunk.tilemap[i][j];
+		}
+	if (lit_chunk[4][4] != nullptr)
+	{
+		sf::FloatRect check = lit_chunk[4][4]->getGlobalBound();
+		std::cout << check.left << " " << check.top << std::endl;
+	}*/
+
+	int i1 = player_position.x;
+	i1 /= 32;
+	int j1 = player_position.y;
+	j1 /= 32;
+
+	int temp = i1;
+	i1 = j1;
+	j1 = temp;
+
+	i1 -= 5;
+	if (i1 < 0) i1 = 0;
+	j1 -= 5;
+	if (j1 < 0) j1 = 0;
+
+	int LESS_HEIGHT = CHUNK_HEIGHT;
+	int LESS_WIDTH = CHUNK_WIDTH;
+	if (CHUNK_HEIGHT - i1 > 15) LESS_HEIGHT = i1+15;
+	if (CHUNK_WIDTH -  j1 > 15) LESS_WIDTH = j1+15;
+
+	for (int i = i1; i < LESS_HEIGHT; ++i)
+		for (int j = j1; j < LESS_WIDTH; ++j)
 		{
 			if (chunk.tilemap[i][j] != nullptr && !(chunk.tilemap[i][j]->passable())) {
 				sf::FloatRect characterBounds1 = character.getGlobalBounds();
@@ -336,6 +408,7 @@ void Player::update_statement(const sf::Time delta_time, const Chunk& chunk)
 
 
 				if (blockBounds.intersects(nextPos)) {
+					std::cout << "i" << i << " j" << j << std::endl;
 
 					// bottom collision
 					if (characterBounds.top < blockBounds.top
@@ -483,7 +556,7 @@ void Game::boot_screen()
 	//text.setOutlineColor(sf::Color::Red);
 	text.setFillColor(sf::Color::Red);
 	text.setStyle(sf::Text::Bold);
-	text.setString("Добро пожаловать в нашу игру!\nPress SPACE to start:)");
+	text.setString("Welcome to our game!\nPress SPACE to start:)");
 	text.setPosition(mysetts.get_width()/4.5f, mysetts.get_height()/2.4f);
 	
 
@@ -545,53 +618,53 @@ Game::Game() : g_window(sf::VideoMode(mysetts.get_width(), mysetts.get_height())
 	// generating map for tests
 	// of course, it wouldnt be here
 
-	for (int i = 14; i < CHUNK_HEIGHT; ++i)
+	for (int i = 20; i < 22; ++i)
 		for (int j = 0; j < CHUNK_WIDTH; ++j)
 		{
 			chunk.tilemap[i][j] = new Block;
 			chunk.tilemap[i][j]->set_coordinates(sf::Vector2f(j * 32.f, i * 32.f));
 		}
-	chunk.tilemap[13][15] = new Block;
-	chunk.tilemap[13][15]->set_coordinates(sf::Vector2f(15 * 32.f, 13 * 32.f));
+	chunk.tilemap[20][17] = new Block;
+	chunk.tilemap[20][17]->set_coordinates(sf::Vector2f(17 * 32.f, 20 * 32.f));
 
-	chunk.tilemap[13][16] = new Block;
-	chunk.tilemap[13][16]->set_coordinates(sf::Vector2f(16 * 32.f, 13 * 32.f));
+	chunk.tilemap[19][16] = new Block;
+	chunk.tilemap[19][16]->set_coordinates(sf::Vector2f(16 * 32.f, 19 * 32.f));
 
-	chunk.tilemap[12][16] = new Block;
-	chunk.tilemap[12][16]->set_coordinates(sf::Vector2f(16 * 32.f, 12 * 32.f));
+	chunk.tilemap[18][16] = new Block;
+	chunk.tilemap[18][16]->set_coordinates(sf::Vector2f(16 * 32.f, 18 * 32.f));
 
-	chunk.tilemap[11][17] = new Block;
-	chunk.tilemap[11][17]->set_coordinates(sf::Vector2f(17 * 32.f, 11 * 32.f));
+	chunk.tilemap[16][17] = new Block;
+	chunk.tilemap[16][17]->set_coordinates(sf::Vector2f(17 * 32.f, 16 * 32.f));
 
-	chunk.tilemap[9][14] = new Block;
-	chunk.tilemap[9][14]->set_coordinates(sf::Vector2f(14 * 32.f, 9 * 32.f));
+	chunk.tilemap[15][14] = new Block;
+	chunk.tilemap[15][14]->set_coordinates(sf::Vector2f(14 * 32.f, 15 * 32.f));
 
-	chunk.tilemap[13][19] = new Block;
-	chunk.tilemap[13][19]->set_coordinates(sf::Vector2f(19 * 32.f, 13 * 32.f));
+	chunk.tilemap[19][19] = new Block;
+	chunk.tilemap[19][19]->set_coordinates(sf::Vector2f(19 * 32.f, 19 * 32.f));
 
-	chunk.tilemap[9][12] = new Block;
-	chunk.tilemap[9][12]->set_coordinates(sf::Vector2f(12 * 32.f, 9 * 32.f));
+	chunk.tilemap[15][12] = new Block;
+	chunk.tilemap[15][12]->set_coordinates(sf::Vector2f(12 * 32.f, 15 * 32.f));
 
-	chunk.tilemap[9][10] = new Block;
-	chunk.tilemap[9][10]->set_coordinates(sf::Vector2f(10 * 32.f, 9 * 32.f));
+	chunk.tilemap[15][10] = new Block;
+	chunk.tilemap[15][10]->set_coordinates(sf::Vector2f(10 * 32.f, 15 * 32.f));
 
-	chunk.tilemap[10][19] = new Block;
-	chunk.tilemap[10][19]->set_coordinates(sf::Vector2f(19 * 32.f, 10 * 32.f));
+	chunk.tilemap[16][19] = new Block;
+	chunk.tilemap[16][19]->set_coordinates(sf::Vector2f(19 * 32.f, 16 * 32.f));
 
-	chunk.tilemap[10][9] = new Block;
-	chunk.tilemap[10][9]->set_coordinates(sf::Vector2f(9 * 32.f, 10 * 32.f));
+	chunk.tilemap[16][9] = new Block;
+	chunk.tilemap[16][9]->set_coordinates(sf::Vector2f(9 * 32.f, 16 * 32.f));
 
-	chunk.tilemap[11][7] = new Block;
-	chunk.tilemap[11][7]->set_coordinates(sf::Vector2f(7 * 32.f, 11 * 32.f));
+	chunk.tilemap[17][7] = new Block;
+	chunk.tilemap[17][7]->set_coordinates(sf::Vector2f(7 * 32.f, 17 * 32.f));
 
-	chunk.tilemap[12][6] = new Block;
-	chunk.tilemap[12][6]->set_coordinates(sf::Vector2f(6 * 32.f, 12 * 32.f));
+	chunk.tilemap[18][6] = new Block;
+	chunk.tilemap[18][6]->set_coordinates(sf::Vector2f(6 * 32.f, 18 * 32.f));
 
-	chunk.tilemap[13][5] = new Block;
-	chunk.tilemap[13][5]->set_coordinates(sf::Vector2f(5 * 32.f, 13 * 32.f));
+	chunk.tilemap[19][5] = new Block;
+	chunk.tilemap[19][5]->set_coordinates(sf::Vector2f(5 * 32.f, 19 * 32.f));
 
-	chunk.tilemap[13][0] = new Block;
-	chunk.tilemap[13][0]->set_coordinates(sf::Vector2f(0 * 32.f, 13 * 32.f));
+	chunk.tilemap[19][0] = new Block;
+	chunk.tilemap[19][0]->set_coordinates(sf::Vector2f(0 * 32.f, 19 * 32.f));
 }
 
 void Game::run()
