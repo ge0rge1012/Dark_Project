@@ -1,5 +1,4 @@
 #include "EngineClasses.h"
-
 //____________________________________________________________________
 
 /** Textures chould be an hierarchy, like
@@ -12,30 +11,7 @@
 */
 
 settings mysetts;
-
-TextureHolder::TextureHolder() { }
-
-void TextureHolder::load(Textures::ID id, const std::string& filename)
-{
-	std::unique_ptr<sf::Texture> texture(new sf::Texture());
-	texture->loadFromFile(filename);
-
-	gTextureMap.insert(std::make_pair(id, std::move(texture)));
-}
-//elencomment
-sf::Texture& TextureHolder::get(Textures::ID id)
-{
-	auto found = gTextureMap.find(id);
-	return *found->second;
-}
-
-const sf::Texture& TextureHolder::get(Textures::ID id) const
-{
-	auto found = gTextureMap.find(id);
-	return *found->second;
-}
-
-// in future make by singleton/think about better decision
+sf::View g_view;
 TextureHolder texture_holder;
 
 //____________________________________________________________________
@@ -67,44 +43,6 @@ FontHolder font_holder;
 
 //____________________________________________________________________
 
-bool Block::passable()
-{
-	return isPassable;
-}
-
-Block::Block()
-{
-	sf::Texture& texture = texture_holder.get(Textures::BLOCKS);
-	block.setTexture(texture);
-}
-
-void Block::drawU(sf::RenderWindow& window)
-{
-	block.setPosition(coordinates);
-	window.draw(block);
-	//std::cout << coordinates.x << " " << coordinates.y << std::endl;
-}
-
-void Block::set_coordinates(const sf::Vector2f& coord)
-{
-	coordinates = coord;
-}
-
-sf::FloatRect Block::getGlobalBound()
-{
-	return block.getGlobalBounds();
-}
-
-//____________________________________________________________________
-
-Chunk::Chunk()
-{
-	for (int i = 0; i < 15; ++i)
-		for (int j = 0; j < 20; ++j)
-			tilemap[i][j] = nullptr;
-}
-
-//____________________________________________________________________
 
 NickName::NickName()
 {
@@ -274,12 +212,26 @@ std::string UserInput::get_input()
 
 //____________________________________________________________________
 
+void set_view(float x, float y)
+{
+	if (x < 170) x = 170;
+	if (x > CHUNK_WIDTH * 32 - 370) x = CHUNK_WIDTH * 32 - 370;
+	//if (y < 240) y = 240;
+	//if (y > 554) y = 554;
+
+	g_view.setCenter(x + 100, y);
+}
+
+//____________________________________________________________________
+
 Player::Player()
 {
 	sf::Texture& texture = texture_holder.get(Textures::VAMPIRE);
 	character.setTexture(texture);
 	player_position = sf::Vector2f(50.f, 390.f);
 	character.setPosition(player_position);
+
+	//p_hitbox = sf::FloatRect();
 }
 
 void Player::drawU(sf::RenderWindow& window)
@@ -303,27 +255,97 @@ void Player::key_reaction(sf::Keyboard::Key key, bool isPressed)
 	else if (key == sf::Keyboard::D)   isMovingRigth = isPressed;
 }
 
-void Player::update_statement(const sf::Time delta_time, const Chunk& chunk)
+void Player::update_statement(const sf::Time delta_time, const World& chunk)
 {
 	sf::Vector2f movement(0.f, 0.f);
 	sf::FloatRect nextPos;
 	bool jump = false;
+	const float x_crop = 8.f;
 
 
 	// should be done with calcing bottom block, just palliative
 	bool smth_is_under = false;
-	for (int i = 0; i < CHUNK_HEIGHT; ++i)
-		for (int j = 0; j < CHUNK_WIDTH; ++j)
+
+	/*const int lit_chunk_size = 10;
+	std::array<std::array<Block*, lit_chunk_size>, lit_chunk_size> lit_chunk;
+	for (int i = 0; i < lit_chunk_size; ++i)
+		for (int j = 0; j < lit_chunk_size; ++j)
+			lit_chunk[i][j] = nullptr;*/
+
+	/*// getting left top coordinate of little chunk to check block collisions only there
+	// lots of validation
+	// a kind of optimisation
+	int i = player_position.x;
+	i = (i - (i % 32)) / 32;
+	int j = player_position.y;
+	j = (j - (j % 32)) / 32;
+
+
+	i -= 5;
+	j -= 5;
+	if (i < 0) i = 0;
+	if (i > CHUNK_WIDTH - 10) i = CHUNK_WIDTH - 10;
+	if (j < 0) j = 0;
+	if (j > CHUNK_HEIGHT - 10) j = CHUNK_HEIGHT - 10;
+
+
+	// swapping, because we need:)
+	int temp = i;
+	i = j;
+	j = temp;
+
+	if (i > CHUNK_HEIGHT - 5) i = CHUNK_HEIGHT - 5;
+	if (j > CHUNK_WIDTH - 5) j = CHUNK_WIDTH - 5;
+
+	std::cout << i << "h " << j << "w ";
+
+	for (int i1 = 0; i1 < lit_chunk_size; ++i, ++i1)
+		for (int j1 = 0; j1 < lit_chunk_size; ++j, ++j1)
+		{
+			//std::cout << i1 << " " << j1 << " ";
+			lit_chunk[i1][j1] = chunk.tilemap[i][j];
+		}
+	if (lit_chunk[4][4] != nullptr)
+	{
+		sf::FloatRect check = lit_chunk[4][4]->getGlobalBound();
+		std::cout << check.left << " " << check.top << std::endl;
+	}*/
+
+	int i1 = player_position.x;
+	i1 /= 32;
+	int j1 = player_position.y;
+	j1 /= 32;
+
+	int temp = i1;
+	i1 = j1;
+	j1 = temp;
+
+	i1 -= 5;
+	if (i1 < 0) i1 = 0;
+	j1 -= 5;
+	if (j1 < 0) j1 = 0;
+
+	int LESS_HEIGHT = CHUNK_HEIGHT;
+	int LESS_WIDTH = CHUNK_WIDTH;
+	if (CHUNK_HEIGHT - i1 > 15) LESS_HEIGHT = i1+15;
+	if (CHUNK_WIDTH -  j1 > 15) LESS_WIDTH = j1+15;
+
+	for (int i = i1; i < LESS_HEIGHT; ++i)
+		for (int j = j1; j < LESS_WIDTH; ++j)
 		{
 			if (chunk.tilemap[i][j] != nullptr && !(chunk.tilemap[i][j]->passable())) {
-				sf::FloatRect characterBounds = character.getGlobalBounds();
+				sf::FloatRect characterBounds1 = character.getGlobalBounds();
+				sf::FloatRect characterBounds(characterBounds1.left + x_crop/2, characterBounds1.top, characterBounds1.width-x_crop, characterBounds1.height);
 				sf::FloatRect blockBounds = chunk.tilemap[i][j]->getGlobalBound();
+
+				//std::cout << characterBounds.width << " " << characterBounds.height;
 
 				nextPos = characterBounds;
 				nextPos.top += gravity;
 
 
 				if (blockBounds.intersects(nextPos)) {
+					std::cout << "i" << i << " j" << j << std::endl;
 
 					// bottom collision
 					if (characterBounds.top < blockBounds.top
@@ -357,11 +379,12 @@ void Player::update_statement(const sf::Time delta_time, const Chunk& chunk)
 	}
 
 
-	for (int i = 0; i < CHUNK_HEIGHT; ++i)
-		for (int j = 0; j < CHUNK_WIDTH; ++j)
+	for (int i = 0; i < WORLD_HEIGHT; ++i)
+		for (int j = 0; j < WORLD_WIDTH; ++j)
 		{
 			if (chunk.tilemap[i][j] != nullptr && !(chunk.tilemap[i][j]->passable())) {
-				sf::FloatRect characterBounds = character.getGlobalBounds();
+				sf::FloatRect characterBounds1 = character.getGlobalBounds();
+				sf::FloatRect characterBounds(characterBounds1.left + x_crop / 2, characterBounds1.top, characterBounds1.width - x_crop, characterBounds1.height);
 				sf::FloatRect blockBounds = chunk.tilemap[i][j]->getGlobalBound();
 
 				nextPos = characterBounds;
@@ -369,7 +392,7 @@ void Player::update_statement(const sf::Time delta_time, const Chunk& chunk)
 				nextPos.top += movement.y * delta_time.asSeconds();
 
 				if (blockBounds.intersects(nextPos)) {
-					std::cout << "Collision! ";
+					// std::cout << "Collision! ";
 
 					// bottom collision
 					if (characterBounds.top < blockBounds.top
@@ -379,10 +402,10 @@ void Player::update_statement(const sf::Time delta_time, const Chunk& chunk)
 						)
 					{
 						onGround = true;
-						std::cout << " BOTCOL ";
+						// std::cout << " BOTCOL ";
 						if (!jump) movement.y = 0.f;
 						if (jump) { jump = false; }
-						character.setPosition(characterBounds.left, blockBounds.top - characterBounds.height);
+						character.setPosition(characterBounds.left - x_crop / 2, blockBounds.top - characterBounds.height);
 					}
 
 					// top collision
@@ -394,7 +417,7 @@ void Player::update_statement(const sf::Time delta_time, const Chunk& chunk)
 					{
 						movement.y = 0.f;
 						gravityAccum = 0;
-						character.setPosition(characterBounds.left, blockBounds.top + blockBounds.height);
+						character.setPosition(characterBounds.left - x_crop / 2, blockBounds.top + blockBounds.height);
 					}
 
 					// right collision
@@ -405,7 +428,7 @@ void Player::update_statement(const sf::Time delta_time, const Chunk& chunk)
 						)
 					{
 						movement.x = 0.f;
-						character.setPosition(blockBounds.left - characterBounds.width, characterBounds.top);
+						character.setPosition(blockBounds.left - characterBounds.width - x_crop/2, characterBounds.top);
 					}
 
 					// left collision
@@ -416,12 +439,11 @@ void Player::update_statement(const sf::Time delta_time, const Chunk& chunk)
 						)
 					{
 						movement.x = 0.f;
-						character.setPosition(blockBounds.left + blockBounds.width, characterBounds.top);
+						character.setPosition(blockBounds.left + blockBounds.width - x_crop/2, characterBounds.top);
 					}
 				}
 			}
 		}
-
 
 	if (jump) {
 		movement.y += gravityAccum;
@@ -431,6 +453,8 @@ void Player::update_statement(const sf::Time delta_time, const Chunk& chunk)
 	character.move(movement * delta_time.asSeconds());
 	player_position.x = character.getGlobalBounds().left;
 	player_position.y = character.getGlobalBounds().top;
+
+	set_view(player_position.x, player_position.y);
 }
 
 void Player::screen_collision(int win_width, int win_height)
@@ -441,12 +465,12 @@ void Player::screen_collision(int win_width, int win_height)
 	if (character.getPosition().y < 0)
 		character.setPosition(character.getPosition().x, 0);
 
-	if (character.getPosition().x + character.getGlobalBounds().width > win_width)
-		character.setPosition(win_width - character.getGlobalBounds().width, character.getPosition().y);
+	if (character.getPosition().x + character.getGlobalBounds().width > WORLD_WIDTH*32)
+		character.setPosition(WORLD_WIDTH*32 - character.getGlobalBounds().width, character.getPosition().y);
 
-	if (character.getPosition().y + character.getGlobalBounds().height > win_height)
+	if (character.getPosition().y + character.getGlobalBounds().height > WORLD_HEIGHT*32)
 	{
-		character.setPosition(character.getPosition().x, win_height - character.getGlobalBounds().height);
+		character.setPosition(character.getPosition().x, WORLD_HEIGHT*32 - character.getGlobalBounds().height);
 	}
 }
 
@@ -469,7 +493,7 @@ void Game::boot_screen()
 	//text.setOutlineColor(sf::Color::Red);
 	text.setFillColor(sf::Color::Red);
 	text.setStyle(sf::Text::Bold);
-	text.setString("����� ���������� � ���� ����!\nPress SPACE to start:)");
+	text.setString("Welcome to our game!\nPress SPACE to start:)");
 	text.setPosition(mysetts.get_width()/4.5f, mysetts.get_height()/2.4f);
 	
 
@@ -526,64 +550,51 @@ void Game::start_game()
 Game::Game() : g_window(sf::VideoMode(mysetts.get_width(), mysetts.get_height()), "game_project")
 {
 	player = new Player();
+	g_view.reset(sf::FloatRect(0, 0, 640, 480));
 
 	// generating map for tests
 	// of course, it wouldnt be here
-
-	for (int i = 14; i < 15; ++i)
-		for (int j = 0; j < 20; ++j)
 		{
-			chunk.tilemap[i][j] = new Block;
-			chunk.tilemap[i][j]->set_coordinates(sf::Vector2f(j * 32.f, i * 32.f));
+			chunk.set_block(i, j, 0);
 		}
-	chunk.tilemap[13][15] = new Block;
-	chunk.tilemap[13][15]->set_coordinates(sf::Vector2f(15 * 32.f, 13 * 32.f));
+  
+	chunk.set_block(13, 15, 0);
 
-	chunk.tilemap[13][16] = new Block;
-	chunk.tilemap[13][16]->set_coordinates(sf::Vector2f(16 * 32.f, 13 * 32.f));
+	chunk.set_block(13, 16, 0);
 
-	chunk.tilemap[12][16] = new Block;
-	chunk.tilemap[12][16]->set_coordinates(sf::Vector2f(16 * 32.f, 12 * 32.f));
+	chunk.set_block(12, 15, 0);
 
-	chunk.tilemap[11][17] = new Block;
-	chunk.tilemap[11][17]->set_coordinates(sf::Vector2f(17 * 32.f, 11 * 32.f));
+	chunk.set_block(11, 17, 0);
 
-	chunk.tilemap[9][14] = new Block;
-	chunk.tilemap[9][14]->set_coordinates(sf::Vector2f(14 * 32.f, 9 * 32.f));
+	chunk.set_block(9, 14, 0);
 
-	chunk.tilemap[13][19] = new Block;
-	chunk.tilemap[13][19]->set_coordinates(sf::Vector2f(19 * 32.f, 13 * 32.f));
+	chunk.set_block(13, 19, 0);
 
-	chunk.tilemap[9][12] = new Block;
-	chunk.tilemap[9][12]->set_coordinates(sf::Vector2f(12 * 32.f, 9 * 32.f));
+	chunk.set_block(9, 12, 0);
 
-	chunk.tilemap[9][10] = new Block;
-	chunk.tilemap[9][10]->set_coordinates(sf::Vector2f(10 * 32.f, 9 * 32.f));
+	chunk.set_block(9, 10, 0);
 
-	chunk.tilemap[10][19] = new Block;
-	chunk.tilemap[10][19]->set_coordinates(sf::Vector2f(19 * 32.f, 10 * 32.f));
+	chunk.set_block(10, 19, 0);
 
-	chunk.tilemap[10][9] = new Block;
-	chunk.tilemap[10][9]->set_coordinates(sf::Vector2f(9 * 32.f, 10 * 32.f));
+	chunk.set_block(10, 9, 0);
 
-	chunk.tilemap[11][7] = new Block;
-	chunk.tilemap[11][7]->set_coordinates(sf::Vector2f(7 * 32.f, 11 * 32.f));
+	chunk.set_block(11, 7, 0);
 
-	chunk.tilemap[12][6] = new Block;
-	chunk.tilemap[12][6]->set_coordinates(sf::Vector2f(6 * 32.f, 12 * 32.f));
+	chunk.set_block(12, 6, 0);
 
-	chunk.tilemap[13][5] = new Block;
-	chunk.tilemap[13][5]->set_coordinates(sf::Vector2f(5 * 32.f, 13 * 32.f));
+	chunk.set_block(13, 5, 0);
+
+	chunk.set_block(13, 0, 0);
 }
 
 void Game::run()
 {
-	boot_screen();
+	/*boot_screen();
 
 	UserInput inp;
 	nick = inp.inputting(g_window);
 	nick_under_head.set_string(nick);
-	nick_under_head.set_coordinates(player->getplayercoordinateX(), player->getplayercoordinateY());
+	nick_under_head.set_coordinates(player->getplayercoordinateX(), player->getplayercoordinateY());*/
 
 	sf::Clock clock;
 	sf::Time timeSinceLastUpdate = sf::Time::Zero;
@@ -635,6 +646,7 @@ void Game::update(const sf::Time delta_time)
 
 void Game::render()
 {
+	g_window.setView(g_view);
 	g_window.clear();                  // making black (without anything)
 	draw_objects();                    // drawing objects (for now only one)
 	g_window.display();                // drawing display (screen)
@@ -654,8 +666,8 @@ void Game::draw_objects()              // so here we can order for all objects t
 	player->drawU(g_window);
 
 	// this shit is needed to be drawed not here
-	for (int i = 0; i < 15; ++i)
-		for (int j = 0; j < 20; ++j)
+	for (int i = 0; i < WORLD_HEIGHT; ++i)
+		for (int j = 0; j < WORLD_WIDTH; ++j)
 			if (chunk.tilemap[i][j] != nullptr)
 				chunk.tilemap[i][j]->drawU(g_window);
 
