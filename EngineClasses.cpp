@@ -214,8 +214,15 @@ std::string UserInput::get_input()
 
 void set_view(float x, float y)
 {
+	if (x < 170) x = 170;
+	if (x > CHUNK_WIDTH * 32 - 370) x = CHUNK_WIDTH * 32 - 370;
+	//if (y < 240) y = 240;
+	//if (y > 554) y = 554;
+
 	g_view.setCenter(x + 100, y);
 }
+
+//____________________________________________________________________
 
 Player::Player()
 {
@@ -258,8 +265,73 @@ void Player::update_statement(const sf::Time delta_time, const World& chunk)
 
 	// should be done with calcing bottom block, just palliative
 	bool smth_is_under = false;
-	for (int i = 0; i < WORLD_HEIGHT; ++i)
-		for (int j = 0; j < WORLD_WIDTH; ++j)
+
+	/*const int lit_chunk_size = 10;
+	std::array<std::array<Block*, lit_chunk_size>, lit_chunk_size> lit_chunk;
+	for (int i = 0; i < lit_chunk_size; ++i)
+		for (int j = 0; j < lit_chunk_size; ++j)
+			lit_chunk[i][j] = nullptr;*/
+
+	/*// getting left top coordinate of little chunk to check block collisions only there
+	// lots of validation
+	// a kind of optimisation
+	int i = player_position.x;
+	i = (i - (i % 32)) / 32;
+	int j = player_position.y;
+	j = (j - (j % 32)) / 32;
+
+
+	i -= 5;
+	j -= 5;
+	if (i < 0) i = 0;
+	if (i > CHUNK_WIDTH - 10) i = CHUNK_WIDTH - 10;
+	if (j < 0) j = 0;
+	if (j > CHUNK_HEIGHT - 10) j = CHUNK_HEIGHT - 10;
+
+
+	// swapping, because we need:)
+	int temp = i;
+	i = j;
+	j = temp;
+
+	if (i > CHUNK_HEIGHT - 5) i = CHUNK_HEIGHT - 5;
+	if (j > CHUNK_WIDTH - 5) j = CHUNK_WIDTH - 5;
+
+	std::cout << i << "h " << j << "w ";
+
+	for (int i1 = 0; i1 < lit_chunk_size; ++i, ++i1)
+		for (int j1 = 0; j1 < lit_chunk_size; ++j, ++j1)
+		{
+			//std::cout << i1 << " " << j1 << " ";
+			lit_chunk[i1][j1] = chunk.tilemap[i][j];
+		}
+	if (lit_chunk[4][4] != nullptr)
+	{
+		sf::FloatRect check = lit_chunk[4][4]->getGlobalBound();
+		std::cout << check.left << " " << check.top << std::endl;
+	}*/
+
+	int i1 = player_position.x;
+	i1 /= 32;
+	int j1 = player_position.y;
+	j1 /= 32;
+
+	int temp = i1;
+	i1 = j1;
+	j1 = temp;
+
+	i1 -= 5;
+	if (i1 < 0) i1 = 0;
+	j1 -= 5;
+	if (j1 < 0) j1 = 0;
+
+	int LESS_HEIGHT = CHUNK_HEIGHT;
+	int LESS_WIDTH = CHUNK_WIDTH;
+	if (CHUNK_HEIGHT - i1 > 15) LESS_HEIGHT = i1+15;
+	if (CHUNK_WIDTH -  j1 > 15) LESS_WIDTH = j1+15;
+
+	for (int i = i1; i < LESS_HEIGHT; ++i)
+		for (int j = j1; j < LESS_WIDTH; ++j)
 		{
 			if (chunk.tilemap[i][j] != nullptr && !(chunk.tilemap[i][j]->passable())) {
 				sf::FloatRect characterBounds1 = character.getGlobalBounds();
@@ -273,6 +345,7 @@ void Player::update_statement(const sf::Time delta_time, const World& chunk)
 
 
 				if (blockBounds.intersects(nextPos)) {
+					std::cout << "i" << i << " j" << j << std::endl;
 
 					// bottom collision
 					if (characterBounds.top < blockBounds.top
@@ -420,7 +493,7 @@ void Game::boot_screen()
 	//text.setOutlineColor(sf::Color::Red);
 	text.setFillColor(sf::Color::Red);
 	text.setStyle(sf::Text::Bold);
-	text.setString("Добро пожаловать в нашу игру!\nPress SPACE to start:)");
+	text.setString("Welcome to our game!\nPress SPACE to start:)");
 	text.setPosition(mysetts.get_width()/4.5f, mysetts.get_height()/2.4f);
 	
 
@@ -481,12 +554,10 @@ Game::Game() : g_window(sf::VideoMode(mysetts.get_width(), mysetts.get_height())
 
 	// generating map for tests
 	// of course, it wouldnt be here
-
-	for (int i = 14; i < WORLD_HEIGHT; ++i)
-		for (int j = 0; j < WORLD_WIDTH; ++j)
 		{
 			chunk.set_block(i, j, 0);
 		}
+  
 	chunk.set_block(13, 15, 0);
 
 	chunk.set_block(13, 16, 0);
@@ -515,6 +586,7 @@ Game::Game() : g_window(sf::VideoMode(mysetts.get_width(), mysetts.get_height())
 
 	chunk.set_block(13, 0, 0);
 }
+
 void Game::run()
 {
 	/*boot_screen();
