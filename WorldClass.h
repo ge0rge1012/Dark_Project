@@ -44,6 +44,9 @@ public:
 	std::array<std::array<Block*, WORLD_WIDTH>, WORLD_HEIGHT> tilemap;
 
 	World();
+	void create_surface();
+	void create_cave(int x, int y);
+	void create_dungeon();
 	void generate_world();
 	void set_block(int x, int y, int id);
 	void delete_block(int x, int y);
