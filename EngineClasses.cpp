@@ -214,8 +214,8 @@ std::string UserInput::get_input()
 
 void set_view(float x, float y)
 {
-	if (x < 170) x = 170;
-	if (x > CHUNK_WIDTH * 32 - 370) x = CHUNK_WIDTH * 32 - 370;
+	if (x < 220) x = 220;
+	if (x > WORLD_WIDTH * 32 - 420) x = WORLD_WIDTH * 32 - 420;
 	//if (y < 240) y = 240;
 	//if (y > 554) y = 554;
 
@@ -228,6 +228,7 @@ Player::Player()
 {
 	sf::Texture& texture = texture_holder.get(Textures::VAMPIRE);
 	character.setTexture(texture);
+	character.setTextureRect(sf::IntRect(0, 0, 32, 60));
 	player_position = sf::Vector2f(50.f, 390.f);
 	character.setPosition(player_position);
 
@@ -263,59 +264,18 @@ void Player::update_statement(const sf::Time delta_time, const World& chunk)
 	const float x_crop = 8.f;
 
 
-	// should be done with calcing bottom block, just palliative
 	bool smth_is_under = false;
 
-	/*const int lit_chunk_size = 10;
-	std::array<std::array<Block*, lit_chunk_size>, lit_chunk_size> lit_chunk;
-	for (int i = 0; i < lit_chunk_size; ++i)
-		for (int j = 0; j < lit_chunk_size; ++j)
-			lit_chunk[i][j] = nullptr;*/
-
-	/*// getting left top coordinate of little chunk to check block collisions only there
+	// getting left top coordinate of little chunk to check block collisions only there
 	// lots of validation
 	// a kind of optimisation
-	int i = player_position.x;
-	i = (i - (i % 32)) / 32;
-	int j = player_position.y;
-	j = (j - (j % 32)) / 32;
-
-
-	i -= 5;
-	j -= 5;
-	if (i < 0) i = 0;
-	if (i > CHUNK_WIDTH - 10) i = CHUNK_WIDTH - 10;
-	if (j < 0) j = 0;
-	if (j > CHUNK_HEIGHT - 10) j = CHUNK_HEIGHT - 10;
-
-
-	// swapping, because we need:)
-	int temp = i;
-	i = j;
-	j = temp;
-
-	if (i > CHUNK_HEIGHT - 5) i = CHUNK_HEIGHT - 5;
-	if (j > CHUNK_WIDTH - 5) j = CHUNK_WIDTH - 5;
-
-	std::cout << i << "h " << j << "w ";
-
-	for (int i1 = 0; i1 < lit_chunk_size; ++i, ++i1)
-		for (int j1 = 0; j1 < lit_chunk_size; ++j, ++j1)
-		{
-			//std::cout << i1 << " " << j1 << " ";
-			lit_chunk[i1][j1] = chunk.tilemap[i][j];
-		}
-	if (lit_chunk[4][4] != nullptr)
-	{
-		sf::FloatRect check = lit_chunk[4][4]->getGlobalBound();
-		std::cout << check.left << " " << check.top << std::endl;
-	}*/
 
 	int i1 = player_position.x;
 	i1 /= 32;
 	int j1 = player_position.y;
 	j1 /= 32;
 
+	// swapping, because we need:)
 	int temp = i1;
 	i1 = j1;
 	j1 = temp;
@@ -325,10 +285,10 @@ void Player::update_statement(const sf::Time delta_time, const World& chunk)
 	j1 -= 5;
 	if (j1 < 0) j1 = 0;
 
-	int LESS_HEIGHT = CHUNK_HEIGHT;
-	int LESS_WIDTH = CHUNK_WIDTH;
-	if (CHUNK_HEIGHT - i1 > 15) LESS_HEIGHT = i1+15;
-	if (CHUNK_WIDTH -  j1 > 15) LESS_WIDTH = j1+15;
+	int LESS_HEIGHT = WORLD_HEIGHT;
+	int LESS_WIDTH = WORLD_WIDTH;
+	if (WORLD_HEIGHT - i1 > 15) LESS_HEIGHT = i1+15;
+	if (WORLD_WIDTH -  j1 > 15) LESS_WIDTH = j1+15;
 
 	for (int i = i1; i < LESS_HEIGHT; ++i)
 		for (int j = j1; j < LESS_WIDTH; ++j)
@@ -378,9 +338,27 @@ void Player::update_statement(const sf::Time delta_time, const World& chunk)
 		}
 	}
 
+	i1 = player_position.x;
+	i1 /= 32;
+	j1 = player_position.y;
+	j1 /= 32;
 
-	for (int i = 0; i < WORLD_HEIGHT; ++i)
-		for (int j = 0; j < WORLD_WIDTH; ++j)
+	temp = i1;
+	i1 = j1;
+	j1 = temp;
+
+	i1 -= 5;
+	if (i1 < 0) i1 = 0;
+	j1 -= 5;
+	if (j1 < 0) j1 = 0;
+
+	LESS_HEIGHT = WORLD_HEIGHT;
+	LESS_WIDTH = WORLD_WIDTH;
+	if (WORLD_HEIGHT - i1 > 15) LESS_HEIGHT = i1 + 15;
+	if (WORLD_WIDTH - j1 > 15) LESS_WIDTH = j1 + 15;
+
+	for (int i = i1; i < LESS_HEIGHT; ++i)
+		for (int j = j1; j < LESS_WIDTH; ++j)
 		{
 			if (chunk.tilemap[i][j] != nullptr && !(chunk.tilemap[i][j]->passable())) {
 				sf::FloatRect characterBounds1 = character.getGlobalBounds();
@@ -538,7 +516,7 @@ void Game::start_game()
 	// make configurations: game mode, choose character model and etc.
 	// so main menu will be opened here in future
 	texture_holder.load(Textures::VAMPIRE, "media/textures/animals/gg_32_64.png"); //changed texture
-	texture_holder.load(Textures::BLOCKS, "media/textures/blocks/ground_orange.png");
+	texture_holder.load(Textures::GRASS, "media/textures/blocks/ground_orange.png");
 	font_holder.load(Fonts::OLD, "media/fonts/CyrilicOld.ttf");
 
 	Game* game = get_game_object();
@@ -552,39 +530,7 @@ Game::Game() : g_window(sf::VideoMode(mysetts.get_width(), mysetts.get_height())
 	player = new Player();
 	g_view.reset(sf::FloatRect(0, 0, 640, 480));
 
-	// generating map for tests
-	// of course, it wouldnt be here
-		{
-			chunk.set_block(i, j, 0);
-		}
-  
-	chunk.set_block(13, 15, 0);
-
-	chunk.set_block(13, 16, 0);
-
-	chunk.set_block(12, 15, 0);
-
-	chunk.set_block(11, 17, 0);
-
-	chunk.set_block(9, 14, 0);
-
-	chunk.set_block(13, 19, 0);
-
-	chunk.set_block(9, 12, 0);
-
-	chunk.set_block(9, 10, 0);
-
-	chunk.set_block(10, 19, 0);
-
-	chunk.set_block(10, 9, 0);
-
-	chunk.set_block(11, 7, 0);
-
-	chunk.set_block(12, 6, 0);
-
-	chunk.set_block(13, 5, 0);
-
-	chunk.set_block(13, 0, 0);
+	chunk.test_world();
 }
 
 void Game::run()
