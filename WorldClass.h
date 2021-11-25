@@ -1,13 +1,14 @@
 #pragma once
 #include <array>
 #include <SFML/Graphics.hpp>
+#include <iostream>
 
-const int WORLD_WIDTH = 50;
-const int WORLD_HEIGHT = 20;
+const int WORLD_WIDTH = 1000;
+const int WORLD_HEIGHT = 100;
 
 namespace Textures
 {
-	enum ID { VAMPIRE, BLOCKS, ITEMS };
+	enum ID { VAMPIRE, GRASS, ITEMS };
 }
 
 class TextureHolder
@@ -26,15 +27,19 @@ class Block
 {
 public:
 	Block();
+	Block(Textures::ID id);
 	void drawU(sf::RenderWindow& window);
 	void set_coordinates(const sf::Vector2f& coord);
 	sf::FloatRect getGlobalBound();
 	bool passable();
+	bool breakable();
 
 
 private:
 	int id = 0;
 	bool isPassable = false;
+	bool isBreakable = false;
+
 	sf::Vector2f coordinates;
 	sf::Sprite block;
 };
@@ -48,7 +53,10 @@ public:
 	void create_cave(int x, int y);
 	void create_dungeon();
 	void generate_world();
-	void set_block(int x, int y, int id);
+	void set_block(int x, int y, Textures::ID id);
 	void delete_block(int x, int y);
 
+
+	// for test location
+	void test_world();
 };
