@@ -214,12 +214,31 @@ std::string UserInput::get_input()
 
 void set_view(float x, float y)
 {
-	if (x < 220) x = 220;
-	if (x > WORLD_WIDTH * 32 - 420) x = WORLD_WIDTH * 32 - 420;
-	//if (y < 240) y = 240;
-	//if (y > 554) y = 554;
+	
+	int x_cor = x;
+	int y_cor = y;
 
-	g_view.setCenter(x + 100, y);
+	/*sf::Vector2f cam_coord = g_view.getCenter();
+	int x_dif = cam_coord.x - x;
+
+	int y_dif = cam_coord.y - y;
+
+	if (x_dif > 5 * 32)
+		x_cor = x - 5 * 32;
+	else if (x_dif < 5 * 32)
+		x_cor = x + 5 * 32;
+	if (y_dif > 3 * 32)
+		y_cor = y - 3 * 32;
+	else if (y_dif < 3 * 32)
+		y_cor = y - 3 * 32;
+
+	//if (y < 240) y = 240;
+	//if (y > 554) y = 554;*/
+
+	if (x < 220) x_cor = 220;
+	if (x > WORLD_WIDTH * 32 - 420) x_cor = WORLD_WIDTH * 32 - 420;
+
+	g_view.setCenter(x_cor + 100, y_cor);
 }
 
 //____________________________________________________________________
@@ -280,15 +299,15 @@ void Player::update_statement(const sf::Time delta_time, const World& chunk)
 	i1 = j1;
 	j1 = temp;
 
-	i1 -= 5;
+	i1 -= 1;
 	if (i1 < 0) i1 = 0;
-	j1 -= 5;
+	j1 -= 3;
 	if (j1 < 0) j1 = 0;
 
 	int LESS_HEIGHT = WORLD_HEIGHT;
 	int LESS_WIDTH = WORLD_WIDTH;
-	if (WORLD_HEIGHT - i1 > 15) LESS_HEIGHT = i1+15;
-	if (WORLD_WIDTH -  j1 > 15) LESS_WIDTH = j1+15;
+	if (WORLD_HEIGHT - i1 > 6) LESS_HEIGHT = i1+6;
+	if (WORLD_WIDTH -  j1 > 6) LESS_WIDTH = j1+6;
 
 	for (int i = i1; i < LESS_HEIGHT; ++i)
 		for (int j = j1; j < LESS_WIDTH; ++j)
@@ -347,15 +366,15 @@ void Player::update_statement(const sf::Time delta_time, const World& chunk)
 	i1 = j1;
 	j1 = temp;
 
-	i1 -= 5;
+	i1 -= 3;
 	if (i1 < 0) i1 = 0;
-	j1 -= 5;
+	j1 -= 3;
 	if (j1 < 0) j1 = 0;
 
 	LESS_HEIGHT = WORLD_HEIGHT;
 	LESS_WIDTH = WORLD_WIDTH;
-	if (WORLD_HEIGHT - i1 > 15) LESS_HEIGHT = i1 + 15;
-	if (WORLD_WIDTH - j1 > 15) LESS_WIDTH = j1 + 15;
+	if (WORLD_HEIGHT - i1 > 8) LESS_HEIGHT = i1 + 8;
+	if (WORLD_WIDTH - j1 > 8) LESS_WIDTH = j1 + 8;
 
 	for (int i = i1; i < LESS_HEIGHT; ++i)
 		for (int j = j1; j < LESS_WIDTH; ++j)
@@ -443,8 +462,8 @@ void Player::screen_collision(int win_width, int win_height)
 	if (character.getPosition().y < 0)
 		character.setPosition(character.getPosition().x, 0);
 
-	if (character.getPosition().x + character.getGlobalBounds().width > WORLD_WIDTH*32)
-		character.setPosition(WORLD_WIDTH*32 - character.getGlobalBounds().width, character.getPosition().y);
+	if (character.getPosition().x + character.getGlobalBounds().width >= WORLD_WIDTH*32 - 32)
+		character.setPosition(WORLD_WIDTH*32 - character.getGlobalBounds().width - 32, character.getPosition().y);
 
 	if (character.getPosition().y + character.getGlobalBounds().height > WORLD_HEIGHT*32)
 	{
@@ -530,6 +549,7 @@ Game::Game() : g_window(sf::VideoMode(mysetts.get_width(), mysetts.get_height())
 {
 	player = new Player();
 	g_view.reset(sf::FloatRect(0, 0, 640, 480));
+	g_view.setCenter(player->getplayercoordinateX() + 100, player->getplayercoordinateY());
 
 	chunk.test_world();
 	chunk.add_enemy(sf::Vector2f(50.f, 390.f), Textures::ID::GREY);
@@ -615,11 +635,8 @@ void Game::draw_objects()              // so here we can order for all objects t
 {
 	player->drawU(g_window);
 
-	// this shit is needed to be drawed not here
-	for (int i = 0; i < WORLD_HEIGHT; ++i)
-		for (int j = 0; j < WORLD_WIDTH; ++j)
-			if (chunk.tilemap[i][j] != nullptr)
-				chunk.tilemap[i][j]->drawU(g_window);
+	chunk.drawU(g_window, sf::Vector2f(player->getplayercoordinateX(), player->getplayercoordinateY()));
+
 	for (auto it = chunk.enemies.begin(); it != chunk.enemies.end(); it++)
 		(*it).drawU(g_window);
 

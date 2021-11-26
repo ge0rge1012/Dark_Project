@@ -4,7 +4,7 @@
 #include <iostream>
 #include <list>
 
-const int WORLD_WIDTH = 1000;
+const int WORLD_WIDTH = 60;
 const int WORLD_HEIGHT = 100;
 
 class Enemy;
@@ -63,6 +63,7 @@ public:
 	void add_enemy(sf::Vector2f position, Textures::ID id);
 	// for test location
 	void test_world();
+	void drawU(sf::RenderWindow& window, sf::Vector2f p_coordinates);
 };
 
 //.............................................
