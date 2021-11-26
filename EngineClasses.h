@@ -16,7 +16,7 @@ const int CHUNK_HEIGHT = 15;
 
 namespace Textures
 {
-	enum ID { VAMPIRE, BLOCKS, ITEMS };
+	enum ID { VAMPIRE, BLOCKS, ITEMS };// something that we will not use
 }
 
 class TextureHolder
@@ -114,6 +114,7 @@ public:
 private:
 	void run();                  // starting game loop (main loop)
 	void boot_screen();
+	void prologue();
 	std::vector<std::vector<std::string>> tiles;
 
 

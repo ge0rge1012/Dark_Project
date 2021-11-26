@@ -29,6 +29,7 @@ TextureHolder modifiing:
 
 int main()
 {
+
 	Game::start_game(); // start game
 
 	return 0;

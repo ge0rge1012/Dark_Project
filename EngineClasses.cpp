@@ -1,4 +1,9 @@
 #include "EngineClasses.h"
+#include <fstream>
+#include <string>
+#include <sstream>
+//#include <locale>
+#include <windows.h>
 
 //____________________________________________________________________
 
@@ -292,51 +297,127 @@ Game* Game::get_game_object()
 	return game_ptr;
 }
 
-void Game::boot_screen()
-{
-	sf::Font& font = font_holder.get(Fonts::OLD);
-	sf::Text text("", font, 20);
-	//text.setOutlineColor(sf::Color::Red);
-	text.setFillColor(sf::Color::Red);
-	text.setStyle(sf::Text::Bold);
-	text.setString("Добро пожаловать в нашу игру!\nPress SPACE to start:)");
-	text.setPosition(mysetts.get_width()/3, mysetts.get_height()/2.5);
-	
+//void Game::boot_screen()
+//{
+//	sf::Font& font = font_holder.get(Fonts::OLD);
+//	sf::Text text("", font, 20);
+//	//text.setOutlineColor(sf::Color::Red);
+//	text.setFillColor(sf::Color::Red);
+//	text.setStyle(sf::Text::Bold);
+//	text.setString("Добро пожаловать в нашу игру!\nPress SPACE to start:)");
+//	text.setPosition(mysetts.get_width()/3, mysetts.get_height()/2.5);
+//	
+//
+//	while (g_window.isOpen())
+//	{
+//		// dont do this, just example of using image
+//		/*sf::Image booting;
+//		booting.loadFromFile("media/images/booter.png");
+//		sf::Texture bt;
+//		bt.loadFromImage(booting);
+//		sf::Sprite sprbt;
+//		sprbt.setTexture(bt);
+//		sprbt.setPosition(0.f, 0.f);
+//
+//
+//		g_window.clear();
+//		g_window.draw(sprbt);
+//		g_window.display();*/
+//
+//		g_window.clear();
+//		g_window.draw(text);
+//		g_window.display();
+//
+//		bool space = false;
+//		sf::Event event;
+//		while (g_window.pollEvent(event))        // SFML is saving all events in a queue, so checking them all
+//		{
+//
+//			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)
+//			{
+//				space = true;
+//				break;
+//			}
+//
+//		}
+//		if (space) break;
+//	}
+//}
 
+void Game::prologue() 
+{
+	// Func reads a text from file and send it in gentline
+	// Then i draw and display every str line with N sec delay
 	while (g_window.isOpen())
 	{
-		// dont do this, just example of using image
-		/*sf::Image booting;
-		booting.loadFromFile("media/images/booter.png");
-		sf::Texture bt;
-		bt.loadFromImage(booting);
-		sf::Sprite sprbt;
-		sprbt.setTexture(bt);
-		sprbt.setPosition(0.f, 0.f);
-
-
-		g_window.clear();
-		g_window.draw(sprbt);
-		g_window.display();*/
-
-		g_window.clear();
-		g_window.draw(text);
-		g_window.display();
-
-		bool space = false;
-		sf::Event event;
-		while (g_window.pollEvent(event))        // SFML is saving all events in a queue, so checking them all
+		std::string prologue_str;
+		std::string path = "Prologue.txt";
+		std::ifstream CurrentFile;
+		
+		CurrentFile.open(path);
+		sf::Font& font = font_holder.get(Fonts::OLD);
+		if (!CurrentFile.is_open())
 		{
-
-			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)
+			std::cout << "Openning file error\n";
+		}
+		else
+		{
+			sf::Event event;
+			bool space = false;
+			
+			
+			while (!CurrentFile.eof())
 			{
-				space = true;
-				break;
+				
+				if (space) break;
+				while (g_window.pollEvent(event))        // SFML is saving all events in a queue, so checking them all
+				{
+
+					if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)
+					{
+						space = true;
+						break;
+					}
+
+				}
+				
+				getline(CurrentFile, prologue_str);
+				
+				sf::Text text(prologue_str, font, 20);
+				text.setFillColor(sf::Color::Red);
+				text.setStyle(sf::Text::Bold);
+
+				if (prologue_str.length() >= 40)
+				{
+					text.setPosition(mysetts.get_width() / 5.3f, mysetts.get_height() /2 );
+					
+				}
+				else
+				{
+					text.setPosition(mysetts.get_width() / 4.5f, mysetts.get_height() / 2);
+				}
+				
+				
+
+				std::cout << prologue_str << '\n';
+				
+				g_window.draw(text);
+				g_window.display();
+				g_window.clear();
+				Sleep(3000);
+				
+
 			}
+			
+			break;
 
 		}
-		if (space) break;
+		CurrentFile.close();
+
 	}
+
+
+
 }
 
 void Game::start_game()
@@ -409,7 +490,7 @@ Game::Game() : g_window(sf::VideoMode(mysetts.get_width(), mysetts.get_height())
 
 void Game::run()
 {
-	boot_screen();
+	//prologue();
 
 	sf::Clock clock;
 	sf::Time timeSinceLastUpdate = sf::Time::Zero;
