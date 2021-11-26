@@ -516,6 +516,7 @@ void Game::start_game()
 	// make configurations: game mode, choose character model and etc.
 	// so main menu will be opened here in future
 	texture_holder.load(Textures::VAMPIRE, "media/textures/animals/gg_32_64.png"); //changed texture
+	texture_holder.load(Textures::GREY, "media/textures/animals/skeleton_grey.png");
 	texture_holder.load(Textures::GRASS, "media/textures/blocks/ground_orange.png");
 	font_holder.load(Fonts::OLD, "media/fonts/CyrilicOld.ttf");
 
@@ -531,6 +532,7 @@ Game::Game() : g_window(sf::VideoMode(mysetts.get_width(), mysetts.get_height())
 	g_view.reset(sf::FloatRect(0, 0, 640, 480));
 
 	chunk.test_world();
+	chunk.add_enemy(sf::Vector2f(50.f, 390.f), Textures::ID::GREY);
 }
 
 void Game::run()
@@ -587,6 +589,8 @@ void Game::update(const sf::Time delta_time)
 {
 	player->screen_collision(mysetts.get_width(), mysetts.get_height());
 	player->update_statement(delta_time, chunk);
+	for (auto it = chunk.enemies.begin(); it != chunk.enemies.end(); it++)
+		(*it).update_statement(delta_time, chunk);
 	nick_under_head.set_coordinates(player->getplayercoordinateX(), player->getplayercoordinateY());
 }
 
@@ -616,6 +620,8 @@ void Game::draw_objects()              // so here we can order for all objects t
 		for (int j = 0; j < WORLD_WIDTH; ++j)
 			if (chunk.tilemap[i][j] != nullptr)
 				chunk.tilemap[i][j]->drawU(g_window);
+	for (auto it = chunk.enemies.begin(); it != chunk.enemies.end(); it++)
+		(*it).drawU(g_window);
 
 	nick_under_head.drawU(g_window);
 }

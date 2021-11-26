@@ -124,3 +124,216 @@ void World::test_world()
 	set_block(13, 0, g);
 }
 
+void World::add_enemy(sf::Vector2f position, Textures::ID id)
+{
+
+	enemies.push_back(Enemy(position, id));
+}
+
+//.....................................................................
+
+Enemy::Enemy(sf::Vector2f position, Textures::ID id)
+{
+	sf::Texture& texture = texture_holder.get(id);
+	type = id;
+	character.setTexture(texture);
+	enemy_position = position;
+	character.setPosition(enemy_position);
+	if (type == Textures::ID::GREY)
+	{
+		character.setTextureRect(sf::IntRect(0, 0, 32, 29));
+		std::cout << "!";
+	}
+}
+
+void Enemy::drawU(sf::RenderWindow& window)
+{
+	window.draw(character);
+}
+
+float Enemy::getenemycoordinateX()
+{
+	return enemy_position.x;
+}
+
+float Enemy::getenemycoordinateY()
+{
+	return enemy_position.y;
+}
+
+void Enemy::update_statement(const sf::Time delta_time, const World& chunk)
+{
+	sf::Vector2f movement(0.f, 0.f);
+	sf::FloatRect nextPos;
+	bool jump = false;
+	const float x_crop = 8.f;
+
+
+	bool smth_is_under = false;
+
+	// getting left top coordinate of little chunk to check block collisions only there
+	// lots of validation
+	// a kind of optimisation
+
+	int i1 = enemy_position.x;
+	i1 /= 32;
+	int j1 = enemy_position.y;
+	j1 /= 32;
+
+	// swapping, because we need:)
+	int temp = i1;
+	i1 = j1;
+	j1 = temp;
+
+	i1 -= 5;
+	if (i1 < 0) i1 = 0;
+	j1 -= 5;
+	if (j1 < 0) j1 = 0;
+
+	int LESS_HEIGHT = WORLD_HEIGHT;
+	int LESS_WIDTH = WORLD_WIDTH;
+	if (WORLD_HEIGHT - i1 > 15) LESS_HEIGHT = i1 + 15;
+	if (WORLD_WIDTH - j1 > 15) LESS_WIDTH = j1 + 15;
+
+	for (int i = i1; i < LESS_HEIGHT; ++i)
+		for (int j = j1; j < LESS_WIDTH; ++j)
+		{
+			if (chunk.tilemap[i][j] != nullptr && !(chunk.tilemap[i][j]->passable())) {
+				sf::FloatRect characterBounds1 = character.getGlobalBounds();
+				sf::FloatRect characterBounds(characterBounds1.left + x_crop / 2, characterBounds1.top, characterBounds1.width - x_crop, characterBounds1.height);
+				sf::FloatRect blockBounds = chunk.tilemap[i][j]->getGlobalBound();
+
+				//std::cout << characterBounds.width << " " << characterBounds.height;
+
+				nextPos = characterBounds;
+				nextPos.top += gravity;
+
+
+				if (blockBounds.intersects(nextPos)) {
+					std::cout << "i" << i << " j" << j << std::endl;
+
+					// bottom collision
+					if (characterBounds.top < blockBounds.top
+						&& characterBounds.top + characterBounds.height < blockBounds.top + blockBounds.height
+						&& characterBounds.left < blockBounds.left + blockBounds.width
+						&& characterBounds.left + characterBounds.width > blockBounds.left
+						)
+					{
+						smth_is_under = true;
+					}
+				}
+			}
+		}
+	if (!smth_is_under) onGround = false;
+
+	// if (isMovingUp)    movement.y -= player_speed;   // isn't needed untill we have vertical stairs, jumping by negative gravity
+	// if (isMovingDown)  movement.y += player_speed;   // going down by pressing keys, when we have gravity? lol
+	/*if (isMovingLeft)  movement.x -= enemy_speed;
+	if (isMovingRigth) movement.x += enemy_speed;*/
+	if (!onGround) { movement.y += gravityAccum; gravityAccum += gravity; }
+
+	// there is no gravitation on the floor (it can be, doesn't matter, but...)
+	if (onGround) {
+		gravityAccum = 0;
+
+		if (isMovingUp) {
+			gravityAccum -= jumpVelocity; 	             // negative gravitation for jumping
+			isMovingUp = false;
+			jump = true;
+		}
+	}
+
+	i1 = enemy_position.x;
+	i1 /= 32;
+	j1 = enemy_position.y;
+	j1 /= 32;
+
+	temp = i1;
+	i1 = j1;
+	j1 = temp;
+
+	i1 -= 5;
+	if (i1 < 0) i1 = 0;
+	j1 -= 5;
+	if (j1 < 0) j1 = 0;
+
+	LESS_HEIGHT = WORLD_HEIGHT;
+	LESS_WIDTH = WORLD_WIDTH;
+	if (WORLD_HEIGHT - i1 > 15) LESS_HEIGHT = i1 + 15;
+	if (WORLD_WIDTH - j1 > 15) LESS_WIDTH = j1 + 15;
+
+	for (int i = i1; i < LESS_HEIGHT; ++i)
+		for (int j = j1; j < LESS_WIDTH; ++j)
+		{
+			if (chunk.tilemap[i][j] != nullptr && !(chunk.tilemap[i][j]->passable())) {
+				sf::FloatRect characterBounds1 = character.getGlobalBounds();
+				sf::FloatRect characterBounds(characterBounds1.left + x_crop / 2, characterBounds1.top, characterBounds1.width - x_crop, characterBounds1.height);
+				sf::FloatRect blockBounds = chunk.tilemap[i][j]->getGlobalBound();
+
+				nextPos = characterBounds;
+				nextPos.left += movement.x * delta_time.asSeconds();
+				nextPos.top += movement.y * delta_time.asSeconds();
+
+				if (blockBounds.intersects(nextPos)) {
+					// std::cout << "Collision! ";
+
+					// bottom collision
+					if (characterBounds.top < blockBounds.top
+						&& characterBounds.top + characterBounds.height < blockBounds.top + blockBounds.height
+						&& characterBounds.left < blockBounds.left + blockBounds.width
+						&& characterBounds.left + characterBounds.width > blockBounds.left
+						)
+					{
+						onGround = true;
+						// std::cout << " BOTCOL ";
+						if (!jump) movement.y = 0.f;
+						if (jump) { jump = false; }
+						character.setPosition(characterBounds.left - x_crop / 2, blockBounds.top - characterBounds.height);
+					}
+
+					// top collision
+					else if (characterBounds.top > blockBounds.top
+						&& characterBounds.top + characterBounds.height > blockBounds.top + blockBounds.height
+						&& characterBounds.left < blockBounds.left + blockBounds.width
+						&& characterBounds.left + characterBounds.width > blockBounds.left
+						)
+					{
+						movement.y = 0.f;
+						gravityAccum = 0;
+						character.setPosition(characterBounds.left - x_crop / 2, blockBounds.top + blockBounds.height);
+					}
+
+					// right collision
+					else if (characterBounds.left < blockBounds.left
+						&& characterBounds.left + characterBounds.width < blockBounds.left + blockBounds.width
+						&& characterBounds.top < blockBounds.top + blockBounds.height
+						&& characterBounds.top + characterBounds.height > blockBounds.top
+						)
+					{
+						movement.x = 0.f;
+						character.setPosition(blockBounds.left - characterBounds.width - x_crop / 2, characterBounds.top);
+					}
+
+					// left collision
+					else if (characterBounds.left > blockBounds.left
+						&& characterBounds.left + characterBounds.width > blockBounds.left + blockBounds.width
+						&& characterBounds.top < blockBounds.top + blockBounds.height
+						&& characterBounds.top + characterBounds.height > blockBounds.top
+						)
+					{
+						movement.x = 0.f;
+						character.setPosition(blockBounds.left + blockBounds.width - x_crop / 2, characterBounds.top);
+					}
+				}
+			}
+		}
+
+	if (jump) {
+		movement.y += gravityAccum;
+		onGround = false;
+	}
+	// distance = speed * time
+	character.move(movement * delta_time.asSeconds());
+	enemy_position.x = character.getGlobalBounds().left;
+	enemy_position.y = character.getGlobalBounds().top;
+}
