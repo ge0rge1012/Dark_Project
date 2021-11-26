@@ -147,10 +147,12 @@
     <ClCompile Include="EngineClasses.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="settings.cpp" />
+    <ClCompile Include="WorldClass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EngineClasses.h" />
     <ClInclude Include="settings.h" />
+    <ClInclude Include="WorldClass.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
