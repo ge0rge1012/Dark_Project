@@ -72,6 +72,32 @@ World::World()
 			tilemap[i][j] = nullptr;
 }
 
+void World::create_surface() {
+
+}
+
+void World::create_cave(int x, int y) {
+
+}
+
+void World::create_mountain() {
+
+}
+
+void World::spawn_dungeon() {
+
+}
+
+void World::generate_world() {
+	for (int i = 29; i < WORLD_HEIGHT; i++) {
+		for (int j = 0; j < WORLD_WIDTH; j++) {
+			World::set_block(i, j, Textures::ID::GRASS);
+		}
+	}
+	World::create_surface();
+	World::create_cave(20, 0);
+}
+
 void World::delete_block(int x, int y)
 {
 	delete tilemap[x][y];

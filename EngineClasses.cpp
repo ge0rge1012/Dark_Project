@@ -531,7 +531,7 @@ Game::Game() : g_window(sf::VideoMode(mysetts.get_width(), mysetts.get_height())
 	player = new Player();
 	g_view.reset(sf::FloatRect(0, 0, 640, 480));
 
-	chunk.test_world();
+	chunk.generate_world();
 	chunk.add_enemy(sf::Vector2f(50.f, 390.f), Textures::ID::GREY);
 }
 
