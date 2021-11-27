@@ -324,7 +324,7 @@ void Player::update_statement(const sf::Time delta_time, const World& chunk)
 
 
 				if (blockBounds.intersects(nextPos)) {
-					std::cout << "i" << i << " j" << j << std::endl;
+					// std::cout << "i" << i << " j" << j << std::endl;
 
 					// bottom collision
 					if (characterBounds.top < blockBounds.top
@@ -552,7 +552,7 @@ Game::Game() : g_window(sf::VideoMode(mysetts.get_width(), mysetts.get_height())
 	g_view.setCenter(player->getplayercoordinateX() + 100, player->getplayercoordinateY());
 
 	chunk.test_world();
-	chunk.add_enemy(sf::Vector2f(50.f, 390.f), Textures::ID::GREY);
+	chunk.add_enemy(sf::Vector2f(800.f, 390.f), Textures::ID::GREY);
 }
 
 void Game::run()
@@ -610,7 +610,7 @@ void Game::update(const sf::Time delta_time)
 	player->screen_collision(mysetts.get_width(), mysetts.get_height());
 	player->update_statement(delta_time, chunk);
 	for (auto it = chunk.enemies.begin(); it != chunk.enemies.end(); it++)
-		(*it).update_statement(delta_time, chunk);
+		(*it).update_statement(delta_time, chunk, sf::Vector2f (player->getplayercoordinateX(), player->getplayercoordinateY()));
 	nick_under_head.set_coordinates(player->getplayercoordinateX(), player->getplayercoordinateY());
 }
 
