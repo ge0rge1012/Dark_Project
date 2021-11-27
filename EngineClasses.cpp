@@ -534,9 +534,12 @@ void Game::start_game()
 {
 	// make configurations: game mode, choose character model and etc.
 	// so main menu will be opened here in future
-	texture_holder.load(Textures::VAMPIRE, "media/textures/animals/gg_32_64.png"); //changed texture
-	texture_holder.load(Textures::GREY, "media/textures/animals/skeleton_grey.png");
-	texture_holder.load(Textures::GRASS, "media/textures/blocks/ground_orange.png");
+	texture_holder.load(Textures::VAMPIRE, "media/textures/animals/gg_32_64.png"); 
+	texture_holder.load(Textures::GREY,    "media/textures/animals/skeleton_grey.png");
+	texture_holder.load(Textures::ORANGE,  "media/textures/blocks/block_orange/block_orange_32_32.png");
+	texture_holder.load(Textures::ROCK,    "media/textures/blocks/block_rock/block_rock_32_32.png");
+	texture_holder.load(Textures::DIRT,    "media/textures/blocks/block_dirt/block_dirt_32_32.png");
+
 	font_holder.load(Fonts::OLD, "media/fonts/CyrilicOld.ttf");
 
 	Game* game = get_game_object();
@@ -668,7 +671,7 @@ void Game::mouse_processor()
 		else
 		{
 			std::cout << "IUU";
-			chunk.place_block(real_pos, Textures::GRASS);
+			chunk.place_block(real_pos, Textures::ORANGE);
 		}
 	}
 

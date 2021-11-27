@@ -12,7 +12,7 @@ class Enemy;
 
 namespace Textures
 {
-	enum ID { NUL, VAMPIRE, GRASS, ITEMS, GREY };
+	enum ID { NUL, VAMPIRE, ORANGE, ITEMS, GREY, ROCK, DIRT };
 }
 
 class TextureHolder

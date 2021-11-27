@@ -35,10 +35,10 @@ bool Block::breakable()
 	return isBreakable;
 }
 
-// let standart texture be just dirt with grass
+// let standart texture be just dirt with ORANGE
 Block::Block()
 {
-	sf::Texture& texture = texture_holder.get(Textures::GRASS);
+	sf::Texture& texture = texture_holder.get(Textures::ORANGE);
 	block.setTexture(texture);
 }
 
@@ -91,7 +91,7 @@ void World::spawn_dungeon() {
 void World::generate_world() {
 	for (int i = 29; i < WORLD_HEIGHT; i++) {
 		for (int j = 0; j < WORLD_WIDTH; j++) {
-			World::set_block(i, j, Textures::ID::GRASS);
+			World::set_block(i, j, Textures::ID::ORANGE);
 		}
 	}
 	World::create_surface();
@@ -158,7 +158,7 @@ void World::drawU(sf::RenderWindow& window, sf::Vector2f p_coordinates)
 void World::test_world()
 {
 	// dont want to write it everytime even using copy-paste
-	Textures::ID g = Textures::ID::GRASS;
+	Textures::ID g = Textures::ID::ORANGE;
 	for (int i = 14; i < WORLD_HEIGHT; ++i)
 		for (int j = 0; j < WORLD_WIDTH; ++j)
 		{
