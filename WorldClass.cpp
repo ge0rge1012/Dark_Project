@@ -107,7 +107,7 @@ void World::create_surface() {
 		else if (line_of_horizon<10)
 			line_of_horizon += random_number.get_random(0, 3);
 		else
-			line_of_horizon += random_number.get_random(-3, 3);
+			line_of_horizon += random_number.get_random(-1, 1);
 
 		std::cout << line_of_horizon << std::endl;
 
