@@ -537,8 +537,9 @@ void Game::start_game()
 	texture_holder.load(Textures::VAMPIRE, "media/textures/animals/gg_32_64.png"); 
 	texture_holder.load(Textures::GREY,    "media/textures/animals/skeleton_grey.png");
 	texture_holder.load(Textures::ORANGE,  "media/textures/blocks/block_orange/block_orange_32_32.png");
-	texture_holder.load(Textures::ROCK,    "media/textures/blocks/block_rock/block_rock_32_32.png");
+	texture_holder.load(Textures::ROCK,    "media/textures/blocks/block_rock/block_rock_32_32v2.png");
 	texture_holder.load(Textures::DIRT,    "media/textures/blocks/block_dirt/block_dirt_32_32.png");
+	texture_holder.load(Textures::IRON,		"media/textures/blocks/block_iron/block_iron_32_32.png");
 
 	font_holder.load(Fonts::OLD, "media/fonts/CyrilicOld.ttf");
 
@@ -554,7 +555,7 @@ Game::Game() : g_window(sf::VideoMode(mysetts.get_width(), mysetts.get_height())
 	g_view.reset(sf::FloatRect(0, 0, mysetts.get_width(), mysetts.get_height()));
 	g_view.setCenter(player->getplayercoordinateX() + 100, player->getplayercoordinateY());
 
-	 chunk.generate_world();
+	chunk.generate_world();
 	//chunk.test_world();
 	chunk.add_enemy(sf::Vector2f(50.f, 390.f), Textures::ID::GREY);
 }
