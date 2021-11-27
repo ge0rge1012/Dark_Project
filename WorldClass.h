@@ -14,7 +14,7 @@ class Enemy;
 
 namespace Textures
 {
-	enum ID { NUL, VAMPIRE, ORANGE, ITEMS, GREY, ROCK, DIRT };
+	enum ID { NUL, VAMPIRE, ORANGE, ITEMS, GREY, ROCK, DIRT, IRON };
 }
 
 class Randomizer {
@@ -73,6 +73,7 @@ public:
 	void create_cave(int x, int y);
 	void create_mountain();
 	void spawn_dungeon();
+	void spawn_resources();
 	void generate_world();
 	void set_block(int x, int y, Textures::ID id);
 	void delete_block(int x, int y);
