@@ -50,9 +50,11 @@ public:
 	sf::FloatRect getGlobalBound();
 	bool passable();
 	bool breakable();
+	Textures::ID get_id();
+	void set_id(Textures::ID id);
 
 private:
-	int id = 0;
+	Textures::ID id = Textures::ID::NUL;
 	bool isPassable = false;
 	bool isBreakable = false;
 
