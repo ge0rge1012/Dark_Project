@@ -72,7 +72,33 @@ World::World()
 			tilemap[i][j] = nullptr;
 }
 
-void World::delete_block(sf::Vector2i pos)
+void World::create_surface() {
+
+}
+
+void World::create_cave(int x, int y) {
+
+}
+
+void World::create_mountain() {
+
+}
+
+void World::spawn_dungeon() {
+	//stmnd dont know how dung should looks like, so waiting for info from Said.
+}
+
+void World::generate_world() {
+	for (int i = 29; i < WORLD_HEIGHT; i++) {
+		for (int j = 0; j < WORLD_WIDTH; j++) {
+			World::set_block(i, j, Textures::ID::GRASS);
+		}
+	}
+	World::create_surface();
+	World::create_cave(20, 0);
+}
+
+void World::delete_block(int x, int y)
 {
 	delete tilemap[pos.y/32][pos.x/32];
 	tilemap[pos.y/32][pos.x/32] = nullptr;
@@ -99,7 +125,7 @@ void World::drawU(sf::RenderWindow& window, sf::Vector2f p_coordinates)
 	j1 -= 20;
 	if (j1 < 0) j1 = 0;
 
-	std::cout << i1 << "i1 " << j1 << "j1" << std::endl;
+	// std::cout << i1 << "i1 " << j1 << "j1" << std::endl;
 
 	int LESS_HEIGHT = i1 + 40;
 	int LESS_WIDTH = j1 + 40;
@@ -175,6 +201,7 @@ Enemy::Enemy(sf::Vector2f position, Textures::ID id)
 	if (type == Textures::ID::GREY)
 	{
 		character.setTextureRect(sf::IntRect(0, 0, 32, 29));
+		enemy_speed /= 2;
 	}
 }
 
@@ -193,13 +220,79 @@ float Enemy::getenemycoordinateY()
 	return enemy_position.y;
 }
 
-void Enemy::update_statement(const sf::Time delta_time, const World& chunk)
+bool Enemy::may_jump_left(const World& chunk, sf::Vector2f p_coor)
 {
+	int x = p_coor.x;
+	x /= 32;
+	int y = p_coor.y;
+	y /= 32;
+
+	int temp = x;
+	x = y;
+	y = temp;
+
+	if (x > 0 && y >0 )
+	{
+		if ((chunk.tilemap[x][y-1] != nullptr) && (chunk.tilemap[x - 1][y - 1] != nullptr) &&
+			(!chunk.tilemap[x][y-1]->passable()) && (!chunk.tilemap[x - 1][y - 1]->passable()))
+			return true;
+	}
+	
+	return false;
+}
+
+bool Enemy::may_jump_right(const World& chunk, sf::Vector2f p_coor)
+{
+	int x = p_coor.x;
+	x /= 32;
+	int y = p_coor.y;
+	y /= 32;
+
+	int temp = x;
+	x = y;
+	y = temp;
+
+	if (x < (WORLD_HEIGHT-1)*32 && y < (WORLD_WIDTH-1)*32)
+	{
+		if ((chunk.tilemap[x][y + 1] != nullptr) && (chunk.tilemap[x - 1][y + 1] != nullptr) &&
+			(!chunk.tilemap[x][y + 1]->passable()) && (!chunk.tilemap[x - 1][y + 1]->passable()))
+			return true;
+	}
+
+	return false;
+}
+
+void Enemy::update_statement(const sf::Time delta_time, const World& chunk, sf::Vector2f p_coor)
+{
+	const int AIarea = 4 * 32; // area of mobs working. After set a higher value.
+	const int AIstop = 18;
 	sf::Vector2f movement(0.f, 0.f);
 	sf::FloatRect nextPos;
 	bool jump = false;
-	const float x_crop = 8.f;
+	const float x_crop = 10.f;
 
+	float e_movement_x =  p_coor.x - enemy_position.x;
+
+	if ( ((e_movement_x <= AIarea && e_movement_x > 0) || (e_movement_x * -1 <= AIarea && e_movement_x < 0)) && (
+		  (e_movement_x >= AIstop && e_movement_x > 0) || (e_movement_x * -1 >= AIstop && e_movement_x < 0))    )
+	{
+		if (e_movement_x > 0)
+		{
+			isMovingRigth = true;
+			isMovingLeft = false;
+		}
+		else if (e_movement_x < 0)
+		{
+			isMovingLeft = true;
+			isMovingRigth = false;
+		}
+	}
+
+	else
+	{
+		isMovingRigth = false;
+		isMovingLeft = false;
+	}
 
 	bool smth_is_under = false;
 
@@ -221,6 +314,7 @@ void Enemy::update_statement(const sf::Time delta_time, const World& chunk)
 	if (i1 < 0) i1 = 0;
 	j1 -= 3;
 	if (j1 < 0) j1 = 0;
+
 
 	int LESS_HEIGHT = WORLD_HEIGHT;
 	int LESS_WIDTH = WORLD_WIDTH;
@@ -260,8 +354,10 @@ void Enemy::update_statement(const sf::Time delta_time, const World& chunk)
 
 	// if (isMovingUp)    movement.y -= player_speed;   // isn't needed untill we have vertical stairs, jumping by negative gravity
 	// if (isMovingDown)  movement.y += player_speed;   // going down by pressing keys, when we have gravity? lol
-	/*if (isMovingLeft)  movement.x -= enemy_speed;
-	if (isMovingRigth) movement.x += enemy_speed;*/
+
+	if (isMovingLeft)  movement.x -= enemy_speed;
+	if (isMovingRigth) movement.x += enemy_speed;
+
 	if (!onGround) { movement.y += gravityAccum; gravityAccum += gravity; }
 
 	// there is no gravitation on the floor (it can be, doesn't matter, but...)
@@ -343,6 +439,8 @@ void Enemy::update_statement(const sf::Time delta_time, const World& chunk)
 						)
 					{
 						movement.x = 0.f;
+						if (!Enemy::may_jump_right(chunk, p_coor)) isMovingUp = true;
+						std::cout << "rh";
 						character.setPosition(blockBounds.left - characterBounds.width - x_crop / 2, characterBounds.top);
 					}
 
@@ -354,6 +452,8 @@ void Enemy::update_statement(const sf::Time delta_time, const World& chunk)
 						)
 					{
 						movement.x = 0.f;
+						if (!Enemy::may_jump_left(chunk, p_coor)) isMovingUp = true;
+						std::cout << "lf";
 						character.setPosition(blockBounds.left + blockBounds.width - x_crop / 2, characterBounds.top);
 					}
 				}

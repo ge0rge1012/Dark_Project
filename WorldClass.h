@@ -5,7 +5,8 @@
 #include <list>
 
 const int WORLD_WIDTH = 1000;
-const int WORLD_HEIGHT = 100;
+const int WORLD_HEIGHT = 130;
+
 
 class Enemy;
 
@@ -55,7 +56,8 @@ public:
 	World();
 	void create_surface();
 	void create_cave(int x, int y);
-	void create_dungeon();
+	void create_mountain();
+	void spawn_dungeon();
 	void generate_world();
 	void set_block(int x, int y, Textures::ID id);
 	void delete_block(sf::Vector2i pos);
@@ -90,7 +92,9 @@ public:
 	Enemy(sf::Vector2f position, Textures::ID id);
 
 	void drawU(sf::RenderWindow& window);
-	void update_statement(const sf::Time delta_time, const World& chunk);
+	void update_statement(const sf::Time delta_time, const World& chunk, sf::Vector2f p_coor);
+	static bool may_jump_left(const World& chunk, sf::Vector2f p_coor);
+	static bool may_jump_right(const World& chunk, sf::Vector2f p_coor);
 	void screen_collision(int win_width, int win_height);
 	void key_reaction(sf::Keyboard::Key key, bool isPressed);
 	float getenemycoordinateX();
