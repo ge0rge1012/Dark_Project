@@ -85,7 +85,7 @@ void World::create_mountain() {
 }
 
 void World::spawn_dungeon() {
-
+	//stmnd dont know how dung should looks like, so waiting for info from Said.
 }
 
 void World::generate_world() {
