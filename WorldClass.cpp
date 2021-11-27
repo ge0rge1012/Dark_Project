@@ -1,6 +1,33 @@
 #include "WorldClass.h"
 
 TextureHolder::TextureHolder() { }
+Randomizer random_number;
+
+Randomizer::Randomizer() {
+	srand(time(NULL));
+}
+
+void Randomizer::initialize() {
+	unsigned value = unsigned(std::time(nullptr));
+	srand(time(NULL));
+	for (int i = 0; i < 1000; ++i)
+	{
+		N[i] = rand() % 10000;
+		std::cout << N[i] << std::endl;
+	}
+}
+
+int Randomizer::get_random(int min, int max) {
+	if (counter < 999) counter++;
+	else counter = 0;
+	std::cout << counter << " " << min + N[counter] % (max - min + 1) << std::endl;
+	return min + N[counter] % (max - min + 1);
+}
+
+int Randomizer::get_random() {
+	srand(time(NULL));
+	return rand();
+}
 
 void TextureHolder::load(Textures::ID id, const std::string& filename)
 {
@@ -73,7 +100,22 @@ World::World()
 }
 
 void World::create_surface() {
+	random_number.initialize();
+	for (int j = 0; j < WORLD_WIDTH; j++) {
+		if (line_of_horizon>60)
+			line_of_horizon += random_number.get_random(-3, 0);
+		else if (line_of_horizon<10)
+			line_of_horizon += random_number.get_random(0, 3);
+		else
+			line_of_horizon += random_number.get_random(-3, 3);
 
+		std::cout << line_of_horizon << std::endl;
+
+		for (int i = 0; i < WORLD_HEIGHT; i++) {
+			if (i < line_of_horizon) World::delete_block(i, j);
+			else World::set_block(i, j, Textures::ID::GRASS);
+		}
+	}
 }
 
 void World::create_cave(int x, int y) {
@@ -89,11 +131,11 @@ void World::spawn_dungeon() {
 }
 
 void World::generate_world() {
-	for (int i = 29; i < WORLD_HEIGHT; i++) {
-		for (int j = 0; j < WORLD_WIDTH; j++) {
-			World::set_block(i, j, Textures::ID::GRASS);
-		}
-	}
+	//for (int i = 29; i < WORLD_HEIGHT; i++) {
+	//	for (int j = 0; j < WORLD_WIDTH; j++) {
+	//		World::set_block(i, j, Textures::ID::GRASS);
+	//	}
+	//}
 	World::create_surface();
 	World::create_cave(20, 0);
 }
