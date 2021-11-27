@@ -4,8 +4,9 @@
 #include <iostream>
 #include <list>
 
-const int WORLD_WIDTH = 60;
-const int WORLD_HEIGHT = 100;
+const int WORLD_WIDTH = 1000;
+const int WORLD_HEIGHT = 130;
+
 
 class Enemy;
 
@@ -55,7 +56,8 @@ public:
 	World();
 	void create_surface();
 	void create_cave(int x, int y);
-	void create_dungeon();
+	void create_mountain();
+	void spawn_dungeon();
 	void generate_world();
 	void set_block(int x, int y, Textures::ID id);
 	void delete_block(int x, int y);
