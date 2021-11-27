@@ -100,8 +100,21 @@ void World::generate_world() {
 
 void World::delete_block(int x, int y)
 {
-	delete tilemap[pos.y/32][pos.x/32];
-	tilemap[pos.y/32][pos.x/32] = nullptr;
+	delete tilemap[x][y];
+	tilemap[x][y] = nullptr;
+}
+
+void World::destroy_block(sf::Vector2i pos)
+{
+	delete tilemap[pos.y / 32][pos.x / 32];
+	tilemap[pos.y / 32][pos.x / 32] = nullptr;
+}
+
+void World::place_block(sf::Vector2i pos, Textures::ID id)
+{
+	if (id == Textures::ID::NUL) return;
+	tilemap[pos.y / 32][pos.x / 32] = new Block(id);
+	tilemap[pos.y / 32][pos.x / 32]->set_coordinates(sf::Vector2f((pos.x/32) * 32.f, (pos.y/32)* 32.f));
 }
 
 void World::set_block (int x, int y, Textures::ID id) {
@@ -440,7 +453,7 @@ void Enemy::update_statement(const sf::Time delta_time, const World& chunk, sf::
 					{
 						movement.x = 0.f;
 						if (!Enemy::may_jump_right(chunk, p_coor)) isMovingUp = true;
-						std::cout << "rh";
+						// std::cout << "rh";
 						character.setPosition(blockBounds.left - characterBounds.width - x_crop / 2, characterBounds.top);
 					}
 
@@ -453,7 +466,7 @@ void Enemy::update_statement(const sf::Time delta_time, const World& chunk, sf::
 					{
 						movement.x = 0.f;
 						if (!Enemy::may_jump_left(chunk, p_coor)) isMovingUp = true;
-						std::cout << "lf";
+						// std::cout << "lf";
 						character.setPosition(blockBounds.left + blockBounds.width - x_crop / 2, characterBounds.top);
 					}
 				}

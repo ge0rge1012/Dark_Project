@@ -7,7 +7,7 @@
 *   TextureHolder <- MobsHolder
 *   TextureHolder <- EffectsHolder
 *
-*   Moreover, it would be better to create main parent class - ResureHolder (for music, images, fonts and etc.)
+*   Moreover, it would be better to create main parent class - ResurseHolder (for music, images, fonts and etc.)
 */
 
 settings mysetts;
@@ -548,10 +548,11 @@ void Game::start_game()
 Game::Game() : g_window(sf::VideoMode(mysetts.get_width(), mysetts.get_height()), "game_project")
 {
 	player = new Player();
-	g_view.reset(sf::FloatRect(0, 0, 640, 480));
+	g_view.reset(sf::FloatRect(0, 0, mysetts.get_width(), mysetts.get_height()));
 	g_view.setCenter(player->getplayercoordinateX() + 100, player->getplayercoordinateY());
 
-	chunk.generate_world();
+	// chunk.generate_world();
+	chunk.test_world();
 	chunk.add_enemy(sf::Vector2f(50.f, 390.f), Textures::ID::GREY);
 }
 
@@ -601,6 +602,10 @@ void Game::process_events()
 		case  sf::Event::Closed:
 			g_window.close();
 			break;
+
+		default:
+			mouse_processor();
+			break;
 		}
 	}
 }
@@ -629,14 +634,33 @@ void Game::handle_events(sf::Keyboard::Key key, bool isPressed)
 		key == sf::Keyboard::S ||
 		key == sf::Keyboard::D)
 		player->key_reaction(key, isPressed);
-	mouse_processor();
 }
 
 void Game::mouse_processor()
 {
-	sf::Vector2i mouse_pos = sf::Mouse::getPosition();
+	// we can look for mouse coordinates on computer screeen bounds or only inside window of game, where top left corner is always 0;0
+	// so I had to transfer it into global world coordinates
+	sf::Vector2i mouse_pos = sf::Mouse::getPosition(g_window);
+	sf::Vector2f cam_pos = g_view.getCenter();
+	sf::Vector2i real_pos = sf::Vector2i((cam_pos.x - (mysetts.get_width() / 2) + mouse_pos.x), (cam_pos.y - (mysetts.get_height() / 2) + mouse_pos.y));
+	
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-		chunk.delete_block(mouse_pos);
+		chunk.destroy_block(real_pos);
+	else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+	{
+		 std::cout << "mx=" << real_pos.x / 32<< "my=" << real_pos.y / 32 << " px=" << static_cast<int>(player->getplayercoordinateX()) / 32 << "py=" << static_cast<int>(player->getplayercoordinateY()) / 32 << std::endl;
+		if ((real_pos.x / 32 == static_cast<int>(player->getplayercoordinateX()) / 32) &&
+			(   (real_pos.y / 32 == static_cast<int>(player->getplayercoordinateY()) / 32) ||
+				(real_pos.y / 32 == static_cast<int>(player->getplayercoordinateY()) / 32 + 1)))
+		{
+			chunk.place_block(real_pos, Textures::NUL);
+			std::cout << "Dont place";
+		}
+
+		else chunk.place_block(real_pos, Textures::GRASS);
+	}
+
+
 
 }
 
