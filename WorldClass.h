@@ -92,7 +92,9 @@ public:
 	Enemy(sf::Vector2f position, Textures::ID id);
 
 	void drawU(sf::RenderWindow& window);
-	void update_statement(const sf::Time delta_time, const World& chunk);
+	void update_statement(const sf::Time delta_time, const World& chunk, sf::Vector2f p_coor);
+	static bool may_jump_left(const World& chunk, sf::Vector2f p_coor);
+	static bool may_jump_right(const World& chunk, sf::Vector2f p_coor);
 	void screen_collision(int win_width, int win_height);
 	void key_reaction(sf::Keyboard::Key key, bool isPressed);
 	float getenemycoordinateX();

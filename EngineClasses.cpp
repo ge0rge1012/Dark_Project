@@ -324,7 +324,7 @@ void Player::update_statement(const sf::Time delta_time, const World& chunk)
 
 
 				if (blockBounds.intersects(nextPos)) {
-					std::cout << "i" << i << " j" << j << std::endl;
+					// std::cout << "i" << i << " j" << j << std::endl;
 
 					// bottom collision
 					if (characterBounds.top < blockBounds.top
@@ -610,7 +610,7 @@ void Game::update(const sf::Time delta_time)
 	player->screen_collision(mysetts.get_width(), mysetts.get_height());
 	player->update_statement(delta_time, chunk);
 	for (auto it = chunk.enemies.begin(); it != chunk.enemies.end(); it++)
-		(*it).update_statement(delta_time, chunk);
+		(*it).update_statement(delta_time, chunk, sf::Vector2f (player->getplayercoordinateX(), player->getplayercoordinateY()));
 	nick_under_head.set_coordinates(player->getplayercoordinateX(), player->getplayercoordinateY());
 }
 
