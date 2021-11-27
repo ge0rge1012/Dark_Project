@@ -7,7 +7,7 @@
 *   TextureHolder <- MobsHolder
 *   TextureHolder <- EffectsHolder
 *
-*   Moreover, it would be better to create main parent class - ResureHolder (for music, images, fonts and etc.)
+*   Moreover, it would be better to create main parent class - ResurseHolder (for music, images, fonts and etc.)
 */
 
 settings mysetts;
@@ -534,9 +534,12 @@ void Game::start_game()
 {
 	// make configurations: game mode, choose character model and etc.
 	// so main menu will be opened here in future
-	texture_holder.load(Textures::VAMPIRE, "media/textures/animals/gg_32_64.png"); //changed texture
-	texture_holder.load(Textures::GREY, "media/textures/animals/skeleton_grey.png");
-	texture_holder.load(Textures::GRASS, "media/textures/blocks/ground_orange.png");
+	texture_holder.load(Textures::VAMPIRE, "media/textures/animals/gg_32_64.png"); 
+	texture_holder.load(Textures::GREY,    "media/textures/animals/skeleton_grey.png");
+	texture_holder.load(Textures::ORANGE,  "media/textures/blocks/block_orange/block_orange_32_32.png");
+	texture_holder.load(Textures::ROCK,    "media/textures/blocks/block_rock/block_rock_32_32.png");
+	texture_holder.load(Textures::DIRT,    "media/textures/blocks/block_dirt/block_dirt_32_32.png");
+
 	font_holder.load(Fonts::OLD, "media/fonts/CyrilicOld.ttf");
 
 	Game* game = get_game_object();
@@ -548,10 +551,11 @@ void Game::start_game()
 Game::Game() : g_window(sf::VideoMode(mysetts.get_width(), mysetts.get_height()), "game_project")
 {
 	player = new Player();
-	g_view.reset(sf::FloatRect(0, 0, 640, 480));
+	g_view.reset(sf::FloatRect(0, 0, mysetts.get_width(), mysetts.get_height()));
 	g_view.setCenter(player->getplayercoordinateX() + 100, player->getplayercoordinateY());
 
-	chunk.generate_world();
+	// chunk.generate_world();
+	chunk.test_world();
 	chunk.add_enemy(sf::Vector2f(50.f, 390.f), Textures::ID::GREY);
 }
 
@@ -601,6 +605,10 @@ void Game::process_events()
 		case  sf::Event::Closed:
 			g_window.close();
 			break;
+
+		default:
+			mouse_processor();
+			break;
 		}
 	}
 }
@@ -629,6 +637,46 @@ void Game::handle_events(sf::Keyboard::Key key, bool isPressed)
 		key == sf::Keyboard::S ||
 		key == sf::Keyboard::D)
 		player->key_reaction(key, isPressed);
+}
+
+void Game::mouse_processor()
+{
+	// we can look for mouse coordinates on computer screeen bounds or only inside window of game, where top left corner is always 0;0
+	// so I had to transfer it into global world coordinates
+	sf::Vector2i mouse_pos = sf::Mouse::getPosition(g_window);
+	if (mouse_pos.x < 0 || mouse_pos.y < 0 || mouse_pos.x > mysetts.get_width() - 1 || mouse_pos.y > mysetts.get_height() - 1)
+		return;
+
+	sf::Vector2f cam_pos = g_view.getCenter();
+	sf::Vector2i real_pos = sf::Vector2i((cam_pos.x - (mysetts.get_width() / 2) + mouse_pos.x), (cam_pos.y - (mysetts.get_height() / 2) + mouse_pos.y));
+	
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		chunk.destroy_block(real_pos);
+
+
+	else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+	{
+		std::cout << "mx=" << real_pos.x / 32<< "my=" << real_pos.y / 32 << " px=" 
+			<< static_cast<int>(player->getplayercoordinateX()) / 32 << "py=" 
+			<< static_cast<int>(player->getplayercoordinateY()) / 32 << std::endl;
+
+		if ((real_pos.x / 32 == static_cast<int>(player->getplayercoordinateX()) / 32) &&
+			   ((real_pos.y / 32 == static_cast<int>(player->getplayercoordinateY()) / 32) ||
+				(real_pos.y / 32 == static_cast<int>(player->getplayercoordinateY()) / 32 + 1)))
+		{
+			std::cout << "Dont place";
+			chunk.place_block(real_pos, Textures::NUL);
+		}
+
+		else
+		{
+			std::cout << "IUU";
+			chunk.place_block(real_pos, Textures::ORANGE);
+		}
+	}
+
+
+
 }
 
 void Game::draw_objects()              // so here we can order for all objects to draw themselves

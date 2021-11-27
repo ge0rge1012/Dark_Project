@@ -62,10 +62,10 @@ bool Block::breakable()
 	return isBreakable;
 }
 
-// let standart texture be just dirt with grass
+// let standart texture be just dirt with ORANGE
 Block::Block()
 {
-	sf::Texture& texture = texture_holder.get(Textures::GRASS);
+	sf::Texture& texture = texture_holder.get(Textures::ORANGE);
 	block.setTexture(texture);
 }
 
@@ -131,11 +131,12 @@ void World::spawn_dungeon() {
 }
 
 void World::generate_world() {
-	//for (int i = 29; i < WORLD_HEIGHT; i++) {
-	//	for (int j = 0; j < WORLD_WIDTH; j++) {
-	//		World::set_block(i, j, Textures::ID::GRASS);
-	//	}
-	//}
+	for (int i = 29; i < WORLD_HEIGHT; i++) {
+		for (int j = 0; j < WORLD_WIDTH; j++) {
+			World::set_block(i, j, Textures::ID::ORANGE);
+		}
+	}
+
 	World::create_surface();
 	World::create_cave(20, 0);
 }
@@ -144,6 +145,19 @@ void World::delete_block(int x, int y)
 {
 	delete tilemap[x][y];
 	tilemap[x][y] = nullptr;
+}
+
+void World::destroy_block(sf::Vector2i pos)
+{
+	delete tilemap[pos.y / 32][pos.x / 32];
+	tilemap[pos.y / 32][pos.x / 32] = nullptr;
+}
+
+void World::place_block(sf::Vector2i pos, Textures::ID id)
+{
+	if (id == Textures::ID::NUL) return;
+	tilemap[pos.y / 32][pos.x / 32] = new Block(id);
+	tilemap[pos.y / 32][pos.x / 32]->set_coordinates(sf::Vector2f((pos.x/32) * 32.f, (pos.y/32)* 32.f));
 }
 
 void World::set_block (int x, int y, Textures::ID id) {
@@ -187,7 +201,7 @@ void World::drawU(sf::RenderWindow& window, sf::Vector2f p_coordinates)
 void World::test_world()
 {
 	// dont want to write it everytime even using copy-paste
-	Textures::ID g = Textures::ID::GRASS;
+	Textures::ID g = Textures::ID::ORANGE;
 	for (int i = 14; i < WORLD_HEIGHT; ++i)
 		for (int j = 0; j < WORLD_WIDTH; ++j)
 		{
@@ -482,7 +496,7 @@ void Enemy::update_statement(const sf::Time delta_time, const World& chunk, sf::
 					{
 						movement.x = 0.f;
 						if (!Enemy::may_jump_right(chunk, p_coor)) isMovingUp = true;
-						std::cout << "rh";
+						// std::cout << "rh";
 						character.setPosition(blockBounds.left - characterBounds.width - x_crop / 2, characterBounds.top);
 					}
 
@@ -495,7 +509,7 @@ void Enemy::update_statement(const sf::Time delta_time, const World& chunk, sf::
 					{
 						movement.x = 0.f;
 						if (!Enemy::may_jump_left(chunk, p_coor)) isMovingUp = true;
-						std::cout << "lf";
+						// std::cout << "lf";
 						character.setPosition(blockBounds.left + blockBounds.width - x_crop / 2, characterBounds.top);
 					}
 				}
