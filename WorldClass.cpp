@@ -113,7 +113,7 @@ void World::create_surface() {
 
 		for (int i = 0; i < WORLD_HEIGHT; i++) {
 			if (i < line_of_horizon) World::delete_block(i, j);
-			else World::set_block(i, j, Textures::ID::GRASS);
+			else World::set_block(i, j, Textures::ID::ORANGE);
 		}
 	}
 }
