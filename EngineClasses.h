@@ -113,6 +113,7 @@ private:
 	void draw_objects();
 
 	void handle_events(sf::Keyboard::Key key, bool isPressed);
+	void mouse_processor();
 
 
 private:

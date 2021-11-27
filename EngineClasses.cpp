@@ -629,6 +629,15 @@ void Game::handle_events(sf::Keyboard::Key key, bool isPressed)
 		key == sf::Keyboard::S ||
 		key == sf::Keyboard::D)
 		player->key_reaction(key, isPressed);
+	mouse_processor();
+}
+
+void Game::mouse_processor()
+{
+	sf::Vector2i mouse_pos = sf::Mouse::getPosition();
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		chunk.delete_block(mouse_pos);
+
 }
 
 void Game::draw_objects()              // so here we can order for all objects to draw themselves

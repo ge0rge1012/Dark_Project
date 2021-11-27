@@ -72,10 +72,10 @@ World::World()
 			tilemap[i][j] = nullptr;
 }
 
-void World::delete_block(int x, int y)
+void World::delete_block(sf::Vector2i pos)
 {
-	delete tilemap[x][y];
-	tilemap[x][y] = nullptr;
+	delete tilemap[pos.y/32][pos.x/32];
+	tilemap[pos.y/32][pos.x/32] = nullptr;
 }
 
 void World::set_block (int x, int y, Textures::ID id) {
