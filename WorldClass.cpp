@@ -66,12 +66,14 @@ bool Block::breakable()
 Block::Block()
 {
 	sf::Texture& texture = texture_holder.get(Textures::ORANGE);
+	id = Textures::ORANGE;
 	block.setTexture(texture);
 }
 
-Block::Block(Textures::ID id)
+Block::Block(Textures::ID id):id(id)
 {
 	sf::Texture& texture = texture_holder.get(id);
+	this->id = id;
 	block.setTexture(texture);
 }
 
@@ -87,10 +89,20 @@ void Block::set_coordinates(const sf::Vector2f& coord)
 	block.setPosition(coordinates);
 }
 
+Textures::ID Block::get_id() {
+	return id;
+}
+
+void Block::set_id(Textures::ID id) {
+	sf::Texture& texture = texture_holder.get(id);
+	block.setTexture(texture);
+}
+
 sf::FloatRect Block::getGlobalBound()
 {
 	return block.getGlobalBounds();
 }
+
 
 World::World() 
 {
@@ -161,6 +173,14 @@ void World::place_block(sf::Vector2i pos, Textures::ID id)
 }
 
 void World::set_block (int x, int y, Textures::ID id) {
+	if (id = Textures::ID::ORANGE) {
+		if (tilemap[x - 1][y] != nullptr)
+			if ((tilemap[x - 1][y]->get_id() == Textures::ID::ORANGE || tilemap[x - 1][y]->get_id() == Textures::ID::DIRT))
+				id = Textures::ID::DIRT;
+		else if (tilemap[x + 1][y] != nullptr)
+				if (tilemap[x + 1][y]->get_id() == Textures::ID::ORANGE)
+					tilemap[x + 1][y]->set_id(Textures::ID::DIRT);
+	}
 	tilemap[x][y] = new Block(id);
 	tilemap[x][y]->set_coordinates(sf::Vector2f(y * 32.f, x * 32.f));
 }
