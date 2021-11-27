@@ -50,7 +50,6 @@ Block::Block(Textures::ID id)
 
 void Block::drawU(sf::RenderWindow& window)
 {
-	block.setPosition(coordinates);
 	window.draw(block);
 	//std::cout << coordinates.x << " " << coordinates.y << std::endl;
 }
@@ -58,6 +57,7 @@ void Block::drawU(sf::RenderWindow& window)
 void Block::set_coordinates(const sf::Vector2f& coord)
 {
 	coordinates = coord;
+	block.setPosition(coordinates);
 }
 
 sf::FloatRect Block::getGlobalBound()
@@ -109,11 +109,44 @@ void World::set_block (int x, int y, Textures::ID id) {
 	tilemap[x][y]->set_coordinates(sf::Vector2f(y * 32.f, x * 32.f));
 }
 
+void World::drawU(sf::RenderWindow& window, sf::Vector2f p_coordinates)
+{
+	int i1 = p_coordinates.x;
+	i1 /= 32;
+	int j1 = p_coordinates.y;
+	j1 /= 32;
+
+	int temp = i1;
+	i1 = j1;
+	j1 = temp;
+
+	i1 -= 20;
+	if (i1 < 0) i1 = 0;
+	j1 -= 20;
+	if (j1 < 0) j1 = 0;
+
+	std::cout << i1 << "i1 " << j1 << "j1" << std::endl;
+
+	int LESS_HEIGHT = i1 + 40;
+	int LESS_WIDTH = j1 + 40;
+	if (LESS_HEIGHT >= WORLD_HEIGHT) LESS_HEIGHT = WORLD_HEIGHT - 1;
+	if (LESS_WIDTH >= WORLD_WIDTH)   LESS_WIDTH  =  WORLD_WIDTH - 1;
+
+	
+	if (WORLD_HEIGHT - i1 > 40) LESS_HEIGHT = i1 + 40;
+	if (WORLD_WIDTH - j1 > 45) LESS_WIDTH = j1 + 45;
+
+	for (int i = i1; i < LESS_HEIGHT; ++i)
+		for (int j = j1; j < LESS_WIDTH; ++j)
+			if (tilemap[i][j] != nullptr)
+				tilemap[i][j]->drawU(window);
+}
+
 void World::test_world()
 {
 	// dont want to write it everytime even using copy-paste
 	Textures::ID g = Textures::ID::GRASS;
-	for (int i = 14; i < 18; ++i)
+	for (int i = 14; i < WORLD_HEIGHT; ++i)
 		for (int j = 0; j < WORLD_WIDTH; ++j)
 		{
 			set_block(i, j, g);
@@ -168,7 +201,6 @@ Enemy::Enemy(sf::Vector2f position, Textures::ID id)
 	if (type == Textures::ID::GREY)
 	{
 		character.setTextureRect(sf::IntRect(0, 0, 32, 29));
-		std::cout << "!";
 	}
 }
 
@@ -211,15 +243,15 @@ void Enemy::update_statement(const sf::Time delta_time, const World& chunk)
 	i1 = j1;
 	j1 = temp;
 
-	i1 -= 5;
+	i1 -= 1;
 	if (i1 < 0) i1 = 0;
-	j1 -= 5;
+	j1 -= 3;
 	if (j1 < 0) j1 = 0;
 
 	int LESS_HEIGHT = WORLD_HEIGHT;
 	int LESS_WIDTH = WORLD_WIDTH;
-	if (WORLD_HEIGHT - i1 > 15) LESS_HEIGHT = i1 + 15;
-	if (WORLD_WIDTH - j1 > 15) LESS_WIDTH = j1 + 15;
+	if (WORLD_HEIGHT - i1 > 6) LESS_HEIGHT = i1 + 6;
+	if (WORLD_WIDTH - j1 > 6) LESS_WIDTH = j1 + 6;
 
 	for (int i = i1; i < LESS_HEIGHT; ++i)
 		for (int j = j1; j < LESS_WIDTH; ++j)
@@ -236,7 +268,7 @@ void Enemy::update_statement(const sf::Time delta_time, const World& chunk)
 
 
 				if (blockBounds.intersects(nextPos)) {
-					std::cout << "i" << i << " j" << j << std::endl;
+					// std::cout << "i" << i << " j" << j << std::endl;
 
 					// bottom collision
 					if (characterBounds.top < blockBounds.top
@@ -278,15 +310,15 @@ void Enemy::update_statement(const sf::Time delta_time, const World& chunk)
 	i1 = j1;
 	j1 = temp;
 
-	i1 -= 5;
+	i1 -= 3;
 	if (i1 < 0) i1 = 0;
-	j1 -= 5;
+	j1 -= 3;
 	if (j1 < 0) j1 = 0;
 
 	LESS_HEIGHT = WORLD_HEIGHT;
 	LESS_WIDTH = WORLD_WIDTH;
-	if (WORLD_HEIGHT - i1 > 15) LESS_HEIGHT = i1 + 15;
-	if (WORLD_WIDTH - j1 > 15) LESS_WIDTH = j1 + 15;
+	if (WORLD_HEIGHT - i1 > 8) LESS_HEIGHT = i1 + 8;
+	if (WORLD_WIDTH - j1 > 8) LESS_WIDTH = j1 + 8;
 
 	for (int i = i1; i < LESS_HEIGHT; ++i)
 		for (int j = j1; j < LESS_WIDTH; ++j)
