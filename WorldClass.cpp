@@ -124,13 +124,26 @@ void World::create_surface() {
 		std::cout << line_of_horizon << std::endl;
 
 		for (int i = 0; i < WORLD_HEIGHT; i++) {
-			if (i < line_of_horizon) World::delete_block(i, j);
-			else World::set_block(i, j, Textures::ID::ORANGE);
+			if (i < line_of_horizon)
+				World::delete_block(i, j);
+			else if (i >= line_of_horizon && i < line_of_horizon + 3)
+				World::set_block(i, j, Textures::ID::ORANGE);
+			else
+				World::set_block(i, j, Textures::ID::ROCK);
 		}
 	}
 }
 
 void World::create_cave(int x, int y) {
+	int cave_height = random_number.get_random(50, 100);
+	std::cout << "CAVE HEIGHT" << cave_height << std::endl;
+	for (int i = x; i < x + cave_height; i++) {
+		int cave_width = random_number.get_random(6, 8);
+		for (int j = y; j < y + cave_width; j++) {
+			World::delete_block(i, j);
+		}
+		y+=cave_width%3;
+	}
 
 }
 
@@ -138,19 +151,29 @@ void World::create_mountain() {
 
 }
 
+void World::spawn_resources() {
+	for (int i = 0; i < 10000; i++) {
+		int randX = random_number.get_random(60, WORLD_HEIGHT - 1);
+		int randY = random_number.get_random(0, WORLD_WIDTH - 1);
+		if (tilemap[randX][randY]->get_id() == Textures::ID::ROCK)
+			tilemap[randX][randY]->set_id(Textures::ID::IRON);
+	}
+}
+
 void World::spawn_dungeon() {
 	//stmnd dont know how dung should looks like, so waiting for info from Said.
 }
 
 void World::generate_world() {
-	for (int i = 29; i < WORLD_HEIGHT; i++) {
-		for (int j = 0; j < WORLD_WIDTH; j++) {
-			World::set_block(i, j, Textures::ID::ORANGE);
-		}
-	}
+	//for (int i = 29; i < WORLD_HEIGHT; i++) {
+	//	for (int j = 0; j < WORLD_WIDTH; j++) {		//flat world generate commented
+	//		World::set_block(i, j, Textures::ID::ORANGE);
+	//	}
+	//}
 
 	World::create_surface();
-	World::create_cave(20, 0);
+	World::spawn_resources();
+	World::create_cave(29, 5);
 }
 
 void World::delete_block(int x, int y)
@@ -173,7 +196,7 @@ void World::place_block(sf::Vector2i pos, Textures::ID id)
 }
 
 void World::set_block (int x, int y, Textures::ID id) {
-	if (id = Textures::ID::ORANGE) {
+	if (id == Textures::ID::ORANGE) {
 		if (tilemap[x - 1][y] != nullptr)
 			if ((tilemap[x - 1][y]->get_id() == Textures::ID::ORANGE || tilemap[x - 1][y]->get_id() == Textures::ID::DIRT))
 				id = Textures::ID::DIRT;
