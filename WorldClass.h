@@ -3,6 +3,8 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <list>
+#include <stdlib.h>
+#include <time.h>
 
 const int WORLD_WIDTH = 1000;
 const int WORLD_HEIGHT = 130;
@@ -14,6 +16,17 @@ namespace Textures
 {
 	enum ID { NUL, VAMPIRE, ORANGE, ITEMS, GREY, ROCK, DIRT };
 }
+
+class Randomizer {
+
+public:
+	int N[1000];
+	int counter = 0;
+	Randomizer();
+	void initialize();
+	int get_random(int min, int max);
+	int get_random();
+};
 
 class TextureHolder
 {
@@ -38,7 +51,6 @@ public:
 	bool passable();
 	bool breakable();
 
-
 private:
 	int id = 0;
 	bool isPassable = false;
@@ -52,6 +64,7 @@ class World {
 public:
 	std::array<std::array<Block*, WORLD_WIDTH>, WORLD_HEIGHT> tilemap;
 	std::list <Enemy> enemies;
+	int line_of_horizon = 29;
 
 	World();
 	void create_surface();
