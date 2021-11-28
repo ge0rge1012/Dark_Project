@@ -166,7 +166,7 @@ void World::create_surface() {
 }
 
 void World::create_cave(int x, int y) {
-	int cave_height = random_number.get_random(50, 100);
+	int cave_height = random_number.get_random(70, 135);
 	std::cout << "CAVE HEIGHT" << cave_height << std::endl;
 	for (int i = x; i < x + cave_height; i++) {
 		int cave_width = random_number.get_random(6, 8);

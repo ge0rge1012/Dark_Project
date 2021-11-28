@@ -247,7 +247,7 @@ Player::Player(): plR(texture_holder.get(Textures::VAMPIRE)), plL(texture_holder
 {
 	character.setTexture(plR);
 	character.setTextureRect(sf::IntRect(0, 0, 32, 60));
-	player_position = sf::Vector2f(50.f, 390.f);
+	player_position = sf::Vector2f(5*32.f, 45*32.f);
 	character.setPosition(player_position);
 
 	//p_hitbox = sf::FloatRect();
