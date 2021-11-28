@@ -13,14 +13,14 @@ void Randomizer::initialize() {
 	for (int i = 0; i < 1000; ++i)
 	{
 		N[i] = rand() % 10000;
-		std::cout << N[i] << std::endl;
+		//std::cout << N[i] << std::endl;
 	}
 }
 
 int Randomizer::get_random(int min, int max) {
 	if (counter < 999) counter++;
 	else counter = 0;
-	std::cout << counter << " " << min + N[counter] % (max - min + 1) << std::endl;
+	//std::cout << counter << " " << min + N[counter] % (max - min + 1) << std::endl;
 	return min + N[counter] % (max - min + 1);
 }
 
@@ -111,6 +111,34 @@ World::World()
 			tilemap[i][j] = nullptr;
 }
 
+void World::spawn_tree(int x, int y) {
+	if (y > 3 && y < 996) {
+		Textures::ID leaves = Textures::ID::LEAVES;
+		Textures::ID wood = Textures::ID::WOOD;
+		for (int i = x; i > x - 4; i--) {
+			set_block(i, y, wood);
+		}
+		for (int i = 0; i < 5; i++) {
+			if (tilemap[x - 4][y - 2 + i] == nullptr)
+					set_block(x - 4, y - 2 + i, leaves);
+		}
+		for (int i = 0; i < 5; i++) {
+			if (tilemap[x - 3][y - 2 + i] == nullptr)
+					set_block(x - 3, y - 2 + i, leaves);
+		}
+		for (int i = 0; i < 3; i++) {
+			if (tilemap[x - 5][y - 1 + i] == nullptr)
+					set_block(x - 5, y - 1 + i, leaves);
+		}
+		if (tilemap[x - 2][y - 1] == nullptr)
+				set_block(x - 2, y - 1, leaves);
+		if (tilemap[x - 2][y +1] == nullptr)
+				set_block(x - 2, y + 1, leaves);
+		if (tilemap[x - 6][y] == nullptr)
+				set_block(x - 6, y, leaves);
+	}
+}
+
 void World::create_surface() {
 	random_number.initialize();
 	for (int j = 0; j < WORLD_WIDTH; j++) {
@@ -123,14 +151,17 @@ void World::create_surface() {
 
 		std::cout << line_of_horizon << std::endl;
 
-		for (int i = 0; i < WORLD_HEIGHT; i++) {
-			if (i < line_of_horizon)
-				World::delete_block(i, j);
-			else if (i >= line_of_horizon && i < line_of_horizon + 3)
-				World::set_block(i, j, Textures::ID::ORANGE);
+		for (int i = line_of_horizon; i < WORLD_HEIGHT; i++) {
+			//if (i < line_of_horizon)
+			//	delete_block(i, j);
+			if (i >= line_of_horizon && i < line_of_horizon + 3)
+				set_block(i, j, Textures::ID::ORANGE);
 			else
-				World::set_block(i, j, Textures::ID::ROCK);
+				set_block(i, j, Textures::ID::ROCK);
 		}
+		int tree_chance = random_number.get_random(0, 20);
+		if (tree_chance == 20)
+			spawn_tree(line_of_horizon, j);
 	}
 }
 
@@ -140,7 +171,7 @@ void World::create_cave(int x, int y) {
 	for (int i = x; i < x + cave_height; i++) {
 		int cave_width = random_number.get_random(6, 8);
 		for (int j = y; j < y + cave_width; j++) {
-			World::delete_block(i, j);
+			delete_block(i, j);
 		}
 		y+=cave_width%3;
 	}
@@ -173,7 +204,8 @@ void World::generate_world() {
 
 	World::create_surface();
 	World::spawn_resources();
-	World::create_cave(29, 5);
+	World::create_cave(0, random_number.get_random(25, 60));
+
 }
 
 void World::delete_block(int x, int y)
@@ -194,6 +226,7 @@ void World::place_block(sf::Vector2i pos, Textures::ID id)
 	if (id == Textures::ID::NUL || pos.x < 0 || pos.x > WORLD_HEIGHT*32 - 1 || pos.y < 0 || pos.y > WORLD_WIDTH*32 - 1 || tilemap[pos.y / 32][pos.x / 32] != nullptr) return;
 	tilemap[pos.y / 32][pos.x / 32] = new Block(id);
 	tilemap[pos.y / 32][pos.x / 32]->set_coordinates(sf::Vector2f((pos.x/32) * 32.f, (pos.y/32)* 32.f));
+
 }
 
 void World::set_block (int x, int y, Textures::ID id) {

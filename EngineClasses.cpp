@@ -549,7 +549,10 @@ void Game::start_game()
 	texture_holder.load(Textures::ROCK,     "media/textures/blocks/block_rock/block_rock_32_32v2.png");
 	texture_holder.load(Textures::DIRT,     "media/textures/blocks/block_dirt/block_dirt_32_32.png");
 	texture_holder.load(Textures::IRON,		"media/textures/blocks/block_iron/block_iron_32_32.png");
+	texture_holder.load(Textures::WOOD, "media/textures/blocks/block_wood/block_wood_32_32v2.png");
+	texture_holder.load(Textures::LEAVES, "media/textures/blocks/block_leaves/block_leaves_32_32v2.png");
 	texture_holder.load(Textures::MENU,     "media/images/menu_640_480.png");
+
 
 
 	font_holder.load(Fonts::OLD, "media/fonts/CyrilicOld.ttf");
