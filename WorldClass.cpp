@@ -13,14 +13,14 @@ void Randomizer::initialize() {
 	for (int i = 0; i < 1000; ++i)
 	{
 		N[i] = rand() % 10000;
-		std::cout << N[i] << std::endl;
+		//std::cout << N[i] << std::endl;
 	}
 }
 
 int Randomizer::get_random(int min, int max) {
 	if (counter < 999) counter++;
 	else counter = 0;
-	std::cout << counter << " " << min + N[counter] % (max - min + 1) << std::endl;
+	//std::cout << counter << " " << min + N[counter] % (max - min + 1) << std::endl;
 	return min + N[counter] % (max - min + 1);
 }
 
@@ -192,8 +192,10 @@ void World::destroy_block(sf::Vector2i pos)
 void World::place_block(sf::Vector2i pos, Textures::ID id)
 {
 	if (id == Textures::ID::NUL || pos.x < 0 || pos.x > WORLD_HEIGHT*32 - 1 || pos.y < 0 || pos.y > WORLD_WIDTH*32 - 1) return;
-	tilemap[pos.y / 32][pos.x / 32] = new Block(id);
-	tilemap[pos.y / 32][pos.x / 32]->set_coordinates(sf::Vector2f((pos.x/32) * 32.f, (pos.y/32)* 32.f));
+	if (tilemap[pos.y / 32][pos.x / 32]->get_id() == Textures::ID::NUL) {
+		tilemap[pos.y / 32][pos.x / 32] = new Block(id);
+		tilemap[pos.y / 32][pos.x / 32]->set_coordinates(sf::Vector2f((pos.x / 32) * 32.f, (pos.y / 32) * 32.f));
+	}
 }
 
 void World::set_block (int x, int y, Textures::ID id) {
