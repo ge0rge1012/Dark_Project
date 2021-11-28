@@ -665,15 +665,21 @@ void Game::mouse_processor()
 	// we can look for mouse coordinates on computer screeen bounds or only inside window of game, where top left corner is always 0;0
 	// so I had to transfer it into global world coordinates
 	sf::Vector2i mouse_pos = sf::Mouse::getPosition(g_window);
-	if (mouse_pos.x < 0 || mouse_pos.y < 0 || mouse_pos.x > mysetts.get_width() - 1 || mouse_pos.y > mysetts.get_height() - 1)
+	if (mouse_pos.x < 0 || mouse_pos.y < 0 || mouse_pos.x > g_window.getSize().x - 1 || mouse_pos.y > g_window.getSize().y - 1)
 		return;
 
 	sf::Vector2f cam_pos = g_view.getCenter();
-	sf::Vector2i real_pos = sf::Vector2i((cam_pos.x - (mysetts.get_width() / 2) + mouse_pos.x), (cam_pos.y - (mysetts.get_height() / 2) + mouse_pos.y));
+	// std::cout << g_view.getCenter().x << " " << g_view.getCenter().y << std::endl;
+	sf::Vector2i real_pos = sf::Vector2i((cam_pos.x - (mysetts.get_width() / 2) + static_cast<float>(mouse_pos.x) / (static_cast<float>(g_window.getSize().x / static_cast<float>(mysetts.get_width())))),
+		                                 (cam_pos.y - (mysetts.get_height() / 2) + static_cast<float>(mouse_pos.y) / (static_cast<float>(g_window.getSize().y / static_cast<float>(mysetts.get_height())))));
 	
 
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	{
+		std::cout << "mousecoord " << mouse_pos.x << " " << mouse_pos.y << std::endl;
+		std::cout << "realcoord " << real_pos.x << " " << real_pos.y << std::endl;
 		chunk.destroy_block(real_pos);
+	}
 
 	else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
 	{

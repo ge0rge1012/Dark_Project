@@ -191,7 +191,7 @@ void World::destroy_block(sf::Vector2i pos)
 
 void World::place_block(sf::Vector2i pos, Textures::ID id)
 {
-	if (id == Textures::ID::NUL || pos.x < 0 || pos.x > WORLD_HEIGHT*32 - 1 || pos.y < 0 || pos.y > WORLD_WIDTH*32 - 1) return;
+	if (id == Textures::ID::NUL || pos.x < 0 || pos.x > WORLD_HEIGHT*32 - 1 || pos.y < 0 || pos.y > WORLD_WIDTH*32 - 1 || tilemap[pos.y / 32][pos.x / 32] != nullptr) return;
 	tilemap[pos.y / 32][pos.x / 32] = new Block(id);
 	tilemap[pos.y / 32][pos.x / 32]->set_coordinates(sf::Vector2f((pos.x/32) * 32.f, (pos.y/32)* 32.f));
 }
