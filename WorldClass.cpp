@@ -220,11 +220,12 @@ void World::destroy_block(sf::Vector2i pos)
 	tilemap[pos.y / 32][pos.x / 32] = nullptr;
 }
 
-void World::place_block(sf::Vector2i pos, Textures::ID id)
+bool World::place_block(sf::Vector2i pos, Textures::ID id)
 {
-	if (id == Textures::ID::NUL || pos.x < 0 || pos.y > WORLD_HEIGHT*32 || pos.y < 0 || pos.x > WORLD_WIDTH*32 || tilemap[pos.y / 32][pos.x / 32] != nullptr) return;
+	if (id == Textures::ID::NUL || pos.x < 0 || pos.y > WORLD_HEIGHT*32 || pos.y < 0 || pos.x > WORLD_WIDTH*32 || tilemap[pos.y / 32][pos.x / 32] != nullptr) return false;
 	tilemap[pos.y / 32][pos.x / 32] = new Block(id);
 	tilemap[pos.y / 32][pos.x / 32]->set_coordinates(sf::Vector2f((pos.x/32) * 32.f, (pos.y/32)* 32.f));
+	return true;
 
 }
 

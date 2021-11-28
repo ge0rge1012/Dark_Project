@@ -79,7 +79,7 @@ public:
 	void set_block(int x, int y, Textures::ID id);
 	void delete_block(int x, int y);
 	void destroy_block(sf::Vector2i pos);
-	void place_block(sf::Vector2i pos, Textures::ID id);
+	bool place_block(sf::Vector2i pos, Textures::ID id);
 
 	void add_enemy(sf::Vector2f position, Textures::ID id);
 	// for test location
