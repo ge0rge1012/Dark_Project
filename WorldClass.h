@@ -7,7 +7,7 @@
 #include <time.h>
 
 const int WORLD_WIDTH = 1000;
-const int WORLD_HEIGHT = 130;
+const int WORLD_HEIGHT = 150;
 
 
 class Enemy;
@@ -66,7 +66,7 @@ class World {
 public:
 	std::array<std::array<Block*, WORLD_WIDTH>, WORLD_HEIGHT> tilemap;
 	std::list <Enemy> enemies;
-	int line_of_horizon = 29;
+	int line_of_horizon = 49;
 
 	World();
 	void create_surface();

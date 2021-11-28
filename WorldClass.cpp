@@ -142,9 +142,9 @@ void World::spawn_tree(int x, int y) {
 void World::create_surface() {
 	random_number.initialize();
 	for (int j = 0; j < WORLD_WIDTH; j++) {
-		if (line_of_horizon>60)
+		if (line_of_horizon>WORLD_HEIGHT-85)
 			line_of_horizon += random_number.get_random(-3, 0);
-		else if (line_of_horizon<10)
+		else if (line_of_horizon<30)
 			line_of_horizon += random_number.get_random(0, 3);
 		else
 			line_of_horizon += random_number.get_random(-1, 1);
@@ -184,7 +184,7 @@ void World::create_mountain() {
 
 void World::spawn_resources() {
 	for (int i = 0; i < 10000; i++) {
-		int randX = random_number.get_random(60, WORLD_HEIGHT - 1);
+		int randX = random_number.get_random(line_of_horizon+20, WORLD_HEIGHT - 1);
 		int randY = random_number.get_random(0, WORLD_WIDTH - 1);
 		if (tilemap[randX][randY]->get_id() == Textures::ID::ROCK)
 			tilemap[randX][randY]->set_id(Textures::ID::IRON);
