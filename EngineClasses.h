@@ -105,6 +105,8 @@ private:
 	float jumpVelocity = 230;
 	sf::Vector2f player_position;
 	sf::FloatRect p_hitbox;
+	sf::Texture& plR;
+	sf::Texture& plL;
 
 public:
 	Player();
@@ -149,6 +151,7 @@ private:
 	sf::RenderWindow g_window;
 	std::string nick = "";
 	NickName nick_under_head;
+	sf::Sprite menu;
 
 	// can be vectors of different objects
 	Player* player;

@@ -14,7 +14,7 @@ class Enemy;
 
 namespace Textures
 {
-	enum ID { NUL, VAMPIRE, ORANGE, ITEMS, GREY, ROCK, DIRT, IRON };
+	enum ID { NUL, MENU, VAMPIRE, VAMPIREL, ORANGE, ITEMS, GREY, ROCK, DIRT, IRON };
 }
 
 class Randomizer {
