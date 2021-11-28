@@ -455,7 +455,7 @@ void Inventory::add_item(Textures::ID id, int kolvo)
 		if ((*it).get_id() == id)
 			iter = it;
 	if (iter != items.end())
-		(*iter).add_one();
+		(*iter).add_plenty(kolvo);
 	else
 		items.push_back(InvItem(id));
 
@@ -487,6 +487,11 @@ Player::Player(): plR(texture_holder.get(Textures::VAMPIRE)), plL(texture_holder
 void Player::drawU(sf::RenderWindow& window)
 {
 	window.draw(character);
+}
+
+sf::FloatRect Player::getGlobalBounds()
+{
+	return character.getGlobalBounds();
 }
 
 float Player::getplayercoordinateX() {
@@ -716,6 +721,22 @@ Game* Game::game_ptr = nullptr;  // because we can't initialize static nonconst 
 
 Game::~Game() { delete game_ptr;  game_ptr = nullptr; }
 
+void Game::raising_items()
+{
+	for (auto it = chunk.gitems.begin(); it != chunk.gitems.end(); it++)
+	{
+		// std::cout <<  "player " << player->getGlobalBounds().left << player->getGlobalBounds().top << player->getGlobalBounds().width << player->getGlobalBounds().height;
+		// std::cout << "player " << (*it).getGlobalBounds().left << (*it).getGlobalBounds().top << (*it).getGlobalBounds().width << (*it).getGlobalBounds().height;
+		if (player->getGlobalBounds().intersects((*it).getGlobalBounds()))
+		{
+			std::cout << std::endl << " raising" << std::endl;
+			inventory.add_item((*it).get_id(), (*it).get_amount());
+			chunk.gitems.erase(it);
+			break;
+		}
+	}
+}
+
 Game* Game::get_game_object()
 {
 	if (game_ptr == nullptr) game_ptr = new Game();
@@ -872,10 +893,15 @@ void Game::process_events()
 
 void Game::update(const sf::Time delta_time)
 {
+	raising_items();
 	player->screen_collision(mysetts.get_width(), mysetts.get_height());
 	player->update_statement(delta_time, chunk);
+
 	for (auto it = chunk.enemies.begin(); it != chunk.enemies.end(); it++)
 		(*it).update_statement(delta_time, chunk, sf::Vector2f (player->getplayercoordinateX(), player->getplayercoordinateY()));
+	for (auto it = chunk.gitems.begin(); it != chunk.gitems.end(); it++)
+		(*it).update_statement(delta_time, chunk);
+
 	nick_under_head.set_coordinates(player->getplayercoordinateX(), player->getplayercoordinateY());
 
 	sf::Vector2f cam_pos = g_view.getCenter();
@@ -954,6 +980,8 @@ void Game::draw_objects()              // so here we can order for all objects t
 	chunk.drawU(g_window, sf::Vector2f(player->getplayercoordinateX(), player->getplayercoordinateY()));
 
 	for (auto it = chunk.enemies.begin(); it != chunk.enemies.end(); it++)
+		(*it).drawU(g_window);
+	for (auto it = chunk.gitems.begin(); it != chunk.gitems.end(); it++)
 		(*it).drawU(g_window);
 
 	nick_under_head.drawU(g_window);

@@ -11,6 +11,7 @@ const int WORLD_HEIGHT = 150;
 
 
 class Enemy;
+class GroundItem;
 
 namespace Textures
 {
@@ -66,6 +67,7 @@ class World {
 public:
 	std::array<std::array<Block*, WORLD_WIDTH>, WORLD_HEIGHT> tilemap;
 	std::list <Enemy> enemies;
+	std::list<GroundItem> gitems;
 	int line_of_horizon = 49;
 
 	World();
@@ -80,6 +82,7 @@ public:
 	void delete_block(int x, int y);
 	void destroy_block(sf::Vector2i pos);
 	bool place_block(sf::Vector2i pos, Textures::ID id);
+	void add_ground_item(Textures::ID id, sf::Vector2f coord);
 
 	void add_enemy(sf::Vector2f position, Textures::ID id);
 	// for test location
@@ -87,7 +90,8 @@ public:
 	void drawU(sf::RenderWindow& window, sf::Vector2f p_coordinates);
 };
 
-//.............................................
+//____________________________________________________________________
+
 class Enemy
 {
 private:
@@ -118,4 +122,29 @@ public:
 	void key_reaction(sf::Keyboard::Key key, bool isPressed);
 	float getenemycoordinateX();
 	float getenemycoordinateY();
+};
+
+//____________________________________________________________________
+
+class GroundItem
+{
+public:
+	Textures::ID get_id();
+	int get_amount();
+	GroundItem(Textures::ID id, sf::Vector2f coord);
+	void add_plenty(int num);
+	sf::Vector2f get_position();
+	void set_position(sf::Vector2f pos);
+	void drawU(sf::RenderWindow& window);
+	void update_statement(const sf::Time delta_time, const World& chunk);
+	sf::FloatRect getGlobalBounds();
+
+private:
+	Textures::ID id;
+	sf::Sprite sprite;
+	int amount;
+
+	int gravity = 8;
+	int gravityAccum = 0;
+	bool onGround = false;
 };

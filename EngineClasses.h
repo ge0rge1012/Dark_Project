@@ -160,6 +160,7 @@ public:
 	void screen_collision(int win_width, int win_height);
 	float getplayercoordinateX();
 	float getplayercoordinateY();
+	sf::FloatRect getGlobalBounds();
 };
 
 class Game
@@ -172,6 +173,7 @@ public:
 	static Game* get_game_object();        // for singleton
 	Game(Game& other) = delete;            // to prevent copies for singleton
 	void operator=(const Game&) = delete;  // for singleton
+	void raising_items();
 
 private:
 	void run();                  // starting game loop (main loop)
