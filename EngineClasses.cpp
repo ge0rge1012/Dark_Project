@@ -243,10 +243,9 @@ void set_view(float x, float y)
 
 //____________________________________________________________________
 
-Player::Player()
+Player::Player(): plR(texture_holder.get(Textures::VAMPIRE)), plL(texture_holder.get(Textures::VAMPIREL))
 {
-	sf::Texture& texture = texture_holder.get(Textures::VAMPIRE);
-	character.setTexture(texture);
+	character.setTexture(plR);
 	character.setTextureRect(sf::IntRect(0, 0, 32, 60));
 	player_position = sf::Vector2f(50.f, 390.f);
 	character.setPosition(player_position);
@@ -342,8 +341,17 @@ void Player::update_statement(const sf::Time delta_time, const World& chunk)
 
 	// if (isMovingUp)    movement.y -= player_speed;   // isn't needed untill we have vertical stairs, jumping by negative gravity
 	// if (isMovingDown)  movement.y += player_speed;   // going down by pressing keys, when we have gravity? lol
-	if (isMovingLeft)  movement.x -= player_speed;
-	if (isMovingRigth) movement.x += player_speed;
+	if (isMovingLeft) {
+		movement.x -= player_speed; 
+		character.setTexture(plL);
+		character.setTextureRect(sf::IntRect(0, 0, 32, 60));
+	}
+	if (isMovingRigth) {
+		movement.x += player_speed;
+		character.setTexture(plR);
+		character.setTextureRect(sf::IntRect(0, 0, 32, 60));
+	}
+
 	if (!onGround) { movement.y += gravityAccum; gravityAccum += gravity; }
 
 	// there is no gravitation on the floor (it can be, doesn't matter, but...)
@@ -534,14 +542,18 @@ void Game::start_game()
 {
 	// make configurations: game mode, choose character model and etc.
 	// so main menu will be opened here in future
-	texture_holder.load(Textures::VAMPIRE, "media/textures/animals/gg_32_64.png"); 
-	texture_holder.load(Textures::GREY,    "media/textures/animals/skeleton_grey.png");
-	texture_holder.load(Textures::ORANGE,  "media/textures/blocks/block_orange/block_orange_32_32.png");
-	texture_holder.load(Textures::ROCK,    "media/textures/blocks/block_rock/block_rock_32_32v2.png");
-	texture_holder.load(Textures::DIRT,    "media/textures/blocks/block_dirt/block_dirt_32_32.png");
+	texture_holder.load(Textures::VAMPIRE,  "media/textures/animals/gg_32_64.png"); 
+	texture_holder.load(Textures::VAMPIREL, "media/textures/animals/gg_32_64l.png");
+	texture_holder.load(Textures::GREY,     "media/textures/animals/skeleton_grey.png");
+	texture_holder.load(Textures::ORANGE,   "media/textures/blocks/block_orange/block_orange_32_32.png");
+	texture_holder.load(Textures::ROCK,     "media/textures/blocks/block_rock/block_rock_32_32v2.png");
+	texture_holder.load(Textures::DIRT,     "media/textures/blocks/block_dirt/block_dirt_32_32.png");
 	texture_holder.load(Textures::IRON,		"media/textures/blocks/block_iron/block_iron_32_32.png");
 	texture_holder.load(Textures::WOOD, "media/textures/blocks/block_wood/block_wood_32_32v2.png");
 	texture_holder.load(Textures::LEAVES, "media/textures/blocks/block_leaves/block_leaves_32_32v2.png");
+	texture_holder.load(Textures::MENU,     "media/images/menu_640_480.png");
+
+
 
 	font_holder.load(Fonts::OLD, "media/fonts/CyrilicOld.ttf");
 
@@ -557,7 +569,12 @@ Game::Game() : g_window(sf::VideoMode(mysetts.get_width(), mysetts.get_height())
 	g_view.reset(sf::FloatRect(0, 0, mysetts.get_width(), mysetts.get_height()));
 	g_view.setCenter(player->getplayercoordinateX() + 100, player->getplayercoordinateY());
 
-	chunk.generate_world();
+	sf::Texture& men = texture_holder.get(Textures::ID::MENU);
+	menu.setTexture(men);
+	menu.setColor(sf::Color(64, 64, 64, 255));
+
+	chunk.test_world();
+	//chunk.generate_world();
 	//chunk.test_world();
 	chunk.add_enemy(sf::Vector2f(50.f, 390.f), Textures::ID::GREY);
 }
@@ -623,13 +640,17 @@ void Game::update(const sf::Time delta_time)
 	for (auto it = chunk.enemies.begin(); it != chunk.enemies.end(); it++)
 		(*it).update_statement(delta_time, chunk, sf::Vector2f (player->getplayercoordinateX(), player->getplayercoordinateY()));
 	nick_under_head.set_coordinates(player->getplayercoordinateX(), player->getplayercoordinateY());
+
+	sf::Vector2f cam_pos = g_view.getCenter();
+	menu.setPosition(cam_pos.x - mysetts.get_width()/2, cam_pos.y - mysetts.get_height()/2);
+
 }
 
 void Game::render()
 {
 	g_window.setView(g_view);
 	g_window.clear();                  // making black (without anything)
-	draw_objects();                    // drawing objects (for now only one)
+	draw_objects();                    // drawing objects 
 	g_window.display();                // drawing display (screen)
 }
 
@@ -647,15 +668,21 @@ void Game::mouse_processor()
 	// we can look for mouse coordinates on computer screeen bounds or only inside window of game, where top left corner is always 0;0
 	// so I had to transfer it into global world coordinates
 	sf::Vector2i mouse_pos = sf::Mouse::getPosition(g_window);
-	if (mouse_pos.x < 0 || mouse_pos.y < 0 || mouse_pos.x > mysetts.get_width() - 1 || mouse_pos.y > mysetts.get_height() - 1)
+	if (mouse_pos.x < 0 || mouse_pos.y < 0 || mouse_pos.x > g_window.getSize().x - 1 || mouse_pos.y > g_window.getSize().y - 1)
 		return;
 
 	sf::Vector2f cam_pos = g_view.getCenter();
-	sf::Vector2i real_pos = sf::Vector2i((cam_pos.x - (mysetts.get_width() / 2) + mouse_pos.x), (cam_pos.y - (mysetts.get_height() / 2) + mouse_pos.y));
+	// std::cout << g_view.getCenter().x << " " << g_view.getCenter().y << std::endl;
+	sf::Vector2i real_pos = sf::Vector2i((cam_pos.x - (mysetts.get_width() / 2) + static_cast<float>(mouse_pos.x) / (static_cast<float>(g_window.getSize().x / static_cast<float>(mysetts.get_width())))),
+		                                 (cam_pos.y - (mysetts.get_height() / 2) + static_cast<float>(mouse_pos.y) / (static_cast<float>(g_window.getSize().y / static_cast<float>(mysetts.get_height())))));
 	
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-		chunk.destroy_block(real_pos);
 
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	{
+		std::cout << "mousecoord " << mouse_pos.x << " " << mouse_pos.y << std::endl;
+		std::cout << "realcoord " << real_pos.x << " " << real_pos.y << std::endl;
+		chunk.destroy_block(real_pos);
+	}
 
 	else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
 	{
@@ -673,7 +700,6 @@ void Game::mouse_processor()
 
 		else
 		{
-			std::cout << "IUU";
 			chunk.place_block(real_pos, Textures::ORANGE);
 		}
 	}
@@ -684,6 +710,7 @@ void Game::mouse_processor()
 
 void Game::draw_objects()              // so here we can order for all objects to draw themselves
 {
+	g_window.draw(menu);
 	player->drawU(g_window);
 
 	chunk.drawU(g_window, sf::Vector2f(player->getplayercoordinateX(), player->getplayercoordinateY()));
