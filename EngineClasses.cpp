@@ -573,8 +573,8 @@ Game::Game() : g_window(sf::VideoMode(mysetts.get_width(), mysetts.get_height())
 	menu.setTexture(men);
 	menu.setColor(sf::Color(64, 64, 64, 255));
 
-	chunk.test_world();
-	//chunk.generate_world();
+	// chunk.test_world();
+	chunk.generate_world();
 	//chunk.test_world();
 	chunk.add_enemy(sf::Vector2f(50.f, 390.f), Textures::ID::GREY);
 }
