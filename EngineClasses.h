@@ -32,9 +32,11 @@ TextureHolder modifiing:
 #include <vector>
 #include <map>
 #include <string>
+#include <string>
 #include <memory>
 #include "settings.h"
 #include "WorldClass.h"
+
 
 // a little bit of shitcode (let it be, it's a joke) for fixed time steps realisation - my proud
 // it gives about 60 fps, but work (may be) more stable, then standart function
@@ -88,6 +90,47 @@ public:
 	const sf::Font& get(Fonts::ID id) const;
 };
 
+class InvItem
+{
+public:
+	Textures::ID get_id();
+	int get_amount();
+	InvItem(Textures::ID id);
+	void add_one();
+	void add_plenty(int num);
+	void set_scale(sf::Vector2f scale);
+    sf::Vector2f get_position();
+	void substract_one();
+	void set_position(sf::Vector2f pos);
+	void drawU(sf::RenderWindow& window);
+
+private:
+	Textures::ID id;
+	sf::Sprite sprite;
+	int amount;
+
+};
+
+class Inventory
+{
+public:
+	void drawU(sf::RenderWindow& window);
+	Inventory();
+	void update_statement();
+	void add_item(Textures::ID id, int kolvo = 1);
+	Textures::ID get_current();
+	void key_reaction(sf::Keyboard::Key key);
+	int set_current(int num);
+	void decrease_item();
+
+private:
+	std::list<InvItem> items;
+	std::array<sf::RectangleShape, 8> cubes;
+	sf::RectangleShape inv_line;
+	int current_item = 1;
+
+};
+
 class Player
 {
 private:
@@ -117,6 +160,7 @@ public:
 	void screen_collision(int win_width, int win_height);
 	float getplayercoordinateX();
 	float getplayercoordinateY();
+	sf::FloatRect getGlobalBounds();
 };
 
 class Game
@@ -129,11 +173,13 @@ public:
 	static Game* get_game_object();        // for singleton
 	Game(Game& other) = delete;            // to prevent copies for singleton
 	void operator=(const Game&) = delete;  // for singleton
+	void raising_items();
 
 private:
 	void run();                  // starting game loop (main loop)
 	void boot_screen();
 	std::vector<std::vector<std::string>> tiles;
+	Inventory inventory;
 
 
 	void process_events();                                 // observing for players action (pressing keys)

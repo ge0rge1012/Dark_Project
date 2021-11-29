@@ -175,7 +175,6 @@ void World::create_cave(int x, int y) {
 		}
 		y+=cave_width%3;
 	}
-
 }
 
 void World::create_mountain() {
@@ -245,17 +244,25 @@ void World::delete_block(int x, int y)
 
 void World::destroy_block(sf::Vector2i pos)
 {
-	if (pos.x < 0 || pos.x > WORLD_HEIGHT*32 - 1 || pos.y < 0 || pos.y > WORLD_WIDTH*32 - 1) return;
+	if (pos.x < 0 || pos.y > WORLD_HEIGHT*32 - 1 || pos.y < 0 || pos.x > WORLD_WIDTH*32 - 1 || tilemap[pos.y / 32][pos.x / 32] == nullptr) return;
+	Textures::ID id = tilemap[pos.y / 32][pos.x / 32]->get_id();
 	delete tilemap[pos.y / 32][pos.x / 32];
 	tilemap[pos.y / 32][pos.x / 32] = nullptr;
+	add_ground_item(id, sf::Vector2f(pos.x, pos.y));
 }
 
-void World::place_block(sf::Vector2i pos, Textures::ID id)
+bool World::place_block(sf::Vector2i pos, Textures::ID id)
 {
-	if (id == Textures::ID::NUL || pos.x < 0 || pos.x > WORLD_HEIGHT*32 - 1 || pos.y < 0 || pos.y > WORLD_WIDTH*32 - 1 || tilemap[pos.y / 32][pos.x / 32] != nullptr) return;
+	if (id == Textures::ID::NUL || pos.x < 0 || pos.y > WORLD_HEIGHT*32 || pos.y < 0 || pos.x > WORLD_WIDTH*32 || tilemap[pos.y / 32][pos.x / 32] != nullptr) return false;
 	tilemap[pos.y / 32][pos.x / 32] = new Block(id);
 	tilemap[pos.y / 32][pos.x / 32]->set_coordinates(sf::Vector2f((pos.x/32) * 32.f, (pos.y/32)* 32.f));
+	return true;
 
+}
+
+void World::add_ground_item(Textures::ID id, sf::Vector2f coord)
+{
+	gitems.push_back(GroundItem(id, coord));
 }
 
 void World::set_block (int x, int y, Textures::ID id) {
@@ -351,7 +358,8 @@ void World::add_enemy(sf::Vector2f position, Textures::ID id)
 	enemies.push_back(Enemy(position, id));
 }
 
-//.....................................................................
+
+//____________________________________________________________________
 
 Enemy::Enemy(sf::Vector2f position, Textures::ID id)
 {
@@ -630,4 +638,208 @@ void Enemy::update_statement(const sf::Time delta_time, const World& chunk, sf::
 	character.move(movement * delta_time.asSeconds());
 	enemy_position.x = character.getGlobalBounds().left;
 	enemy_position.y = character.getGlobalBounds().top;
+}
+
+//____________________________________________________________________
+
+Textures::ID GroundItem::get_id()
+{
+	return id;
+}
+
+GroundItem::GroundItem(Textures::ID id, sf::Vector2f coord) : id(id)
+{
+	amount = 1;
+
+	sf::Texture& texture = texture_holder.get(id);
+	sprite.setTexture(texture);
+	sprite.setScale(0.2, 0.2);
+	sprite.setPosition(coord);
+}
+
+int GroundItem::get_amount()
+{
+	return amount;
+}
+
+void GroundItem::set_position(sf::Vector2f pos)
+{
+	sprite.setPosition(pos);
+}
+
+void GroundItem::drawU(sf::RenderWindow& window)
+{
+	window.draw(sprite);
+}
+
+
+void GroundItem::add_plenty(int num)
+{
+	amount = num;
+}
+
+sf::FloatRect GroundItem::getGlobalBounds()
+{
+	return sf::FloatRect(sprite.getGlobalBounds());
+}
+
+void GroundItem::update_statement(const sf::Time delta_time, const World& chunk)
+{
+	sf::Vector2f movement(0.f, 0.f);
+	sf::FloatRect nextPos;
+
+	bool smth_is_under = false;
+
+	// getting left top coordinate of little chunk to check block collisions only there
+	// lots of validation
+	// a kind of optimisation
+
+	int i1 = sprite.getPosition().x;
+	i1 /= 32;
+	int j1 = sprite.getPosition().y;
+	j1 /= 32;
+
+	// swapping, because we need:)
+	int temp = i1;
+	i1 = j1;
+	j1 = temp;
+
+	i1 -= 1;
+	if (i1 < 0) i1 = 0;
+	j1 -= 3;
+	if (j1 < 0) j1 = 0;
+
+	int LESS_HEIGHT = WORLD_HEIGHT;
+	int LESS_WIDTH = WORLD_WIDTH;
+	if (WORLD_HEIGHT - i1 > 6) LESS_HEIGHT = i1 + 6;
+	if (WORLD_WIDTH - j1 > 6) LESS_WIDTH = j1 + 6;
+
+	for (int i = i1; i < LESS_HEIGHT; ++i)
+		for (int j = j1; j < LESS_WIDTH; ++j)
+		{
+			if (chunk.tilemap[i][j] != nullptr && !(chunk.tilemap[i][j]->passable())) {
+				sf::FloatRect characterBounds1 = sprite.getGlobalBounds();
+				sf::FloatRect characterBounds(characterBounds1.left, characterBounds1.top, characterBounds1.width, characterBounds1.height);
+				sf::FloatRect blockBounds = chunk.tilemap[i][j]->getGlobalBound();
+
+				//std::cout << characterBounds.width << " " << characterBounds.height;
+
+				nextPos = characterBounds;
+				nextPos.top += gravity = 9;
+
+
+				if (blockBounds.intersects(nextPos)) {
+					// std::cout << "i" << i << " j" << j << std::endl;
+
+					// bottom collision
+					if (characterBounds.top < blockBounds.top
+						&& characterBounds.top + characterBounds.height < blockBounds.top + blockBounds.height
+						&& characterBounds.left < blockBounds.left + blockBounds.width
+						&& characterBounds.left + characterBounds.width > blockBounds.left
+						)
+					{
+						smth_is_under = true;
+					}
+				}
+			}
+		}
+	if (!smth_is_under) onGround = false;
+
+
+
+	if (!onGround)
+	{
+		movement.y += gravityAccum; 
+		gravityAccum += gravity;
+	}
+
+	if (onGround) gravityAccum = 0;
+
+	// there is no gravitation on the floor (it can be, doesn't matter, but...)
+
+	i1 = sprite.getPosition().x;
+	i1 /= 32;
+	j1 = sprite.getPosition().y;
+	j1 /= 32;
+
+	temp = i1;
+	i1 = j1;
+	j1 = temp;
+
+	i1 -= 3;
+	if (i1 < 0) i1 = 0;
+	j1 -= 3;
+	if (j1 < 0) j1 = 0;
+
+	LESS_HEIGHT = WORLD_HEIGHT;
+	LESS_WIDTH = WORLD_WIDTH;
+	if (WORLD_HEIGHT - i1 > 8) LESS_HEIGHT = i1 + 8;
+	if (WORLD_WIDTH - j1 > 8) LESS_WIDTH = j1 + 8;
+
+	for (int i = i1; i < LESS_HEIGHT; ++i)
+		for (int j = j1; j < LESS_WIDTH; ++j)
+		{
+			if (chunk.tilemap[i][j] != nullptr && !(chunk.tilemap[i][j]->passable())) {
+				sf::FloatRect characterBounds1 = sprite.getGlobalBounds();
+				sf::FloatRect characterBounds(characterBounds1.left, characterBounds1.top, characterBounds1.width, characterBounds1.height);
+				sf::FloatRect blockBounds = chunk.tilemap[i][j]->getGlobalBound();
+
+				nextPos = characterBounds;
+				nextPos.left += movement.x * delta_time.asSeconds();
+				nextPos.top += movement.y * delta_time.asSeconds();
+
+				if (blockBounds.intersects(nextPos)) {
+					// std::cout << "Collision! ";
+
+					// bottom collision
+					if (characterBounds.top < blockBounds.top
+						&& characterBounds.top + characterBounds.height < blockBounds.top + blockBounds.height
+						&& characterBounds.left < blockBounds.left + blockBounds.width
+						&& characterBounds.left + characterBounds.width > blockBounds.left
+						)
+					{
+						onGround = true;
+						// std::cout << " BOTCOL ";
+						movement.y = 0.f;
+
+						sprite.setPosition(characterBounds.left, blockBounds.top - characterBounds.height);
+					}
+
+					// top collision
+					else if (characterBounds.top > blockBounds.top
+						&& characterBounds.top + characterBounds.height > blockBounds.top + blockBounds.height
+						&& characterBounds.left < blockBounds.left + blockBounds.width
+						&& characterBounds.left + characterBounds.width > blockBounds.left
+						)
+					{
+						movement.y = 0.f;
+						gravityAccum = 0;
+						sprite.setPosition(characterBounds.left, blockBounds.top + blockBounds.height);
+					}
+
+					// right collision
+					else if (characterBounds.left < blockBounds.left
+						&& characterBounds.left + characterBounds.width < blockBounds.left + blockBounds.width
+						&& characterBounds.top < blockBounds.top + blockBounds.height
+						&& characterBounds.top + characterBounds.height > blockBounds.top
+						)
+					{
+						movement.x = 0.f;
+						sprite.setPosition(blockBounds.left - characterBounds.width, characterBounds.top);
+					}
+
+					// left collision
+					else if (characterBounds.left > blockBounds.left
+						&& characterBounds.left + characterBounds.width > blockBounds.left + blockBounds.width
+						&& characterBounds.top < blockBounds.top + blockBounds.height
+						&& characterBounds.top + characterBounds.height > blockBounds.top
+						)
+					{
+						movement.x = 0.f;
+						sprite.setPosition(blockBounds.left + blockBounds.width, characterBounds.top);
+					}
+				}
+			}
+		}
+	sprite.move(movement* delta_time.asSeconds());
 }
