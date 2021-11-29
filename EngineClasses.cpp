@@ -551,7 +551,7 @@ void Game::start_game()
 	texture_holder.load(Textures::IRON,		"media/textures/blocks/block_iron/block_iron_32_32.png");
 	texture_holder.load(Textures::WOOD, "media/textures/blocks/block_wood/block_wood_32_32v2.png");
 	texture_holder.load(Textures::LEAVES, "media/textures/blocks/block_leaves/block_leaves_32_32v2.png");
-	texture_holder.load(Textures::MENU,     "media/images/menu_640_480.png");
+	texture_holder.load(Textures::MENU,     "media/images/backgroundv1.png");
 
 
 

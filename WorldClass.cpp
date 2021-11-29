@@ -186,8 +186,9 @@ void World::spawn_resources() {
 	for (int i = 0; i < 10000; i++) {
 		int randX = random_number.get_random(line_of_horizon+20, WORLD_HEIGHT - 1);
 		int randY = random_number.get_random(0, WORLD_WIDTH - 1);
-		if (tilemap[randX][randY]->get_id() == Textures::ID::ROCK)
-			tilemap[randX][randY]->set_id(Textures::ID::IRON);
+		if (tilemap[randX][randY]!=nullptr)
+			if (tilemap[randX][randY]->get_id() == Textures::ID::ROCK)
+				tilemap[randX][randY]->set_id(Textures::ID::IRON);
 	}
 }
 
