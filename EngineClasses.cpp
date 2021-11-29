@@ -353,13 +353,14 @@ void Inventory::update_statement()
 	int scr_y = g_view.getCenter().y - mysetts.get_height() / 2;
 
 	int pos_x = 164;
+	int pos_y = 448;
  	for (int i = 0; i < 8; ++i)
 	{
-		cubes[i].setPosition(sf::Vector2f(scr_x + pos_x, scr_y));
+		cubes[i].setPosition(sf::Vector2f(scr_x + pos_x, scr_y + pos_y));
 		pos_x += 40;
 	}
 
-	inv_line.setPosition(sf::Vector2f(scr_x + 120, scr_y));
+	inv_line.setPosition(sf::Vector2f(scr_x + 120, scr_y + 440));
 
 	for (auto it = items.begin(); it != items.end(); it++)
 		if ((*it).get_amount() == 0)
@@ -449,12 +450,12 @@ void Inventory::drawU(sf::RenderWindow& window)
 	{
 		std::string kol = std::to_string((*it).get_amount());
 		sf::Text text(kol, font_holder.get(Fonts::ID::OLD), 10);
-		text.setFillColor(sf::Color::Cyan);
+		text.setFillColor(sf::Color::Black);
 		
 		if (i == current_item - 1) 
-			text.setPosition((*it).get_position() + sf::Vector2f(16.f, 38.f));
+			text.setPosition((*it).get_position() + sf::Vector2f(16.f, -12.f));
 		else
-			text.setPosition((*it).get_position() + sf::Vector2f(10.f, 32.f));
+			text.setPosition((*it).get_position() + sf::Vector2f(10.f, -12.f));
 		((*it).drawU(window));
 		window.draw(text);
 		i++;
