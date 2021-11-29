@@ -167,7 +167,7 @@ void World::create_surface() {
 
 void World::create_cave(int x, int y) {
 	int cave_height = random_number.get_random(70, 135);
-	std::cout << "CAVE HEIGHT" << cave_height << std::endl;
+	//std::cout << "CAVE HEIGHT" << cave_height << std::endl;
 	for (int i = x; i < x + cave_height; i++) {
 		int cave_width = random_number.get_random(6, 8);
 		for (int j = y; j < y + cave_width; j++) {
@@ -179,7 +179,34 @@ void World::create_cave(int x, int y) {
 }
 
 void World::create_mountain() {
-
+	int mount_start_y = random_number.get_random(20, 40);
+	int mount_start_x;
+	int mount_width = random_number.get_random(10, 35);
+	int mount_level = WORLD_HEIGHT - 82;
+	for (int i = WORLD_HEIGHT - 82; ; i--) {
+		if (tilemap[i][mount_start_y] != nullptr) {
+			if (tilemap[i][mount_start_y]->get_id() == Textures::ID::ROCK)
+				mount_start_x = i;
+			else if (tilemap[i][mount_start_y]->get_id() == Textures::ID::DIRT)
+				break;
+		}
+	}
+	mount_level = mount_start_x;
+	for (int j = mount_start_y; j < mount_start_y + mount_width; j++) {
+		if ((j - mount_start_y) < (mount_width / 2) && mount_level > 14)
+			mount_level -= random_number.get_random(2, 4);
+		else 
+			mount_level += random_number.get_random(2, 4);
+		
+		for (int i = mount_level-3; i < WORLD_HEIGHT-82; i++) {
+			//if (i < line_of_horizon)
+			//	delete_block(i, j);
+			if (i >= mount_level-3 && i < mount_level)
+				set_block(i, j, Textures::ID::ORANGE);
+			else
+				set_block(i, j, Textures::ID::ROCK);
+		}
+	}
 }
 
 void World::spawn_resources() {
@@ -204,6 +231,7 @@ void World::generate_world() {
 	//}
 
 	World::create_surface();
+	World::create_mountain();
 	World::spawn_resources();
 	World::create_cave(0, random_number.get_random(25, 60));
 
