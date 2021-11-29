@@ -297,6 +297,15 @@ sf::Vector2f InvItem::get_position()
 	return sprite.getPosition();
 }
 
+InvItem::InvItem(Textures::ID id, int kolvo): id(id)
+{
+	amount = kolvo;
+
+	sf::Texture& texture = texture_holder.get(id);
+	sprite.setTexture(texture);
+	sprite.setScale(0.3, 0.3);
+}
+
 
 //____________________________________________________________________
 
@@ -467,6 +476,7 @@ void Inventory::drawU(sf::RenderWindow& window)
 void Inventory::add_item(Textures::ID id, int kolvo)
 {
 	if (kolvo <= 0) return;
+	bool added_to_end = false;
 	auto iter = items.end();
 	for (auto it = items.begin(); it != items.end(); it++)
 		if ((*it).get_id() == id)
@@ -474,18 +484,24 @@ void Inventory::add_item(Textures::ID id, int kolvo)
 	if (iter != items.end())
 		(*iter).add_plenty(kolvo);
 	else
-		items.push_back(InvItem(id));
-
-	int i = 0;
-	for (auto it = items.begin(); it != items.end(); it++)
 	{
-		if (i == items.size()-1)
-		{
-			(*it).add_plenty(kolvo);
-		}
-		++i;
+		items.push_back(InvItem(id, 0));
+		added_to_end = true;
 	}
-	std::cout << "amount" << (*(items.begin())).get_amount();
+
+	if (added_to_end)
+	{
+		int i = 0;
+		for (auto it = items.begin(); it != items.end(); it++)
+		{
+			if (i == items.size() - 1)
+			{
+				(*it).add_plenty(kolvo);
+			}
+			++i;
+		}
+	}
+	// std::cout << "amount" << (*(items.begin())).get_amount();
 }
 
 

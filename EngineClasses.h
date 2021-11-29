@@ -95,6 +95,7 @@ public:
 	Textures::ID get_id();
 	int get_amount();
 	InvItem(Textures::ID id);
+	InvItem(Textures::ID id, int kolvo);
 	void add_one();
 	void add_plenty(int num);
 	void set_scale(sf::Vector2f scale);
