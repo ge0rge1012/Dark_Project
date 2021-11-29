@@ -127,7 +127,7 @@ private:
 	std::list<InvItem> items;
 	std::array<sf::RectangleShape, 8> cubes;
 	sf::RectangleShape inv_line;
-	int current_item = 1;
+	int current_item = 0;
 
 };
 

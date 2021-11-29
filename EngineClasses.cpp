@@ -250,7 +250,7 @@ Textures::ID InvItem::get_id()
 
 InvItem::InvItem(Textures::ID id): id(id)
 {
-	amount = 1;
+	amount = 0;
 
 	sf::Texture& texture = texture_holder.get(id);
 	sprite.setTexture(texture);
@@ -284,7 +284,7 @@ void InvItem::substract_one()
 
 void InvItem::add_plenty(int num)
 {
-	amount = num;
+	amount += num;
 }
 
 void InvItem::set_scale(sf::Vector2f scale)
@@ -302,24 +302,40 @@ sf::Vector2f InvItem::get_position()
 
 void Inventory::key_reaction(sf::Keyboard::Key key)
 {
-	int prev_cur = current_item;
-	cubes[current_item - 1].setOutlineColor(sf::Color::Green);
-	current_item = static_cast<int>(key) - 26;
-	cubes[current_item - 1].setOutlineColor(sf::Color::Red);
+	bool first_current = false;
+	if (current_item <= 0 || current_item > 8)
+	{
+		current_item = key;
+		first_current = true;
+	}
+
+	if (first_current)
+	{
+		current_item = static_cast<int>(key) - 26;
+		cubes[current_item - 1].setOutlineColor(sf::Color::Red);
+	}
+
+	else
+	{
+		int prev_cur = current_item;
+		cubes[current_item - 1].setOutlineColor(sf::Color::Green);
+		current_item = static_cast<int>(key) - 26;
+		cubes[current_item - 1].setOutlineColor(sf::Color::Red);
+
+		int i = 1;
+		for (auto it = items.begin(); it != items.end(); it++)
+		{
+			if (i == prev_cur)
+			{
+				(*it).set_scale(sf::Vector2f(0.3, 0.3));
+				break;
+			}
+			++i;
+		}
+	}
 
 
 	int i = 1;
-	for (auto it = items.begin(); it != items.end(); it++)
-	{
-		if (i == prev_cur)
-		{
-			(*it).set_scale(sf::Vector2f(0.3, 0.3));
-			break;
-		}
-		++i;
-	}
-
-	i = 1;
 	for (auto it = items.begin(); it != items.end(); it++)
 	{
 		if (i == current_item)
@@ -329,7 +345,6 @@ void Inventory::key_reaction(sf::Keyboard::Key key)
 		}
 		++i;
 	}
-
 }
 
 void Inventory::update_statement()
@@ -338,7 +353,7 @@ void Inventory::update_statement()
 	int scr_y = g_view.getCenter().y - mysetts.get_height() / 2;
 
 	int pos_x = 164;
-	for (int i = 0; i < 8; ++i)
+ 	for (int i = 0; i < 8; ++i)
 	{
 		cubes[i].setPosition(sf::Vector2f(scr_x + pos_x, scr_y));
 		pos_x += 40;
@@ -390,7 +405,7 @@ int Inventory::set_current(int num)
 
 Textures::ID Inventory::get_current()
 {
-	if (current_item > items.size())
+	if (current_item > items.size() || current_item <= 0)
 		return Textures::ID::NUL;
 	
 	int i = 1;
@@ -416,7 +431,7 @@ Inventory::Inventory()
 		cubes[i].setOutlineColor(sf::Color::Green);
 
 	}
-	cubes[0].setOutlineColor(sf::Color::Red);
+	// cubes[0].setOutlineColor(sf::Color::Red);
 
 	inv_line.setSize(sf::Vector2f(400.f, 40.f));
 	inv_line.setFillColor(sf::Color::Yellow);
@@ -450,6 +465,7 @@ void Inventory::drawU(sf::RenderWindow& window)
 
 void Inventory::add_item(Textures::ID id, int kolvo)
 {
+	if (kolvo <= 0) return;
 	auto iter = items.end();
 	for (auto it = items.begin(); it != items.end(); it++)
 		if ((*it).get_id() == id)
@@ -468,6 +484,7 @@ void Inventory::add_item(Textures::ID id, int kolvo)
 		}
 		++i;
 	}
+	std::cout << "amount" << (*(items.begin())).get_amount();
 }
 
 
@@ -801,8 +818,8 @@ void Game::start_game()
 	texture_holder.load(Textures::ROCK,     "media/textures/blocks/block_rock/block_rock_32_32v2.png");
 	texture_holder.load(Textures::DIRT,     "media/textures/blocks/block_dirt/block_dirt_32_32.png");
 	texture_holder.load(Textures::IRON,		"media/textures/blocks/block_iron/block_iron_32_32.png");
-	texture_holder.load(Textures::WOOD, "media/textures/blocks/block_wood/block_wood_32_32v2.png");
-	texture_holder.load(Textures::LEAVES, "media/textures/blocks/block_leaves/block_leaves_32_32v2.png");
+	texture_holder.load(Textures::WOOD,     "media/textures/blocks/block_wood/block_wood_32_32v2.png");
+	texture_holder.load(Textures::LEAVES,   "media/textures/blocks/block_leaves/block_leaves_32_32v2.png");
 	texture_holder.load(Textures::MENU,     "media/images/backgroundv1.png");
 
 
@@ -831,7 +848,7 @@ Game::Game() : g_window(sf::VideoMode(mysetts.get_width(), mysetts.get_height())
 	//chunk.test_world();
 	chunk.add_enemy(sf::Vector2f(50.f, 390.f), Textures::ID::GREY);
 
-	inventory.add_item(Textures::DIRT, 666);
+	inventory.add_item(Textures::DIRT, 10);
 	inventory.add_item(Textures::ORANGE, 666);
 	inventory.add_item(Textures::WOOD, 666);
 	inventory.add_item(Textures::IRON, 5);
