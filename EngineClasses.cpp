@@ -523,6 +523,11 @@ void Player::drawU(sf::RenderWindow& window)
 	window.draw(character);
 }
 
+sf::Vector2f Player::get_position()
+{
+	return player_position;
+}
+
 sf::FloatRect Player::getGlobalBounds()
 {
 	return character.getGlobalBounds();
@@ -983,7 +988,7 @@ void Game::mouse_processor()
 	{
 		std::cout << "mousecoord " << mouse_pos.x << " " << mouse_pos.y << std::endl;
 		std::cout << "realcoord " << real_pos.x << " " << real_pos.y << std::endl;
-		chunk.destroy_block(real_pos);
+		chunk.destroy_block(real_pos, player->get_position());
 	}
 
 	else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
@@ -997,13 +1002,15 @@ void Game::mouse_processor()
 				(real_pos.y / 32 == static_cast<int>(player->getplayercoordinateY()) / 32 + 1)))
 		{
 			std::cout << "Dont place";
-			chunk.place_block(real_pos, Textures::NUL);
+			chunk.place_block(real_pos, Textures::NUL, player->get_position());
 		}
 
 		else
 		{
-			if (chunk.place_block(real_pos, inventory.get_current()))
-			inventory.decrease_item();
+			if (chunk.place_block(real_pos, inventory.get_current(), player->get_position()))
+			{
+				inventory.decrease_item();
+			}
 		}
 	}
 }

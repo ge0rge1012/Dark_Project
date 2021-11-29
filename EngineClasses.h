@@ -160,6 +160,7 @@ public:
 	void screen_collision(int win_width, int win_height);
 	float getplayercoordinateX();
 	float getplayercoordinateY();
+	sf::Vector2f get_position();
 	sf::FloatRect getGlobalBounds();
 };
 

@@ -301,18 +301,28 @@ void World::delete_block(int x, int y)
 	tilemap[x][y] = nullptr;
 }
 
-void World::destroy_block(sf::Vector2i pos)
+void World::destroy_block(sf::Vector2i pos, sf::Vector2f p_pos)
 {
 	if (pos.x < 0 || pos.y > WORLD_HEIGHT*32 - 1 || pos.y < 0 || pos.x > WORLD_WIDTH*32 - 1 || tilemap[pos.y / 32][pos.x / 32] == nullptr) return;
+	// std::cout << std::endl << "distance " << sqrt(((p_pos.x - pos.x) * (p_pos.x - pos.x) + (p_pos.y - pos.y) * (p_pos.y - pos.y))) << std::endl;
+	if (static_cast<int>(sqrt((((p_pos.x - pos.x) * (p_pos.x - pos.x) + (p_pos.y - pos.y) * (p_pos.y - pos.y))))) > (7 * 32)) return;
+	// std::cout << std::endl << " destroying " << std::endl;
 	Textures::ID id = tilemap[pos.y / 32][pos.x / 32]->get_id();
 	delete tilemap[pos.y / 32][pos.x / 32];
 	tilemap[pos.y / 32][pos.x / 32] = nullptr;
 	add_ground_item(id, sf::Vector2f(pos.x, pos.y));
 }
 
-bool World::place_block(sf::Vector2i pos, Textures::ID id)
+bool World::place_block(sf::Vector2i pos, Textures::ID id, sf::Vector2f p_pos)
 {
-	if (id == Textures::ID::NUL || pos.x < 0 || pos.y > WORLD_HEIGHT*32 || pos.y < 0 || pos.x > WORLD_WIDTH*32 || tilemap[pos.y / 32][pos.x / 32] != nullptr) return false;
+	if (id == Textures::ID::NUL || pos.x < 0 || pos.y > WORLD_HEIGHT * 32 || pos.y < 0 || pos.x > WORLD_WIDTH * 32 || tilemap[pos.y / 32][pos.x / 32] != nullptr)
+	{
+		return false;
+	}
+	if (static_cast<int>(sqrt((((p_pos.x - pos.x) * (p_pos.x - pos.x) + (p_pos.y - pos.y) * (p_pos.y - pos.y))))) > (7 * 32)) return false;
+
+	//std::cout << std::endl << "distance " << ((p_pos.x - pos.x) * (p_pos.x - pos.x) + (p_pos.y - pos.y) * (p_pos.y - pos.y)) << std::endl;
+	//if (((p_pos.x - pos.x) * (p_pos.x - pos.x) + (p_pos.y - pos.y) * (p_pos.y - pos.y)) > 6 * 32) return false;
 	tilemap[pos.y / 32][pos.x / 32] = new Block(id);
 	tilemap[pos.y / 32][pos.x / 32]->set_coordinates(sf::Vector2f((pos.x/32) * 32.f, (pos.y/32)* 32.f));
 	return true;
@@ -876,7 +886,7 @@ void GroundItem::update_statement(const sf::Time delta_time, const World& chunk)
 						sprite.setPosition(characterBounds.left, blockBounds.top + blockBounds.height);
 					}
 
-					// right collision
+					/*// right collision
 					else if (characterBounds.left < blockBounds.left
 						&& characterBounds.left + characterBounds.width < blockBounds.left + blockBounds.width
 						&& characterBounds.top < blockBounds.top + blockBounds.height
@@ -896,7 +906,7 @@ void GroundItem::update_statement(const sf::Time delta_time, const World& chunk)
 					{
 						movement.x = 0.f;
 						sprite.setPosition(blockBounds.left + blockBounds.width, characterBounds.top);
-					}
+					}*/
 				}
 			}
 		}
