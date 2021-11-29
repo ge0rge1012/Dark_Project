@@ -747,7 +747,7 @@ void Game::raising_items()
 		// std::cout << "player " << (*it).getGlobalBounds().left << (*it).getGlobalBounds().top << (*it).getGlobalBounds().width << (*it).getGlobalBounds().height;
 		if (player->getGlobalBounds().intersects((*it).getGlobalBounds()))
 		{
-			std::cout << std::endl << " raising" << std::endl;
+			std::cout << std::endl << " raising " << (*it).get_amount() << " of " << (*it).get_id() << std::endl;
 			inventory.add_item((*it).get_id(), (*it).get_amount());
 			chunk.gitems.erase(it);
 			break;

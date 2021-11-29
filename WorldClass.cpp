@@ -96,6 +96,7 @@ Textures::ID Block::get_id() {
 void Block::set_id(Textures::ID id) {
 	sf::Texture& texture = texture_holder.get(id);
 	block.setTexture(texture);
+	id = id;
 }
 
 sf::FloatRect Block::getGlobalBound()

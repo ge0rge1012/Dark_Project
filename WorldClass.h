@@ -15,7 +15,7 @@ class GroundItem;
 
 namespace Textures
 {
-	enum ID { NUL, MENU, VAMPIRE, VAMPIREL, ORANGE, ITEMS, GREY, ROCK, DIRT, IRON, WOOD, LEAVES };
+	enum ID { NUL = 0, MENU, VAMPIRE, VAMPIREL, ORANGE, ITEMS, GREY, ROCK, DIRT, IRON, WOOD, LEAVES };
 }
 
 class Randomizer {
