@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <list>
+#include <string>
 #include <stdlib.h>
 #include <time.h>
 
@@ -83,6 +84,7 @@ public:
 	void destroy_block(sf::Vector2i pos);
 	bool place_block(sf::Vector2i pos, Textures::ID id);
 	void add_ground_item(Textures::ID id, sf::Vector2f coord);
+	static std::string get_id_name(Textures::ID id);
 
 	void add_enemy(sf::Vector2f position, Textures::ID id);
 	// for test location

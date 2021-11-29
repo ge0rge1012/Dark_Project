@@ -32,7 +32,6 @@ TextureHolder modifiing:
 #include <vector>
 #include <map>
 #include <string>
-#include <string>
 #include <memory>
 #include "settings.h"
 #include "WorldClass.h"

@@ -747,7 +747,7 @@ void Game::raising_items()
 		// std::cout << "player " << (*it).getGlobalBounds().left << (*it).getGlobalBounds().top << (*it).getGlobalBounds().width << (*it).getGlobalBounds().height;
 		if (player->getGlobalBounds().intersects((*it).getGlobalBounds()))
 		{
-			std::cout << std::endl << " raising " << (*it).get_amount() << " of " << (*it).get_id() << std::endl;
+			std::cout << std::endl << " raising " << (*it).get_amount() << " of " << World::get_id_name((*it).get_id()) << std::endl;
 			inventory.add_item((*it).get_id(), (*it).get_amount());
 			chunk.gitems.erase(it);
 			break;
@@ -853,6 +853,7 @@ Game::Game() : g_window(sf::VideoMode(mysetts.get_width(), mysetts.get_height())
 	inventory.add_item(Textures::ORANGE, 666);
 	inventory.add_item(Textures::WOOD, 666);
 	inventory.add_item(Textures::IRON, 5);
+	inventory.add_item(Textures::ROCK, 40);
 	inventory.add_item(Textures::LEAVES, 666);
 }
 

@@ -96,7 +96,7 @@ Textures::ID Block::get_id() {
 void Block::set_id(Textures::ID id) {
 	sf::Texture& texture = texture_holder.get(id);
 	block.setTexture(texture);
-	id = id;
+	this->id = id;
 }
 
 sf::FloatRect Block::getGlobalBound()
@@ -110,6 +110,64 @@ World::World()
 	for (int i = 0; i < WORLD_HEIGHT; ++i)
 		for (int j = 0; j < WORLD_WIDTH; ++j)
 			tilemap[i][j] = nullptr;
+}
+
+std::string World::get_id_name(Textures::ID id)
+{
+	switch (id)
+	{
+	case Textures::NUL:
+		return "NUL";
+		break;
+
+	case Textures::MENU:
+		return "MENU";
+		break;
+
+	case Textures::VAMPIRE:
+		return "VAMPIRE";
+		break;
+
+	case Textures::VAMPIREL:
+		return "VAMPIREL";
+		break;
+
+	case Textures::ORANGE:
+		return "ORANGE";
+		break;
+
+	case Textures::ITEMS:
+		return "ITEMS";
+		break;
+
+	case Textures::GREY:
+		return "GREY";
+		break;
+
+	case Textures::ROCK:
+		return "ROCK";
+		break;
+
+	case Textures::DIRT:
+		return "DIRT";
+		break;
+
+	case Textures::IRON:
+		return "IRON";
+		break;
+
+	case Textures::WOOD:
+		return "WOOD";
+		break;
+
+	case Textures::LEAVES:
+		return "LEAVES";
+		break;
+
+	default:
+		return "ERRORID";
+		break;
+	}
 }
 
 void World::spawn_tree(int x, int y) {
