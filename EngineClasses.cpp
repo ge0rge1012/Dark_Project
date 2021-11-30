@@ -776,6 +776,55 @@ void Game::raising_items()
 	}
 }
 
+void Game::merging_ground_items()
+{
+	static int i = 0;
+	bool broken = false;
+	//std::cout << std::endl << " gitems length = " << chunk.gitems.size() << std::endl;
+	/*for (auto it = chunk.gitems.begin(); it != chunk.gitems.end(); it++)
+		std::cout << (*it).get_amount() << " ";*/
+	// checking once in 20 ticks
+	if (i >= 20)
+	{
+		i = 0;
+
+		// reusing i here to make first iteration go untill the element before not, not fully
+		for (auto it1 = chunk.gitems.begin(); it1 != chunk.gitems.end(); it1++, i++)
+		{
+			if (i == chunk.gitems.size() - 2) {
+				i = 0;                           // making i 0, to count 20 ticks again
+				break; }
+
+			auto it_pointer = it1;
+			for (auto it2 = ++it_pointer; it2 != chunk.gitems.end(); it2++)
+			{
+				if ((*it1).getGlobalBounds().intersects((*it2).getGlobalBounds()) && ((*it1).get_id() == (*it2).get_id()))
+				{
+					std::cout << std::endl << "merged";
+					if ((*it1).getGlobalBounds().left < (*it2).getGlobalBounds().left)
+					{
+						(*it1).add_plenty((*it2).get_amount());
+						chunk.gitems.erase(it2);
+						broken = true;
+						break;
+
+					}
+					else
+					{
+						(*it2).add_plenty((*it1).get_amount());
+						chunk.gitems.erase(it1);
+						broken = true;
+						break;
+					}
+				}
+			}
+			if (broken) break;
+		}
+	}
+
+	i++;
+}
+
 Game* Game::get_game_object()
 {
 	if (game_ptr == nullptr) game_ptr = new Game();
@@ -935,6 +984,7 @@ void Game::process_events()
 void Game::update(const sf::Time delta_time)
 {
 	raising_items();
+	merging_ground_items();
 	player->screen_collision(mysetts.get_width(), mysetts.get_height());
 	player->update_statement(delta_time, chunk);
 

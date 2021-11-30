@@ -744,7 +744,7 @@ void GroundItem::drawU(sf::RenderWindow& window)
 
 void GroundItem::add_plenty(int num)
 {
-	amount = num;
+	amount += num;
 }
 
 sf::FloatRect GroundItem::getGlobalBounds()

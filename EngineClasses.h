@@ -175,6 +175,7 @@ public:
 	Game(Game& other) = delete;            // to prevent copies for singleton
 	void operator=(const Game&) = delete;  // for singleton
 	void raising_items();
+	void merging_ground_items();
 
 private:
 	void run();                  // starting game loop (main loop)
