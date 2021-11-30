@@ -551,7 +551,7 @@ void Enemy::update_statement(const sf::Time delta_time, const World& chunk, sf::
 
 	i1 -= 1;
 	if (i1 < 0) i1 = 0;
-	j1 -= 3;
+	j1 -= 1;
 	if (j1 < 0) j1 = 0;
 
 

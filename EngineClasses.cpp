@@ -575,13 +575,13 @@ void Player::update_statement(const sf::Time delta_time, const World& chunk)
 
 	i1 -= 1;
 	if (i1 < 0) i1 = 0;
-	j1 -= 3;
+	j1 -= 1;
 	if (j1 < 0) j1 = 0;
 
 	int LESS_HEIGHT = WORLD_HEIGHT;
 	int LESS_WIDTH = WORLD_WIDTH;
-	if (WORLD_HEIGHT - i1 > 6) LESS_HEIGHT = i1+6;
-	if (WORLD_WIDTH -  j1 > 6) LESS_WIDTH = j1+6;
+	if (WORLD_HEIGHT - i1 > 4) LESS_HEIGHT = i1+4;
+	if (WORLD_WIDTH -  j1 > 4) LESS_WIDTH = j1+4;
 
 	for (int i = i1; i < LESS_HEIGHT; ++i)
 		for (int j = j1; j < LESS_WIDTH; ++j)
