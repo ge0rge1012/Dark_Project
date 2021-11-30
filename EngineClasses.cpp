@@ -915,7 +915,7 @@ Game::Game() : g_window(sf::VideoMode(mysetts.get_width(), mysetts.get_height())
 	// chunk.test_world();
 	chunk.generate_world();
 	//chunk.test_world();
-	chunk.add_enemy(sf::Vector2f(50.f, 390.f), Textures::ID::GREY);
+	//chunk.add_enemy(sf::Vector2f(50.f, 390.f), Textures::ID::GREY);
 
 	inventory.add_item(Textures::DIRT, 10);
 	inventory.add_item(Textures::ORANGE, 666);

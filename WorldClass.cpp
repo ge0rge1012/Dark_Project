@@ -318,43 +318,259 @@ void World::destroy_block(sf::Vector2i m_pos, sf::Vector2f p_pos)
 	
 	if (m_pos.x <= p_pos.x + 16 && m_pos.y <= p_pos.y + 30)       // player is 32*60
 	{
-		start_pos = p_pos;                                        // p_pos is left top corner
+		start_pos = sf::Vector2f(p_pos.x + 2, p_pos.y + 2);       // p_pos is left top corner
 		
-		std::cout << std::endl << " start_pos.y " << start_pos.y << " " << m_pos.y << std::endl;
-		if (m_pos.x >= start_pos.x && m_pos.y <= start_pos.y)
+		if (m_pos.x >= start_pos.x - 2 && m_pos.y <= start_pos.y - 2)
 		{
-			start_pos = sf::Vector2f(start_pos.x+2, start_pos.y+2);
-			while (start_pos.y > m_pos.y + 37)
+			while (start_pos.y > m_pos.y + 38)
 			{
-				std::cout << std::endl << " while start_pos.y " << start_pos.y << " " << m_pos.y << std::endl;
 				start_pos = sf::Vector2f(start_pos.x, start_pos.y - 10.f);
 				sf::Sprite check;
 				check.setPosition(start_pos);
 				check.setTextureRect(sf::IntRect(0, 0, 1, 1));
-				std::cout << std::endl << " sprite_y " << check.getPosition().y << " sprite_width "<<  check.getGlobalBounds().width << std::endl;
-				if (tilemap[start_pos.y / 32][start_pos.x / 32] != nullptr && check.getGlobalBounds().intersects(tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound()));
+				/*std::cout << std::endl << " player.pos " << p_pos.x << " " << p_pos.y << std::endl;
+				std::cout << std::endl << " mouse.pos " << m_pos.x << " " << m_pos.y << std::endl;
+				std::cout << std::endl << " check.pos " << check.getPosition().x << " " << check.getPosition().y << std::endl;
+				std::cout << std::endl << " start.pos " << start_pos.x << " " << start_pos.y << std::endl;*/
+				if (tilemap[start_pos.y / 32][start_pos.x / 32] != nullptr && 
+					        check.getGlobalBounds().intersects(tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound()))
 				{
 					intersected = true;
 					intersected_cor = start_pos;
-					std::cout << std::endl << " intersected " << std::endl;
 					break;
 				}
 			}
 		}
-	}                  
+		else if (m_pos.x <= start_pos.x - 2 && m_pos.y >= start_pos.y - 2)
+		{
+			while (start_pos.x > m_pos.x + 38)
+			{
+				start_pos = sf::Vector2f(start_pos.x - 10.f, start_pos.y);
+				sf::Sprite check;
+				check.setPosition(start_pos);
+				check.setTextureRect(sf::IntRect(0, 0, 1, 1));
+
+				if (tilemap[start_pos.y / 32][start_pos.x / 32] != nullptr &&
+					check.getGlobalBounds().intersects(tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound()))
+				{
+					intersected = true;
+					intersected_cor = start_pos;
+					break;
+				}
+			}
+		}
+		else
+		{
+			while (start_pos.x > m_pos.x + 38 && start_pos.y > m_pos.y + 48)
+			{
+				start_pos = sf::Vector2f(start_pos.x - 10.f, start_pos.y - 10.f);
+				sf::Sprite check;
+				check.setPosition(start_pos);
+				check.setTextureRect(sf::IntRect(0, 0, 1, 1));
+
+				if (tilemap[start_pos.y / 32][start_pos.x / 32] != nullptr &&
+					check.getGlobalBounds().intersects(tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound()))
+				{
+					intersected = true;
+					intersected_cor = start_pos;
+					break;
+				}
+			}
+		}
+		lt = true;
+	}   
+
+
+
 	else if (m_pos.x <= p_pos.x + 16 && m_pos.y >= p_pos.y + 30)
 	{
-		start_pos = sf::Vector2f(p_pos.x, p_pos.y + 60);
+		start_pos = sf::Vector2f(p_pos.x + 2, p_pos.y + 58);
+
+		if (m_pos.x >= start_pos.x - 2 && m_pos.y >= start_pos.y + 2)
+		{
+			while (start_pos.y < m_pos.y - 38)
+			{
+				start_pos = sf::Vector2f(start_pos.x, start_pos.y + 10.f);
+				sf::Sprite check;
+				check.setPosition(start_pos);
+				check.setTextureRect(sf::IntRect(0, 0, 1, 1));
+				if (tilemap[start_pos.y / 32][start_pos.x / 32] != nullptr &&
+					check.getGlobalBounds().intersects(tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound()))
+				{
+					intersected = true;
+					intersected_cor = start_pos;
+					break;
+				}
+			}
+		}
+		else if (m_pos.x <= start_pos.x - 2 && m_pos.y <= start_pos.y - 2)
+		{
+			while (start_pos.x > m_pos.x + 38)
+			{
+				start_pos = sf::Vector2f(start_pos.x - 10.f, start_pos.y);
+				sf::Sprite check;
+				check.setPosition(start_pos);
+				check.setTextureRect(sf::IntRect(0, 0, 1, 1));
+
+				if (tilemap[start_pos.y / 32][start_pos.x / 32] != nullptr &&
+					check.getGlobalBounds().intersects(tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound()))
+				{
+					intersected = true;
+					intersected_cor = start_pos;
+					break;
+				}
+			}
+		}
+		else
+		{
+			while (start_pos.x > m_pos.x + 38 && start_pos.y < m_pos.y + 48)
+			{
+				start_pos = sf::Vector2f(start_pos.x - 10.f, start_pos.y + 10.f);
+				sf::Sprite check;
+				check.setPosition(start_pos);
+				check.setTextureRect(sf::IntRect(0, 0, 1, 1));
+
+				if (tilemap[start_pos.y / 32][start_pos.x / 32] != nullptr &&
+					check.getGlobalBounds().intersects(tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound()))
+				{
+					intersected = true;
+					intersected_cor = start_pos;
+					break;
+				}
+			}
+		}
+
 		lb = true;
 	}
+
+
+	// rt
 	else if (m_pos.x >= p_pos.x + 16 && m_pos.y <= p_pos.y + 30)
 	{
-		start_pos = sf::Vector2f(p_pos.x + 32, p_pos.y);
+		start_pos = sf::Vector2f(p_pos.x + 30, p_pos.y + 2);   
+
+		if (m_pos.x <= start_pos.x + 2 && m_pos.y <= start_pos.y - 2)
+		{
+			while (start_pos.y > m_pos.y + 38)
+			{
+				start_pos = sf::Vector2f(start_pos.x, start_pos.y - 10.f);
+				sf::Sprite check;
+				check.setPosition(start_pos);
+				check.setTextureRect(sf::IntRect(0, 0, 1, 1));
+				/*std::cout << std::endl << " player.pos " << p_pos.x << " " << p_pos.y << std::endl;
+				std::cout << std::endl << " mouse.pos " << m_pos.x << " " << m_pos.y << std::endl;
+				std::cout << std::endl << " check.pos " << check.getPosition().x << " " << check.getPosition().y << std::endl;
+				std::cout << std::endl << " start.pos " << start_pos.x << " " << start_pos.y << std::endl;*/
+				if (tilemap[start_pos.y / 32][start_pos.x / 32] != nullptr &&
+					check.getGlobalBounds().intersects(tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound()))
+				{
+					intersected = true;
+					intersected_cor = start_pos;
+					break;
+				}
+			}
+		}
+		else if (m_pos.x >= start_pos.x + 2 && m_pos.y >= start_pos.y - 2)
+		{
+			while (start_pos.x < m_pos.x + 38)
+			{
+				start_pos = sf::Vector2f(start_pos.x + 10.f, start_pos.y);
+				sf::Sprite check;
+				check.setPosition(start_pos);
+				check.setTextureRect(sf::IntRect(0, 0, 1, 1));
+
+				if (tilemap[start_pos.y / 32][start_pos.x / 32] != nullptr &&
+					check.getGlobalBounds().intersects(tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound()))
+				{
+					intersected = true;
+					intersected_cor = start_pos;
+					break;
+				}
+			}
+		}
+		else
+		{
+			while (start_pos.x < m_pos.x + 38 && start_pos.y > m_pos.y + 48)
+			{
+				start_pos = sf::Vector2f(start_pos.x + 10.f, start_pos.y - 10.f);
+				sf::Sprite check;
+				check.setPosition(start_pos);
+				check.setTextureRect(sf::IntRect(0, 0, 1, 1));
+
+				if (tilemap[start_pos.y / 32][start_pos.x / 32] != nullptr &&
+					check.getGlobalBounds().intersects(tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound()))
+				{
+					intersected = true;
+					intersected_cor = start_pos;
+					break;
+				}
+			}
+		}
+		
 		rt = true;
 	}
+
+
+
 	else
 	{
-		start_pos = sf::Vector2f(p_pos.x + 32, p_pos.y + 60);
+		start_pos = sf::Vector2f(p_pos.x + 30, p_pos.y + 58);
+
+		if (m_pos.x <= start_pos.x + 2 && m_pos.y >= start_pos.y + 2)
+		{
+			while (start_pos.y < m_pos.y - 38)
+			{
+				start_pos = sf::Vector2f(start_pos.x, start_pos.y + 10.f);
+				sf::Sprite check;
+				check.setPosition(start_pos);
+				check.setTextureRect(sf::IntRect(0, 0, 1, 1));
+				if (tilemap[start_pos.y / 32][start_pos.x / 32] != nullptr &&
+					check.getGlobalBounds().intersects(tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound()))
+				{
+					intersected = true;
+					intersected_cor = start_pos;
+					break;
+				}
+			}
+		}
+		else if (m_pos.x >= start_pos.x + 2 && m_pos.y <= start_pos.y - 2)
+		{
+			while (start_pos.x < m_pos.x + 38)
+			{
+				start_pos = sf::Vector2f(start_pos.x + 10.f, start_pos.y);
+				sf::Sprite check;
+				check.setPosition(start_pos);
+				check.setTextureRect(sf::IntRect(0, 0, 1, 1));
+
+				if (tilemap[start_pos.y / 32][start_pos.x / 32] != nullptr &&
+					check.getGlobalBounds().intersects(tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound()))
+				{
+					intersected = true;
+					intersected_cor = start_pos;
+					break;
+				}
+			}
+		}
+		else
+		{
+			while (start_pos.x < m_pos.x + 38 && start_pos.y < m_pos.y + 48)
+			{
+				start_pos = sf::Vector2f(start_pos.x + 10.f, start_pos.y + 10.f);
+				sf::Sprite check;
+				check.setPosition(start_pos);
+				check.setTextureRect(sf::IntRect(0, 0, 1, 1));
+
+				if (tilemap[start_pos.y / 32][start_pos.x / 32] != nullptr &&
+					check.getGlobalBounds().intersects(tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound()))
+				{
+					intersected = true;
+					intersected_cor = start_pos;
+					std::cout << std::endl << " intersected " << std::endl;
+					std::cout << std::endl << "_________________________" << std::endl;
+					break;
+				}
+			}
+		}
 		rb = true;
 	}
 
