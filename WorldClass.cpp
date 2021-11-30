@@ -329,6 +329,11 @@ bool World::place_block(sf::Vector2i pos, Textures::ID id, sf::Vector2f p_pos)
 
 }
 
+void World::add_ground_item(Textures::ID id, sf::Vector2f coord, int kolvo)
+{
+	gitems.push_back(GroundItem(id, coord, kolvo));
+}
+
 void World::add_ground_item(Textures::ID id, sf::Vector2f coord)
 {
 	gitems.push_back(GroundItem(id, coord));
@@ -719,6 +724,16 @@ Textures::ID GroundItem::get_id()
 GroundItem::GroundItem(Textures::ID id, sf::Vector2f coord) : id(id)
 {
 	amount = 1;
+
+	sf::Texture& texture = texture_holder.get(id);
+	sprite.setTexture(texture);
+	sprite.setScale(0.2, 0.2);
+	sprite.setPosition(coord);
+}
+
+GroundItem::GroundItem(Textures::ID id, sf::Vector2f coord, int kolvo)
+{
+	amount = kolvo;
 
 	sf::Texture& texture = texture_holder.get(id);
 	sprite.setTexture(texture);

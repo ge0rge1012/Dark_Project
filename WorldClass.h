@@ -83,6 +83,7 @@ public:
 	void delete_block(int x, int y);
 	void destroy_block(sf::Vector2i pos, sf::Vector2f p_pos);
 	bool place_block(sf::Vector2i pos, Textures::ID id, sf::Vector2f p_pos);
+	void add_ground_item(Textures::ID id, sf::Vector2f coord, int kolvo);
 	void add_ground_item(Textures::ID id, sf::Vector2f coord);
 	static std::string get_id_name(Textures::ID id);
 
@@ -134,6 +135,7 @@ public:
 	Textures::ID get_id();
 	int get_amount();
 	GroundItem(Textures::ID id, sf::Vector2f coord);
+	GroundItem(Textures::ID id, sf::Vector2f coord, int kolvo);
 	void add_plenty(int num);
 	sf::Vector2f get_position();
 	void set_position(sf::Vector2f pos);
