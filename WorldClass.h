@@ -81,8 +81,8 @@ public:
 	void generate_world();
 	void set_block(int x, int y, Textures::ID id);
 	void delete_block(int x, int y);
-	void destroy_block(sf::Vector2i pos, sf::Vector2f p_pos);
-	bool place_block(sf::Vector2i pos, Textures::ID id, sf::Vector2f p_pos);
+	void destroy_block(sf::Vector2i m_pos, sf::Vector2f p_pos);
+	bool place_block(sf::Vector2i m_pos, Textures::ID id, sf::Vector2f p_pos);
 	void add_ground_item(Textures::ID id, sf::Vector2f coord, int kolvo);
 	void add_ground_item(Textures::ID id, sf::Vector2f coord);
 	static std::string get_id_name(Textures::ID id);

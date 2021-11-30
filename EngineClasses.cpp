@@ -504,8 +504,6 @@ void Inventory::add_item(Textures::ID id, int kolvo)
 	// std::cout << "amount" << (*(items.begin())).get_amount();
 }
 
-
-
 //____________________________________________________________________
 
 Player::Player(): plR(texture_holder.get(Textures::VAMPIRE)), plL(texture_holder.get(Textures::VAMPIREL))
@@ -1036,8 +1034,8 @@ void Game::mouse_processor()
 
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 	{
-		std::cout << "mousecoord " << mouse_pos.x << " " << mouse_pos.y << std::endl;
-		std::cout << "realcoord " << real_pos.x << " " << real_pos.y << std::endl;
+		//std::cout << "mousecoord " << mouse_pos.x << " " << mouse_pos.y << std::endl;
+		//std::cout << "realcoord " << real_pos.x << " " << real_pos.y << std::endl;
 		chunk.destroy_block(real_pos, player->get_position());
 	}
 

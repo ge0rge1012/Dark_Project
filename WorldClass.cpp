@@ -301,30 +301,84 @@ void World::delete_block(int x, int y)
 	tilemap[x][y] = nullptr;
 }
 
-void World::destroy_block(sf::Vector2i pos, sf::Vector2f p_pos)
+void World::destroy_block(sf::Vector2i m_pos, sf::Vector2f p_pos)
 {
-	if (pos.x < 0 || pos.y > WORLD_HEIGHT*32 - 1 || pos.y < 0 || pos.x > WORLD_WIDTH*32 - 1 || tilemap[pos.y / 32][pos.x / 32] == nullptr) return;
+	if (m_pos.x < 0 || m_pos.y > WORLD_HEIGHT*32 - 1 || m_pos.y < 0 || m_pos.x > WORLD_WIDTH*32 - 1 || tilemap[m_pos.y / 32][m_pos.x / 32] == nullptr) return;
 	// std::cout << std::endl << "distance " << sqrt(((p_pos.x - pos.x) * (p_pos.x - pos.x) + (p_pos.y - pos.y) * (p_pos.y - pos.y))) << std::endl;
-	if (static_cast<int>(sqrt((((p_pos.x - pos.x) * (p_pos.x - pos.x) + (p_pos.y - pos.y) * (p_pos.y - pos.y))))) > (7 * 32)) return;
+	if (static_cast<int>(sqrt((((p_pos.x - m_pos.x) * (p_pos.x - m_pos.x) + (p_pos.y - m_pos.y) * (p_pos.y - m_pos.y))))) > (7 * 32)) return;
 	// std::cout << std::endl << " destroying " << std::endl;
-	Textures::ID id = tilemap[pos.y / 32][pos.x / 32]->get_id();
-	delete tilemap[pos.y / 32][pos.x / 32];
-	tilemap[pos.y / 32][pos.x / 32] = nullptr;
-	add_ground_item(id, sf::Vector2f(pos.x, pos.y));
+
+	// choosing one of 4 corners of player to pull checking vector
+	// left-top, left-bot, right-top, right-bot
+	sf::Vector2f start_pos;
+	sf::Vector2f vector_napr = sf::Vector2f(abs(m_pos.x - p_pos.x), abs(m_pos.y - p_pos.y));         // vector of checking
+	bool lt = false, lb = false, rt = false, rb = false;
+	bool intersected = false;
+	sf::Vector2f intersected_cor;
+	
+	if (m_pos.x <= p_pos.x + 16 && m_pos.y <= p_pos.y + 30)       // player is 32*60
+	{
+		start_pos = p_pos;                                        // p_pos is left top corner
+		
+		std::cout << std::endl << " start_pos.y " << start_pos.y << " " << m_pos.y << std::endl;
+		if (m_pos.x >= start_pos.x && m_pos.y <= start_pos.y)
+		{
+			start_pos = sf::Vector2f(start_pos.x+2, start_pos.y+2);
+			while (start_pos.y > m_pos.y + 37)
+			{
+				std::cout << std::endl << " while start_pos.y " << start_pos.y << " " << m_pos.y << std::endl;
+				start_pos = sf::Vector2f(start_pos.x, start_pos.y - 10.f);
+				sf::Sprite check;
+				check.setPosition(start_pos);
+				check.setTextureRect(sf::IntRect(0, 0, 1, 1));
+				std::cout << std::endl << " sprite_y " << check.getPosition().y << " sprite_width "<<  check.getGlobalBounds().width << std::endl;
+				if (tilemap[start_pos.y / 32][start_pos.x / 32] != nullptr && check.getGlobalBounds().intersects(tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound()));
+				{
+					intersected = true;
+					intersected_cor = start_pos;
+					std::cout << std::endl << " intersected " << std::endl;
+					break;
+				}
+			}
+		}
+	}                  
+	else if (m_pos.x <= p_pos.x + 16 && m_pos.y >= p_pos.y + 30)
+	{
+		start_pos = sf::Vector2f(p_pos.x, p_pos.y + 60);
+		lb = true;
+	}
+	else if (m_pos.x >= p_pos.x + 16 && m_pos.y <= p_pos.y + 30)
+	{
+		start_pos = sf::Vector2f(p_pos.x + 32, p_pos.y);
+		rt = true;
+	}
+	else
+	{
+		start_pos = sf::Vector2f(p_pos.x + 32, p_pos.y + 60);
+		rb = true;
+	}
+
+
+
+
+
+
+
+	Textures::ID id = tilemap[m_pos.y / 32][m_pos.x / 32]->get_id();
+	delete tilemap[m_pos.y / 32][m_pos.x / 32];
+	tilemap[m_pos.y / 32][m_pos.x / 32] = nullptr;
+	add_ground_item(id, sf::Vector2f(m_pos.x, m_pos.y));
 }
 
-bool World::place_block(sf::Vector2i pos, Textures::ID id, sf::Vector2f p_pos)
+bool World::place_block(sf::Vector2i m_pos, Textures::ID id, sf::Vector2f p_pos)
 {
-	if (id == Textures::ID::NUL || pos.x < 0 || pos.y > WORLD_HEIGHT * 32 || pos.y < 0 || pos.x > WORLD_WIDTH * 32 || tilemap[pos.y / 32][pos.x / 32] != nullptr)
-	{
+	if (id == Textures::ID::NUL || m_pos.x < 0 || m_pos.y > WORLD_HEIGHT * 32 || m_pos.y < 0 || m_pos.x > WORLD_WIDTH * 32 || tilemap[m_pos.y / 32][m_pos.x / 32] != nullptr)
 		return false;
-	}
-	if (static_cast<int>(sqrt((((p_pos.x - pos.x) * (p_pos.x - pos.x) + (p_pos.y - pos.y) * (p_pos.y - pos.y))))) > (7 * 32)) return false;
+	if (static_cast<int>(sqrt((((p_pos.x - m_pos.x) * (p_pos.x - m_pos.x) + (p_pos.y - m_pos.y) * (p_pos.y - m_pos.y))))) > (7 * 32)) return false;
 
 	//std::cout << std::endl << "distance " << ((p_pos.x - pos.x) * (p_pos.x - pos.x) + (p_pos.y - pos.y) * (p_pos.y - pos.y)) << std::endl;
-	//if (((p_pos.x - pos.x) * (p_pos.x - pos.x) + (p_pos.y - pos.y) * (p_pos.y - pos.y)) > 6 * 32) return false;
-	tilemap[pos.y / 32][pos.x / 32] = new Block(id);
-	tilemap[pos.y / 32][pos.x / 32]->set_coordinates(sf::Vector2f((pos.x/32) * 32.f, (pos.y/32)* 32.f));
+	tilemap[m_pos.y / 32][m_pos.x / 32] = new Block(id);
+	tilemap[m_pos.y / 32][m_pos.x / 32]->set_coordinates(sf::Vector2f((m_pos.x/32) * 32.f, (m_pos.y/32)* 32.f));
 	return true;
 
 }
