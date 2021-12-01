@@ -335,7 +335,7 @@ void World::destroy_block(sf::Vector2i m_pos, sf::Vector2f p_pos)
 		
 		if (m_pos.x >= start_pos.x - 2 && m_pos.y <= start_pos.y - 2)
 		{
-			while (start_pos.y > m_pos.y + 38)
+			while (start_pos.y > m_pos.y + 12)
 			{
 				start_pos = sf::Vector2f(start_pos.x, start_pos.y - 10.f);
 				sf::Sprite check;
@@ -346,7 +346,8 @@ void World::destroy_block(sf::Vector2i m_pos, sf::Vector2f p_pos)
 				std::cout << std::endl << " check.pos " << check.getPosition().x << " " << check.getPosition().y << std::endl;
 				std::cout << std::endl << " start.pos " << start_pos.x << " " << start_pos.y << std::endl;*/
 				if (tilemap[start_pos.y / 32][start_pos.x / 32] != nullptr && 
-					        check.getGlobalBounds().intersects(tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound()))
+					        check.getGlobalBounds().intersects(tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound()) &&
+					tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound() != tilemap[m_pos.y / 32][m_pos.x / 32]->getGlobalBound())
 				{
 					intersected = true;
 					intersected_cor = start_pos;
@@ -356,7 +357,7 @@ void World::destroy_block(sf::Vector2i m_pos, sf::Vector2f p_pos)
 		}
 		else if (m_pos.x <= start_pos.x - 2 && m_pos.y >= start_pos.y - 2)
 		{
-			while (start_pos.x > m_pos.x + 38)
+			while (start_pos.x > m_pos.x + 12)
 			{
 				start_pos = sf::Vector2f(start_pos.x - 10.f, start_pos.y);
 				sf::Sprite check;
@@ -364,7 +365,8 @@ void World::destroy_block(sf::Vector2i m_pos, sf::Vector2f p_pos)
 				check.setTextureRect(sf::IntRect(0, 0, 1, 1));
 
 				if (tilemap[start_pos.y / 32][start_pos.x / 32] != nullptr &&
-					check.getGlobalBounds().intersects(tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound()))
+					check.getGlobalBounds().intersects(tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound()) &&
+					tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound() != tilemap[m_pos.y / 32][m_pos.x / 32]->getGlobalBound())
 				{
 					intersected = true;
 					intersected_cor = start_pos;
@@ -374,7 +376,7 @@ void World::destroy_block(sf::Vector2i m_pos, sf::Vector2f p_pos)
 		}
 		else
 		{
-			while (start_pos.x > m_pos.x + 38 && start_pos.y > m_pos.y + 48)
+			while (start_pos.x > m_pos.x + 12 && start_pos.y > m_pos.y + 12)
 			{
 				start_pos = sf::Vector2f(start_pos.x - 10.f, start_pos.y - 10.f);
 				sf::Sprite check;
@@ -382,7 +384,8 @@ void World::destroy_block(sf::Vector2i m_pos, sf::Vector2f p_pos)
 				check.setTextureRect(sf::IntRect(0, 0, 1, 1));
 
 				if (tilemap[start_pos.y / 32][start_pos.x / 32] != nullptr &&
-					check.getGlobalBounds().intersects(tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound()))
+					check.getGlobalBounds().intersects(tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound()) &&
+					tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound() != tilemap[m_pos.y / 32][m_pos.x / 32]->getGlobalBound())
 				{
 					intersected = true;
 					intersected_cor = start_pos;
@@ -401,14 +404,15 @@ void World::destroy_block(sf::Vector2i m_pos, sf::Vector2f p_pos)
 
 		if (m_pos.x >= start_pos.x - 2 && m_pos.y >= start_pos.y + 2)
 		{
-			while (start_pos.y < m_pos.y - 38)
+			while (start_pos.y < m_pos.y - 12)
 			{
 				start_pos = sf::Vector2f(start_pos.x, start_pos.y + 10.f);
 				sf::Sprite check;
 				check.setPosition(start_pos);
 				check.setTextureRect(sf::IntRect(0, 0, 1, 1));
 				if (tilemap[start_pos.y / 32][start_pos.x / 32] != nullptr &&
-					check.getGlobalBounds().intersects(tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound()))
+					check.getGlobalBounds().intersects(tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound()) &&
+					tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound() != tilemap[m_pos.y / 32][m_pos.x / 32]->getGlobalBound())
 				{
 					intersected = true;
 					intersected_cor = start_pos;
@@ -418,7 +422,7 @@ void World::destroy_block(sf::Vector2i m_pos, sf::Vector2f p_pos)
 		}
 		else if (m_pos.x <= start_pos.x - 2 && m_pos.y <= start_pos.y - 2)
 		{
-			while (start_pos.x > m_pos.x + 38)
+			while (start_pos.x > m_pos.x + 12)
 			{
 				start_pos = sf::Vector2f(start_pos.x - 10.f, start_pos.y);
 				sf::Sprite check;
@@ -426,7 +430,8 @@ void World::destroy_block(sf::Vector2i m_pos, sf::Vector2f p_pos)
 				check.setTextureRect(sf::IntRect(0, 0, 1, 1));
 
 				if (tilemap[start_pos.y / 32][start_pos.x / 32] != nullptr &&
-					check.getGlobalBounds().intersects(tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound()))
+					check.getGlobalBounds().intersects(tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound()) &&
+					tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound() != tilemap[m_pos.y / 32][m_pos.x / 32]->getGlobalBound())
 				{
 					intersected = true;
 					intersected_cor = start_pos;
@@ -436,7 +441,7 @@ void World::destroy_block(sf::Vector2i m_pos, sf::Vector2f p_pos)
 		}
 		else
 		{
-			while (start_pos.x > m_pos.x + 38 && start_pos.y < m_pos.y + 48)
+			while (start_pos.x > m_pos.x + 12 && start_pos.y < m_pos.y + 12)
 			{
 				start_pos = sf::Vector2f(start_pos.x - 10.f, start_pos.y + 10.f);
 				sf::Sprite check;
@@ -444,7 +449,8 @@ void World::destroy_block(sf::Vector2i m_pos, sf::Vector2f p_pos)
 				check.setTextureRect(sf::IntRect(0, 0, 1, 1));
 
 				if (tilemap[start_pos.y / 32][start_pos.x / 32] != nullptr &&
-					check.getGlobalBounds().intersects(tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound()))
+					check.getGlobalBounds().intersects(tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound()) &&
+					tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound() != tilemap[m_pos.y / 32][m_pos.x / 32]->getGlobalBound())
 				{
 					intersected = true;
 					intersected_cor = start_pos;
@@ -464,7 +470,7 @@ void World::destroy_block(sf::Vector2i m_pos, sf::Vector2f p_pos)
 
 		if (m_pos.x <= start_pos.x + 2 && m_pos.y <= start_pos.y - 2)
 		{
-			while (start_pos.y > m_pos.y + 38)
+			while (start_pos.y > m_pos.y + 12)
 			{
 				start_pos = sf::Vector2f(start_pos.x, start_pos.y - 10.f);
 				sf::Sprite check;
@@ -475,7 +481,8 @@ void World::destroy_block(sf::Vector2i m_pos, sf::Vector2f p_pos)
 				std::cout << std::endl << " check.pos " << check.getPosition().x << " " << check.getPosition().y << std::endl;
 				std::cout << std::endl << " start.pos " << start_pos.x << " " << start_pos.y << std::endl;*/
 				if (tilemap[start_pos.y / 32][start_pos.x / 32] != nullptr &&
-					check.getGlobalBounds().intersects(tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound()))
+					check.getGlobalBounds().intersects(tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound()) &&
+					tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound() != tilemap[m_pos.y / 32][m_pos.x / 32]->getGlobalBound())
 				{
 					intersected = true;
 					intersected_cor = start_pos;
@@ -485,7 +492,7 @@ void World::destroy_block(sf::Vector2i m_pos, sf::Vector2f p_pos)
 		}
 		else if (m_pos.x >= start_pos.x + 2 && m_pos.y >= start_pos.y - 2)
 		{
-			while (start_pos.x < m_pos.x + 38)
+			while (start_pos.x < m_pos.x + 12)
 			{
 				start_pos = sf::Vector2f(start_pos.x + 10.f, start_pos.y);
 				sf::Sprite check;
@@ -493,7 +500,8 @@ void World::destroy_block(sf::Vector2i m_pos, sf::Vector2f p_pos)
 				check.setTextureRect(sf::IntRect(0, 0, 1, 1));
 
 				if (tilemap[start_pos.y / 32][start_pos.x / 32] != nullptr &&
-					check.getGlobalBounds().intersects(tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound()))
+					check.getGlobalBounds().intersects(tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound()) &&
+					tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound() != tilemap[m_pos.y / 32][m_pos.x / 32]->getGlobalBound())
 				{
 					intersected = true;
 					intersected_cor = start_pos;
@@ -503,7 +511,7 @@ void World::destroy_block(sf::Vector2i m_pos, sf::Vector2f p_pos)
 		}
 		else
 		{
-			while (start_pos.x < m_pos.x + 38 && start_pos.y > m_pos.y + 48)
+			while (start_pos.x < m_pos.x + 12 && start_pos.y > m_pos.y + 12)
 			{
 				start_pos = sf::Vector2f(start_pos.x + 10.f, start_pos.y - 10.f);
 				sf::Sprite check;
@@ -511,7 +519,8 @@ void World::destroy_block(sf::Vector2i m_pos, sf::Vector2f p_pos)
 				check.setTextureRect(sf::IntRect(0, 0, 1, 1));
 
 				if (tilemap[start_pos.y / 32][start_pos.x / 32] != nullptr &&
-					check.getGlobalBounds().intersects(tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound()))
+					check.getGlobalBounds().intersects(tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound()) &&
+					tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound() != tilemap[m_pos.y / 32][m_pos.x / 32]->getGlobalBound())
 				{
 					intersected = true;
 					intersected_cor = start_pos;
@@ -531,14 +540,15 @@ void World::destroy_block(sf::Vector2i m_pos, sf::Vector2f p_pos)
 
 		if (m_pos.x <= start_pos.x + 2 && m_pos.y >= start_pos.y + 2)
 		{
-			while (start_pos.y < m_pos.y - 38)
+			while (start_pos.y < m_pos.y - 12)
 			{
 				start_pos = sf::Vector2f(start_pos.x, start_pos.y + 10.f);
 				sf::Sprite check;
 				check.setPosition(start_pos);
 				check.setTextureRect(sf::IntRect(0, 0, 1, 1));
 				if (tilemap[start_pos.y / 32][start_pos.x / 32] != nullptr &&
-					check.getGlobalBounds().intersects(tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound()))
+					check.getGlobalBounds().intersects(tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound()) &&
+					tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound() != tilemap[m_pos.y / 32][m_pos.x / 32]->getGlobalBound())
 				{
 					intersected = true;
 					intersected_cor = start_pos;
@@ -548,7 +558,7 @@ void World::destroy_block(sf::Vector2i m_pos, sf::Vector2f p_pos)
 		}
 		else if (m_pos.x >= start_pos.x + 2 && m_pos.y <= start_pos.y - 2)
 		{
-			while (start_pos.x < m_pos.x + 38)
+			while (start_pos.x < m_pos.x + 12)
 			{
 				start_pos = sf::Vector2f(start_pos.x + 10.f, start_pos.y);
 				sf::Sprite check;
@@ -556,7 +566,8 @@ void World::destroy_block(sf::Vector2i m_pos, sf::Vector2f p_pos)
 				check.setTextureRect(sf::IntRect(0, 0, 1, 1));
 
 				if (tilemap[start_pos.y / 32][start_pos.x / 32] != nullptr &&
-					check.getGlobalBounds().intersects(tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound()))
+					check.getGlobalBounds().intersects(tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound()) &&
+					tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound() != tilemap[m_pos.y / 32][m_pos.x / 32]->getGlobalBound())
 				{
 					intersected = true;
 					intersected_cor = start_pos;
@@ -566,7 +577,7 @@ void World::destroy_block(sf::Vector2i m_pos, sf::Vector2f p_pos)
 		}
 		else
 		{
-			while (start_pos.x < m_pos.x + 38 && start_pos.y < m_pos.y + 48)
+			while (start_pos.x < m_pos.x + 12 && start_pos.y < m_pos.y + 12)
 			{
 				start_pos = sf::Vector2f(start_pos.x + 10.f, start_pos.y + 10.f);
 				sf::Sprite check;
@@ -574,7 +585,8 @@ void World::destroy_block(sf::Vector2i m_pos, sf::Vector2f p_pos)
 				check.setTextureRect(sf::IntRect(0, 0, 1, 1));
 
 				if (tilemap[start_pos.y / 32][start_pos.x / 32] != nullptr &&
-					check.getGlobalBounds().intersects(tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound()))
+					check.getGlobalBounds().intersects(tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound()) &&
+					tilemap[start_pos.y / 32][start_pos.x / 32]->getGlobalBound() != tilemap[m_pos.y / 32][m_pos.x / 32]->getGlobalBound())
 				{
 					intersected = true;
 					intersected_cor = start_pos;
@@ -587,16 +599,21 @@ void World::destroy_block(sf::Vector2i m_pos, sf::Vector2f p_pos)
 		rb = true;
 	}
 
+	if (intersected)
+	{
+		Textures::ID id = tilemap[intersected_cor.y / 32][intersected_cor.x / 32]->get_id();
+		delete tilemap[intersected_cor.y / 32][intersected_cor.x / 32];
+		tilemap[intersected_cor.y / 32][intersected_cor.x / 32] = nullptr;
+		add_ground_item(id, sf::Vector2f(intersected_cor.x, intersected_cor.y));
+	}
 
-
-
-
-
-
-	Textures::ID id = tilemap[m_pos.y / 32][m_pos.x / 32]->get_id();
-	delete tilemap[m_pos.y / 32][m_pos.x / 32];
-	tilemap[m_pos.y / 32][m_pos.x / 32] = nullptr;
-	add_ground_item(id, sf::Vector2f(m_pos.x, m_pos.y));
+	else
+	{
+		Textures::ID id = tilemap[m_pos.y / 32][m_pos.x / 32]->get_id();
+		delete tilemap[m_pos.y / 32][m_pos.x / 32];
+		tilemap[m_pos.y / 32][m_pos.x / 32] = nullptr;
+		add_ground_item(id, sf::Vector2f(m_pos.x, m_pos.y));
+	}
 }
 
 bool World::place_block(sf::Vector2i m_pos, Textures::ID id, sf::Vector2f p_pos)
