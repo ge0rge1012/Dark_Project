@@ -6,6 +6,7 @@
 #include <string>
 #include <stdlib.h>
 #include <time.h>
+#include <map>
 
 const int WORLD_WIDTH = 1000;
 const int WORLD_HEIGHT = 150;
@@ -30,16 +31,24 @@ public:
 	int get_random();
 };
 
-class TextureHolder
-{
+//struct IDHolder {
+//	std::unique_ptr<sf::Texture> texture_pointer;
+//	int type;
+//};
+
+class TextureHolder {
+
 private:
 	std::map<Textures::ID, std::unique_ptr<sf::Texture>> gTextureMap;
+	std::map<Textures::ID, int> type_map;
 
 public:
 	TextureHolder();
-	void load(Textures::ID id, const std::string& filename);
-	sf::Texture& get(Textures::ID id);
-	const sf::Texture& get(Textures::ID id) const;
+	void load(Textures::ID id, const std::string& filename, int type);  //type: 0 - NON-item;
+	sf::Texture& get(Textures::ID id);									// 1 - just ITEM without any functional; 
+	const sf::Texture& get(Textures::ID id) const;						//2 - ITEM-BLOCK; 3 - ITEM_TOOL; 4-ITEM_FOOD;
+	void set_type(Textures::ID id, int type);
+	const int get_type (Textures::ID id) const;
 };
 
 class Block

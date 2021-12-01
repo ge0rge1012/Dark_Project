@@ -30,7 +30,6 @@ TextureHolder modifiing:
 #pragma once
 #include <cmath>
 #include <vector>
-#include <map>
 #include <string>
 #include <memory>
 #include "settings.h"
@@ -103,8 +102,10 @@ public:
 	void substract_one();
 	void set_position(sf::Vector2f pos);
 	void drawU(sf::RenderWindow& window);
+	int set_item_type(Textures::ID id);
 
 private:
+	int item_type;
 	Textures::ID id;
 	sf::Sprite sprite;
 	int amount;

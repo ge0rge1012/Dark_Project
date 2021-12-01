@@ -29,12 +29,13 @@ int Randomizer::get_random() {
 	return rand();
 }
 
-void TextureHolder::load(Textures::ID id, const std::string& filename)
+void TextureHolder::load(Textures::ID id, const std::string& filename, int type)
 {
 	std::unique_ptr<sf::Texture> texture(new sf::Texture());
 	texture->loadFromFile(filename);
 
 	gTextureMap.insert(std::make_pair(id, std::move(texture)));
+	set_type(id, type);
 }
 
 sf::Texture& TextureHolder::get(Textures::ID id)
@@ -48,6 +49,18 @@ const sf::Texture& TextureHolder::get(Textures::ID id) const
 	auto found = gTextureMap.find(id);
 	return *found->second;
 }
+
+void TextureHolder::set_type(Textures:: ID id, int type) {
+	type_map.insert(std::make_pair(id, type));
+}
+
+const int TextureHolder::get_type(Textures::ID id) const 
+{
+	auto found = type_map.find(id);
+	return found->second;
+}
+
+
 
 // in future make by singleton/think about better decision
 extern TextureHolder texture_holder;
@@ -208,7 +221,7 @@ void World::create_surface() {
 		else
 			line_of_horizon += random_number.get_random(-1, 1);
 
-		std::cout << line_of_horizon << std::endl;
+		//std::cout << line_of_horizon << std::endl;
 
 		for (int i = line_of_horizon; i < WORLD_HEIGHT; i++) {
 			//if (i < line_of_horizon)

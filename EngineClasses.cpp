@@ -140,14 +140,14 @@ std::string UserInput::inputting(sf::RenderWindow& window)
 				{
 					symb = static_cast<int>(event.key.code) + 97;
 					smth = true;
-					std::cout << symb;
+					//std::cout << symb;
 				}
 
 				else if (static_cast<int>(event.key.code) >= 26 && static_cast<int>(event.key.code) <= static_cast<int>(sf::Keyboard::Num9))
 				{
 					symb = static_cast<int>(event.key.code) + 22;
 					smth = true;
-					std::cout << symb;
+					//std::cout << symb;
 				}
 			break;
 
@@ -880,18 +880,20 @@ void Game::start_game()
 {
 	// make configurations: game mode, choose character model and etc.
 	// so main menu will be opened here in future
-	texture_holder.load(Textures::VAMPIRE,  "media/textures/animals/gg_32_64.png"); 
-	texture_holder.load(Textures::VAMPIREL, "media/textures/animals/gg_32_64l.png");
-	texture_holder.load(Textures::GREY,     "media/textures/animals/skeleton_grey.png");
-	texture_holder.load(Textures::ORANGE,   "media/textures/blocks/block_orange/block_orange_32_32.png");
-	texture_holder.load(Textures::ROCK,     "media/textures/blocks/block_rock/block_rock_32_32v2.png");
-	texture_holder.load(Textures::DIRT,     "media/textures/blocks/block_dirt/block_dirt_32_32.png");
-	texture_holder.load(Textures::IRON,		"media/textures/blocks/block_iron/block_iron_32_32.png");
-	texture_holder.load(Textures::WOOD,     "media/textures/blocks/block_wood/block_wood_32_32v2.png");
-	texture_holder.load(Textures::LEAVES,   "media/textures/blocks/block_leaves/block_leaves_32_32v2.png");
-	texture_holder.load(Textures::MENU,     "media/images/backgroundv1.png");
+	texture_holder.load(Textures::VAMPIRE,  "media/textures/animals/gg_32_64.png", 0); 
+	texture_holder.load(Textures::VAMPIREL, "media/textures/animals/gg_32_64l.png", 0);
+	texture_holder.load(Textures::GREY,     "media/textures/animals/skeleton_grey.png", 0);
+	texture_holder.load(Textures::ORANGE,   "media/textures/blocks/block_orange/block_orange_32_32.png", 2);
+	texture_holder.load(Textures::ROCK,     "media/textures/blocks/block_rock/block_rock_32_32v2.png", 2);
+	texture_holder.load(Textures::DIRT,     "media/textures/blocks/block_dirt/block_dirt_32_32.png", 2);
+	texture_holder.load(Textures::IRON,		"media/textures/blocks/block_iron/block_iron_32_32.png",2);
+	texture_holder.load(Textures::WOOD,     "media/textures/blocks/block_wood/block_wood_32_32v2.png",2);
+	texture_holder.load(Textures::LEAVES,   "media/textures/blocks/block_leaves/block_leaves_32_32v2.png",2);
+	texture_holder.load(Textures::MENU,     "media/images/backgroundv1.png",0);
 
 
+	std::cout << "LEAVES ITEM TYPE" << texture_holder.get_type(Textures::ID::LEAVES) << std::endl;
+	std::cout << "VAMPIRE ITEM TYPE" << texture_holder.get_type(Textures::ID::VAMPIRE) << std::endl;
 
 
 	font_holder.load(Fonts::OLD, "media/fonts/CyrilicOld.ttf");
