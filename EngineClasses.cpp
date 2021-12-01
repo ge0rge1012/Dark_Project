@@ -506,9 +506,18 @@ void Inventory::add_item(Textures::ID id, int kolvo)
 
 //____________________________________________________________________
 
-Player::Player(): plR(texture_holder.get(Textures::VAMPIRE)), plL(texture_holder.get(Textures::VAMPIREL))
+Player::Player()
 {
-	character.setTexture(plR);
+	texts.push_back(texture_holder.get(Textures::ID::VAMPIRE ));
+	texts.push_back(texture_holder.get(Textures::ID::VAMPIRE1));
+	texts.push_back(texture_holder.get(Textures::ID::VAMPIRE2));
+	texts.push_back(texture_holder.get(Textures::ID::VAMPIRE3));
+	texts.push_back(texture_holder.get(Textures::ID::VAMPIRE4));
+	texts.push_back(texture_holder.get(Textures::ID::VAMPIRE5));
+	texts.push_back(texture_holder.get(Textures::ID::VAMPIRE6));
+	texts.push_back(texture_holder.get(Textures::ID::VAMPIRE7));
+
+	character.setTexture(*(texts.begin()));
 	character.setTextureRect(sf::IntRect(0, 0, 32, 60));
 	player_position = sf::Vector2f(5*32.f, 45*32.f);
 	character.setPosition(player_position);
@@ -553,6 +562,9 @@ void Player::update_statement(const sf::Time delta_time, const World& chunk)
 	sf::FloatRect nextPos;
 	bool jump = false;
 	const float x_crop = 8.f;
+
+	static float time_counter = 0;
+	bool mov_dir_changed = false;
 
 
 	bool smth_is_under = false;
@@ -615,14 +627,29 @@ void Player::update_statement(const sf::Time delta_time, const World& chunk)
 	// if (isMovingUp)    movement.y -= player_speed;   // isn't needed untill we have vertical stairs, jumping by negative gravity
 	// if (isMovingDown)  movement.y += player_speed;   // going down by pressing keys, when we have gravity? lol
 	if (isMovingLeft) {
-		movement.x -= player_speed; 
-		character.setTexture(plL);
-		character.setTextureRect(sf::IntRect(0, 0, 32, 60));
+		if (time_counter >= 8) time_counter = 0;
+		std::cout << std::endl << time_counter << std::endl;
+		auto it = texts.begin();
+		for (int i = 1; i <= time_counter; ++i)
+			it++;
+
+		movement.x -= player_speed;
+		character.setTexture(*it);
+		// character.setTexture(plL);
+		character.setTextureRect(sf::IntRect(32, 0, -32, 60));
+		time_counter += 16 * delta_time.asSeconds();
 	}
 	if (isMovingRigth) {
+		if (time_counter >= 8) time_counter = 0;
+		std::cout << std::endl << time_counter << std::endl;
+		auto it = texts.begin();
+		for (int i = 1; i <= time_counter; ++i)
+			it++;
+
 		movement.x += player_speed;
-		character.setTexture(plR);
+		character.setTexture(*it);
 		character.setTextureRect(sf::IntRect(0, 0, 32, 60));
+		time_counter += 16 * delta_time.asSeconds();
 	}
 
 	if (!onGround) { movement.y += gravityAccum; gravityAccum += gravity; }
@@ -880,8 +907,15 @@ void Game::start_game()
 {
 	// make configurations: game mode, choose character model and etc.
 	// so main menu will be opened here in future
-	texture_holder.load(Textures::VAMPIRE,  "media/textures/animals/gg_32_64.png", 0); 
-	texture_holder.load(Textures::VAMPIREL, "media/textures/animals/gg_32_64l.png", 0);
+	texture_holder.load(Textures::VAMPIRE,  "media/textures/animals/gg_32_64.png", 0);
+	texture_holder.load(Textures::VAMPIRE1, "media/textures/animals/frames_gg_go/gg_go_2.png", 0);
+	texture_holder.load(Textures::VAMPIRE2, "media/textures/animals/frames_gg_go/gg_go_3.png", 0);
+	texture_holder.load(Textures::VAMPIRE3, "media/textures/animals/frames_gg_go/gg_go_4.png", 0);
+	texture_holder.load(Textures::VAMPIRE4, "media/textures/animals/frames_gg_go/gg_go_5.png", 0);
+	texture_holder.load(Textures::VAMPIRE5, "media/textures/animals/frames_gg_go/gg_go_6.png", 0);
+	texture_holder.load(Textures::VAMPIRE6, "media/textures/animals/frames_gg_go/gg_go_7.png", 0);
+	texture_holder.load(Textures::VAMPIRE7, "media/textures/animals/frames_gg_go/gg_go_8.png", 0);
+
 	texture_holder.load(Textures::GREY,     "media/textures/animals/skeleton_grey.png", 0);
 	texture_holder.load(Textures::ORANGE,   "media/textures/blocks/block_orange/block_orange_32_32.png", 2);
 	texture_holder.load(Textures::ROCK,     "media/textures/blocks/block_rock/block_rock_32_32v2.png", 2);

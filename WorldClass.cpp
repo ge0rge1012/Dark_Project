@@ -141,10 +141,6 @@ std::string World::get_id_name(Textures::ID id)
 		return "VAMPIRE";
 		break;
 
-	case Textures::VAMPIREL:
-		return "VAMPIREL";
-		break;
-
 	case Textures::ORANGE:
 		return "ORANGE";
 		break;
