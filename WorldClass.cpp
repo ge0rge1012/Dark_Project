@@ -275,6 +275,9 @@ void World::create_cave_left(int x, int y) {
 		y -= random_number.get_random(-1, 3);
 		if (random_number.get_random(0, 5) == 5)
 			i -= random_number.get_random(1, 2);
+
+		if (random_number.get_random(0, 20) == 20)
+			add_enemy(sf::Vector2f(y * 32.f, i * 32.f), Textures::ID::GREY);
 	}
 }
 
