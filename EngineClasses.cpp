@@ -882,21 +882,26 @@ void Game::start_game()
 	// so main menu will be opened here in future
 	
 	//type: 0 - NON-item;
-	//		1 - NON-FUNCTIONAL-ITEM; 
+	//		1 - NON-FUNCTIONAL-ITEM (mostly for crafting); 
 	//		2 - ITEM-BLOCK; 
 	//		3 - ITEM_TOOL; 
-	//		4-ITEM_FOOD;
+	//		4 - ITEM_FOOD;
 	texture_holder.load(Textures::VAMPIRE,  "media/textures/animals/gg_32_64.png", 0); 
 	texture_holder.load(Textures::VAMPIREL, "media/textures/animals/gg_32_64l.png", 0);
 	texture_holder.load(Textures::GREY,     "media/textures/animals/skeleton_grey.png", 0);
+	texture_holder.load(Textures::MENU, "media/images/backgroundv1.png", 0);
+
+	texture_holder.load(Textures::IRON_ING, "media/textures/blocks/none.png", 1);
+	texture_holder.load(Textures::ORICHALCUM_ING, "media/textures/blocks/none.png", 1);
+
 	texture_holder.load(Textures::ORANGE,   "media/textures/blocks/block_orange/block_orange_32_32.png", 2);
 	texture_holder.load(Textures::ROCK,     "media/textures/blocks/block_rock/block_rock_32_32v2.png", 2);
 	texture_holder.load(Textures::DIRT,     "media/textures/blocks/block_dirt/block_dirt_32_32.png", 2);
 	texture_holder.load(Textures::IRON,		"media/textures/blocks/block_iron/block_iron_32_32.png",2);
-	texture_holder.load(Textures::WOOD,     "media/textures/blocks/block_wood/block_wood_32_32v2.png",2);
-	texture_holder.load(Textures::LEAVES,   "media/textures/blocks/block_leaves/block_leaves_32_32v2.png",2);
-	texture_holder.load(Textures::MENU,     "media/images/backgroundv1.png",0);
-
+	texture_holder.load(Textures::WOOD,     "media/textures/blocks/block_tree/block_tree.png",2);
+	texture_holder.load(Textures::LEAVES,   "media/textures/blocks/block_leaves/leaves_orange/leaves_orange.png",2);
+	texture_holder.load(Textures::LADDER, "media/textures/blocks/ladder/ladder.png", 2);
+	texture_holder.load(Textures::GRASS, "media/textures/blocks/grass/grass_32_32.png", 2);
 
 	//std::cout << "LEAVES ITEM TYPE" << texture_holder.get_type(Textures::ID::LEAVES) << std::endl;
 	//std::cout << "VAMPIRE ITEM TYPE" << texture_holder.get_type(Textures::ID::VAMPIRE) << std::endl;

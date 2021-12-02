@@ -33,7 +33,6 @@ void TextureHolder::load(Textures::ID id, const std::string& filename, int type)
 {
 	std::unique_ptr<sf::Texture> texture(new sf::Texture());
 	texture->loadFromFile(filename);
-
 	gTextureMap.insert(std::make_pair(id, std::move(texture)));
 	set_type(id, type);
 }
@@ -88,6 +87,10 @@ Block::Block(Textures::ID id):id(id)
 	sf::Texture& texture = texture_holder.get(id);
 	this->id = id;
 	block.setTexture(texture);
+
+	if (id == Textures::ID::LADDER || id == Textures::ID::GRASS) {
+		isPassable = true;
+	}
 }
 
 void Block::drawU(sf::RenderWindow& window)
@@ -109,7 +112,12 @@ Textures::ID Block::get_id() {
 void Block::set_id(Textures::ID id) {
 	sf::Texture& texture = texture_holder.get(id);
 	block.setTexture(texture);
+
 	this->id = id;
+
+	if (id == Textures::ID::LADDER || id == Textures::ID::GRASS) {
+		isPassable = true;
+	}
 }
 
 sf::FloatRect Block::getGlobalBound()
