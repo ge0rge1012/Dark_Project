@@ -252,7 +252,7 @@ void World::create_cave_right(int x, int y) {
 		y += random_number.get_random(-1,3);
 		if (random_number.get_random(0, 5) == 5)
 			i -= random_number.get_random(1, 2);
-		if (random_number.get_random(0, 60) == 60)
+		if (random_number.get_random(0, 70) == 70)
 			create_cave_left(i, y);
 		if (i>55)
 			if (random_number.get_random(0, 20) == 20)
