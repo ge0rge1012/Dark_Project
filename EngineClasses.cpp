@@ -612,7 +612,8 @@ void Player::update_statement(const sf::Time delta_time, const World& chunk)
 		}
 	if (!smth_is_under) onGround = false;
 
-	// if (isMovingUp)    movement.y -= player_speed;   // isn't needed untill we have vertical stairs, jumping by negative gravity
+	
+	
 	// if (isMovingDown)  movement.y += player_speed;   // going down by pressing keys, when we have gravity? lol
 	if (isMovingLeft) {
 		movement.x -= player_speed; 
@@ -624,6 +625,24 @@ void Player::update_statement(const sf::Time delta_time, const World& chunk)
 		character.setTexture(plR);
 		character.setTextureRect(sf::IntRect(0, 0, 32, 60));
 	}
+
+	//int blockX = character.getPosition().y / 32;
+	//int blockY = character.getPosition().x / 32; 
+	//
+	//if (chunk.tilemap[blockX][blockY] == nullptr)
+	//	
+	//
+	//if (chunk.tilemap[blockX][blockY] != nullptr)
+	//	if ((chunk.tilemap[blockX][blockY]->get_id() != Textures::ID::LADDER_LEFT
+	//		|| chunk.tilemap[blockX][blockY]->get_id() != Textures::ID::LADDER_RIGHT) && !onGround)
+	//	{
+	//		movement.y += gravityAccum; gravityAccum += gravity;
+	//	}
+	//	else if (isMovingUp) { movement.y -= player_speed; };
+
+	//if (chunk.tilemap[blockX][blockY] != nullptr)
+	//	if (isMovingUp && (chunk.tilemap[blockX][blockY]->get_id() == Textures::ID::LADDER_LEFT || chunk.tilemap[blockX][blockY]->get_id() == Textures::ID::LADDER_RIGHT))
+	//		movement.y -= player_speed;
 
 	if (!onGround) { movement.y += gravityAccum; gravityAccum += gravity; }
 
@@ -882,25 +901,34 @@ void Game::start_game()
 	// so main menu will be opened here in future
 	
 	//type: 0 - NON-item;
-	//		1 - NON-FUNCTIONAL-ITEM; 
+	//		1 - NON-FUNCTIONAL-ITEM (mostly for crafting); 
 	//		2 - ITEM-BLOCK; 
 	//		3 - ITEM_TOOL; 
-	//		4-ITEM_FOOD;
+	//		4 - ITEM_FOOD;
 	texture_holder.load(Textures::VAMPIRE,  "media/textures/animals/gg_32_64.png", 0); 
 	texture_holder.load(Textures::VAMPIREL, "media/textures/animals/gg_32_64l.png", 0);
 	texture_holder.load(Textures::GREY,     "media/textures/animals/skeleton_grey.png", 0);
+	texture_holder.load(Textures::MENU, "media/images/backgroundv1.png", 0);
+
+	texture_holder.load(Textures::IRON_ING, "media/textures/blocks/none.png", 1);
+	texture_holder.load(Textures::ORICHALCUM_ING, "media/textures/blocks/none.png", 1);
+
 	texture_holder.load(Textures::ORANGE,   "media/textures/blocks/block_orange/block_orange_32_32.png", 2);
 	texture_holder.load(Textures::ROCK,     "media/textures/blocks/block_rock/block_rock_32_32v2.png", 2);
 	texture_holder.load(Textures::DIRT,     "media/textures/blocks/block_dirt/block_dirt_32_32.png", 2);
 	texture_holder.load(Textures::IRON,		"media/textures/blocks/block_iron/block_iron_32_32.png",2);
-	texture_holder.load(Textures::WOOD,     "media/textures/blocks/block_wood/block_wood_32_32v2.png",2);
-	texture_holder.load(Textures::LEAVES,   "media/textures/blocks/block_leaves/block_leaves_32_32v2.png",2);
-	texture_holder.load(Textures::MENU,     "media/images/backgroundv1.png",0);
-
+	texture_holder.load(Textures::WOOD,     "media/textures/blocks/block_tree/block_tree.png",2);
+	texture_holder.load(Textures::LEAVES,   "media/textures/blocks/block_leaves/leaves_orange/leaves_orange.png",2);
+	texture_holder.load(Textures::LADDER_LEFT, "media/textures/blocks/ladder/ladder_left.png", 2);
+	texture_holder.load(Textures::LADDER_RIGHT, "media/textures/blocks/ladder/ladder_right.png", 2);
+	texture_holder.load(Textures::LADDER, "media/textures/blocks/ladder/ladder.png", 2);
+	texture_holder.load(Textures::GRASS, "media/textures/blocks/grass/grass_32_32.png", 2);
+	texture_holder.load(Textures::WORKBENCH, "media/textures/blocks/block_workbench/workbench.png", 2);
+	texture_holder.load(Textures::BOX, "media/textures/blocks/block_box/box.png", 2);
+	texture_holder.load(Textures::BAKE, "media/textures/blocks/block_bake/bake.png", 2);
 
 	//std::cout << "LEAVES ITEM TYPE" << texture_holder.get_type(Textures::ID::LEAVES) << std::endl;
 	//std::cout << "VAMPIRE ITEM TYPE" << texture_holder.get_type(Textures::ID::VAMPIRE) << std::endl;
-
 
 	font_holder.load(Fonts::OLD, "media/fonts/CyrilicOld.ttf");
 
@@ -925,12 +953,16 @@ Game::Game() : g_window(sf::VideoMode(mysetts.get_width(), mysetts.get_height())
 	//chunk.test_world();
 	chunk.add_enemy(sf::Vector2f(5*32.f, 40*32.f), Textures::ID::GREY);
 
+	chunk.set_block(42, 5, Textures::ID::LADDER_LEFT);
+	chunk.set_block(43, 5, Textures::ID::LADDER_LEFT);
+
 	inventory.add_item(Textures::DIRT, 10);
 	inventory.add_item(Textures::ORANGE, 666);
 	inventory.add_item(Textures::WOOD, 666);
 	inventory.add_item(Textures::IRON, 5);
 	inventory.add_item(Textures::ROCK, 40);
 	inventory.add_item(Textures::LEAVES, 666);
+	inventory.add_item(Textures::LADDER, 100);
 }
 
 void Game::run()
