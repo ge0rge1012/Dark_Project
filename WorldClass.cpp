@@ -254,9 +254,9 @@ void World::create_cave_right(int x, int y) {
 			i -= random_number.get_random(1, 2);
 		if (random_number.get_random(0, 60) == 60)
 			create_cave_left(i, y);
-
-		if (random_number.get_random(0, 20) == 20)
-			add_enemy(sf::Vector2f(y*32.f, i*32.f), Textures::ID::GREY);
+		if (i>55)
+			if (random_number.get_random(0, 20) == 20)
+				add_enemy(sf::Vector2f(y*32.f, i*32.f), Textures::ID::GREY);
 	}
 }
 
@@ -276,8 +276,9 @@ void World::create_cave_left(int x, int y) {
 		if (random_number.get_random(0, 5) == 5)
 			i -= random_number.get_random(1, 2);
 
-		if (random_number.get_random(0, 20) == 20)
-			add_enemy(sf::Vector2f(y * 32.f, i * 32.f), Textures::ID::GREY);
+		if (i>55)
+			if (random_number.get_random(0, 20) == 20)
+				add_enemy(sf::Vector2f(y * 32.f, i * 32.f), Textures::ID::GREY);
 	}
 }
 
