@@ -88,7 +88,7 @@ Block::Block(Textures::ID id):id(id)
 	this->id = id;
 	block.setTexture(texture);
 
-	if (id == Textures::ID::LADDER || id == Textures::ID::GRASS) {
+	if (id == Textures::ID::LADDER_LEFT || id == Textures::ID::LADDER_RIGHT || id == Textures::ID::GRASS) {
 		isPassable = true;
 	}
 }
@@ -115,7 +115,7 @@ void Block::set_id(Textures::ID id) {
 
 	this->id = id;
 
-	if (id == Textures::ID::LADDER || id == Textures::ID::GRASS) {
+	if (id == Textures::ID::LADDER_LEFT || id == Textures::ID::LADDER_RIGHT || id == Textures::ID::GRASS) {
 		isPassable = true;
 	}
 }
@@ -651,9 +651,21 @@ bool World::place_block(sf::Vector2i m_pos, Textures::ID id, sf::Vector2f p_pos)
 		return false;
 	if (static_cast<int>(sqrt((((p_pos.x - m_pos.x) * (p_pos.x - m_pos.x) + (p_pos.y - m_pos.y) * (p_pos.y - m_pos.y))))) > (7 * 32)) return false;
 
+	if (id == Textures::ID::LADDER && tilemap[m_pos.y / 32][m_pos.x / 32 + 1] != nullptr)
+	{
+		id = Textures::ID::LADDER_RIGHT;
+	}
+	else if (id == Textures::ID::LADDER && tilemap[m_pos.y / 32][m_pos.x / 32 - 1] != nullptr)
+	{
+		id = Textures::ID::LADDER_LEFT;
+	}
+	if (id!=Textures::ID::LADDER)
+	{
+		tilemap[m_pos.y / 32][m_pos.x / 32] = new Block(id);
+		tilemap[m_pos.y / 32][m_pos.x / 32]->set_coordinates(sf::Vector2f((m_pos.x / 32) * 32.f, (m_pos.y / 32) * 32.f));
+	}
 	//std::cout << std::endl << "distance " << ((p_pos.x - pos.x) * (p_pos.x - pos.x) + (p_pos.y - pos.y) * (p_pos.y - pos.y)) << std::endl;
-	tilemap[m_pos.y / 32][m_pos.x / 32] = new Block(id);
-	tilemap[m_pos.y / 32][m_pos.x / 32]->set_coordinates(sf::Vector2f((m_pos.x/32) * 32.f, (m_pos.y/32)* 32.f));
+	
 	return true;
 
 }
@@ -677,6 +689,12 @@ void World::set_block (int x, int y, Textures::ID id) {
 				if (tilemap[x + 1][y]->get_id() == Textures::ID::ORANGE)
 					tilemap[x + 1][y]->set_id(Textures::ID::DIRT);
 	}
+
+	if (id == Textures::ID::LADDER && tilemap[x][y + 1] != nullptr)
+		id = Textures::ID::LADDER_RIGHT;
+	else if (id == Textures::ID::LADDER && tilemap[x][y - 1] != nullptr)
+		id = Textures::ID::LADDER_LEFT;
+
 	tilemap[x][y] = new Block(id);
 	tilemap[x][y]->set_coordinates(sf::Vector2f(y * 32.f, x * 32.f));
 }

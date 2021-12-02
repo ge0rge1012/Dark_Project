@@ -900,6 +900,8 @@ void Game::start_game()
 	texture_holder.load(Textures::IRON,		"media/textures/blocks/block_iron/block_iron_32_32.png",2);
 	texture_holder.load(Textures::WOOD,     "media/textures/blocks/block_tree/block_tree.png",2);
 	texture_holder.load(Textures::LEAVES,   "media/textures/blocks/block_leaves/leaves_orange/leaves_orange.png",2);
+	texture_holder.load(Textures::LADDER_LEFT, "media/textures/blocks/ladder/ladder_left.png", 2);
+	texture_holder.load(Textures::LADDER_RIGHT, "media/textures/blocks/ladder/ladder_right.png", 2);
 	texture_holder.load(Textures::LADDER, "media/textures/blocks/ladder/ladder.png", 2);
 	texture_holder.load(Textures::GRASS, "media/textures/blocks/grass/grass_32_32.png", 2);
 
@@ -930,12 +932,16 @@ Game::Game() : g_window(sf::VideoMode(mysetts.get_width(), mysetts.get_height())
 	//chunk.test_world();
 	chunk.add_enemy(sf::Vector2f(5*32.f, 40*32.f), Textures::ID::GREY);
 
+	chunk.set_block(42, 5, Textures::ID::LADDER_LEFT);
+	chunk.set_block(43, 5, Textures::ID::LADDER_LEFT);
+
 	inventory.add_item(Textures::DIRT, 10);
 	inventory.add_item(Textures::ORANGE, 666);
 	inventory.add_item(Textures::WOOD, 666);
 	inventory.add_item(Textures::IRON, 5);
 	inventory.add_item(Textures::ROCK, 40);
 	inventory.add_item(Textures::LEAVES, 666);
+	inventory.add_item(Textures::LADDER, 100);
 }
 
 void Game::run()
