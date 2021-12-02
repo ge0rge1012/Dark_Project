@@ -17,7 +17,8 @@ class GroundItem;
 
 namespace Textures
 {
-	enum ID { NUL = 0, MENU, VAMPIRE, VAMPIREL, ORANGE, ITEMS, GREY, ROCK, DIRT, IRON, WOOD, LEAVES };
+	enum ID { NUL = 0, MENU, VAMPIRE, VAMPIREL,
+		ORANGE, ITEMS, GREY, ROCK, DIRT, IRON, WOOD, LEAVES };
 }
 
 class Randomizer {
@@ -82,7 +83,8 @@ public:
 
 	World();
 	void create_surface();
-	void create_cave(int x, int y);
+	void create_cave_right(int x, int y);
+	void create_cave_left(int x, int y);
 	void create_mountain();
 	void spawn_dungeon();
 	void spawn_resources();

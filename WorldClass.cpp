@@ -237,7 +237,7 @@ void World::create_surface() {
 	}
 }
 
-void World::create_cave(int x, int y) {
+void World::create_cave_right(int x, int y) {
 	int cave_height = random_number.get_random(100, 135);
 	//std::cout << "CAVE HEIGHT" << cave_height << std::endl;
 	for (int i = x; i < x + cave_height; i++) {
@@ -252,11 +252,31 @@ void World::create_cave(int x, int y) {
 		y += random_number.get_random(-1,3);
 		if (random_number.get_random(0, 5) == 5)
 			i -= random_number.get_random(1, 2);
+		if (random_number.get_random(0, 60) == 60)
+			create_cave_left(i, y);
+	}
+}
+
+void World::create_cave_left(int x, int y) {
+	int cave_height = random_number.get_random(100, 135);
+	//std::cout << "CAVE HEIGHT" << cave_height << std::endl;
+	for (int i = x; i < x + cave_height; i++) {
+		int cave_width = random_number.get_random(6, 8);
+		for (int j = y; j > y - cave_width; j--) {
+			if (i > 0 && i < 150 && j>0 && j < 1000)
+				delete_block(i - 1, j + 1);
+			if (i > 0 && i < 150 && j>0 && j < 1000)
+				delete_block(i, j);
+		}
+
+		y -= random_number.get_random(-1, 3);
+		if (random_number.get_random(0, 5) == 5)
+			i -= random_number.get_random(1, 2);
 	}
 }
 
 void World::create_mountain() {
-	int mount_start_y = random_number.get_random(20, 40);
+	int mount_start_y = random_number.get_random(20, 950);
 	int mount_start_x;
 	int mount_width = random_number.get_random(10, 35);
 	int mount_level = WORLD_HEIGHT - 82;
@@ -307,10 +327,12 @@ void World::generate_world() {
 	//	}
 	//}
 
-	World::create_surface();
-	World::create_mountain();
-	World::spawn_resources();
-	World::create_cave(40, 1/*random_number.get_random(25, 60)*/);
+	create_surface();
+	for (int i = 0; i < random_number.get_random(10, 20); i++) {
+		create_mountain();
+	}
+	spawn_resources();
+	create_cave_right(40, 1/*random_number.get_random(25, 60)*/);
 
 }
 
