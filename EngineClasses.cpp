@@ -612,7 +612,8 @@ void Player::update_statement(const sf::Time delta_time, const World& chunk)
 		}
 	if (!smth_is_under) onGround = false;
 
-	// if (isMovingUp)    movement.y -= player_speed;   // isn't needed untill we have vertical stairs, jumping by negative gravity
+	
+	
 	// if (isMovingDown)  movement.y += player_speed;   // going down by pressing keys, when we have gravity? lol
 	if (isMovingLeft) {
 		movement.x -= player_speed; 
@@ -624,6 +625,24 @@ void Player::update_statement(const sf::Time delta_time, const World& chunk)
 		character.setTexture(plR);
 		character.setTextureRect(sf::IntRect(0, 0, 32, 60));
 	}
+
+	//int blockX = character.getPosition().y / 32;
+	//int blockY = character.getPosition().x / 32; 
+	//
+	//if (chunk.tilemap[blockX][blockY] == nullptr)
+	//	
+	//
+	//if (chunk.tilemap[blockX][blockY] != nullptr)
+	//	if ((chunk.tilemap[blockX][blockY]->get_id() != Textures::ID::LADDER_LEFT
+	//		|| chunk.tilemap[blockX][blockY]->get_id() != Textures::ID::LADDER_RIGHT) && !onGround)
+	//	{
+	//		movement.y += gravityAccum; gravityAccum += gravity;
+	//	}
+	//	else if (isMovingUp) { movement.y -= player_speed; };
+
+	//if (chunk.tilemap[blockX][blockY] != nullptr)
+	//	if (isMovingUp && (chunk.tilemap[blockX][blockY]->get_id() == Textures::ID::LADDER_LEFT || chunk.tilemap[blockX][blockY]->get_id() == Textures::ID::LADDER_RIGHT))
+	//		movement.y -= player_speed;
 
 	if (!onGround) { movement.y += gravityAccum; gravityAccum += gravity; }
 
