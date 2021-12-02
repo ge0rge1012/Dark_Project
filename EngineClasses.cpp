@@ -880,6 +880,12 @@ void Game::start_game()
 {
 	// make configurations: game mode, choose character model and etc.
 	// so main menu will be opened here in future
+	
+	//type: 0 - NON-item;
+	//		1 - NON-FUNCTIONAL-ITEM; 
+	//		2 - ITEM-BLOCK; 
+	//		3 - ITEM_TOOL; 
+	//		4-ITEM_FOOD;
 	texture_holder.load(Textures::VAMPIRE,  "media/textures/animals/gg_32_64.png", 0); 
 	texture_holder.load(Textures::VAMPIREL, "media/textures/animals/gg_32_64l.png", 0);
 	texture_holder.load(Textures::GREY,     "media/textures/animals/skeleton_grey.png", 0);
@@ -892,8 +898,8 @@ void Game::start_game()
 	texture_holder.load(Textures::MENU,     "media/images/backgroundv1.png",0);
 
 
-	std::cout << "LEAVES ITEM TYPE" << texture_holder.get_type(Textures::ID::LEAVES) << std::endl;
-	std::cout << "VAMPIRE ITEM TYPE" << texture_holder.get_type(Textures::ID::VAMPIRE) << std::endl;
+	//std::cout << "LEAVES ITEM TYPE" << texture_holder.get_type(Textures::ID::LEAVES) << std::endl;
+	//std::cout << "VAMPIRE ITEM TYPE" << texture_holder.get_type(Textures::ID::VAMPIRE) << std::endl;
 
 
 	font_holder.load(Fonts::OLD, "media/fonts/CyrilicOld.ttf");
@@ -917,7 +923,7 @@ Game::Game() : g_window(sf::VideoMode(mysetts.get_width(), mysetts.get_height())
 	// chunk.test_world();
 	chunk.generate_world();
 	//chunk.test_world();
-	//chunk.add_enemy(sf::Vector2f(50.f, 390.f), Textures::ID::GREY);
+	chunk.add_enemy(sf::Vector2f(5*32.f, 40*32.f), Textures::ID::GREY);
 
 	inventory.add_item(Textures::DIRT, 10);
 	inventory.add_item(Textures::ORANGE, 666);

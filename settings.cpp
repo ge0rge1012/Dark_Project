@@ -9,3 +9,6 @@ int settings::get_width() {
 int settings::get_height() {
 	return height;
 }
+int settings::get_fps() {
+	return frames_per_second;
+}

@@ -243,17 +243,20 @@ void World::create_cave_right(int x, int y) {
 	for (int i = x; i < x + cave_height; i++) {
 		int cave_width = random_number.get_random(6, 8);
 		for (int j = y; j < y + cave_width; j++) {
-			if (i>0 && i<150 && j>0 && j<1000)
+			if (i>0 && i<145 && j>0 && j<1000)
 				delete_block(i-1, j-1);
-			if (i>0 && i<150 && j>0 && j < 1000)
+			if (i>0 && i<145 && j>0 && j < 1000)
 				delete_block(i, j);
 		}	
 
 		y += random_number.get_random(-1,3);
 		if (random_number.get_random(0, 5) == 5)
 			i -= random_number.get_random(1, 2);
-		if (random_number.get_random(0, 60) == 60)
+		if (random_number.get_random(0, 70) == 70)
 			create_cave_left(i, y);
+		if (i>55)
+			if (random_number.get_random(0, 20) == 20)
+				add_enemy(sf::Vector2f(y*32.f, i*32.f), Textures::ID::GREY);
 	}
 }
 
@@ -263,15 +266,19 @@ void World::create_cave_left(int x, int y) {
 	for (int i = x; i < x + cave_height; i++) {
 		int cave_width = random_number.get_random(6, 8);
 		for (int j = y; j > y - cave_width; j--) {
-			if (i > 0 && i < 150 && j>0 && j < 1000)
+			if (i > 0 && i < 145 && j>0 && j < 1000)
 				delete_block(i - 1, j + 1);
-			if (i > 0 && i < 150 && j>0 && j < 1000)
+			if (i > 0 && i < 145 && j>0 && j < 1000)
 				delete_block(i, j);
 		}
 
 		y -= random_number.get_random(-1, 3);
 		if (random_number.get_random(0, 5) == 5)
 			i -= random_number.get_random(1, 2);
+
+		if (i>55)
+			if (random_number.get_random(0, 20) == 20)
+				add_enemy(sf::Vector2f(y * 32.f, i * 32.f), Textures::ID::GREY);
 	}
 }
 
