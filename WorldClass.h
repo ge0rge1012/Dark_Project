@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <map>
+#include "settings.h"
 
 const int WORLD_WIDTH = 1000;
 const int WORLD_HEIGHT = 150;

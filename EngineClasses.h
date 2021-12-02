@@ -32,13 +32,13 @@ TextureHolder modifiing:
 #include <vector>
 #include <string>
 #include <memory>
-#include "settings.h"
 #include "WorldClass.h"
 
 
 // a little bit of shitcode (let it be, it's a joke) for fixed time steps realisation - my proud
 // it gives about 60 fps, but work (may be) more stable, then standart function
-const sf::Time TimePerFrame = sf::seconds(1.f / 60.f);
+
+const sf::Time TimePerFrame = sf::seconds(1.f / 60*1.f);
 
 void set_view(float x, float y);
 
