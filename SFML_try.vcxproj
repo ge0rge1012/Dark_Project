@@ -24,6 +24,7 @@
     <ProjectGuid>{5bde7c5c-b3ce-41cb-b0e1-c88f7fca2919}</ProjectGuid>
     <RootNamespace>SFMLtry</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>Dark_Mind</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
