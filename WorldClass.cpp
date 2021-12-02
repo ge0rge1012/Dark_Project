@@ -243,9 +243,9 @@ void World::create_cave_right(int x, int y) {
 	for (int i = x; i < x + cave_height; i++) {
 		int cave_width = random_number.get_random(6, 8);
 		for (int j = y; j < y + cave_width; j++) {
-			if (i>0 && i<150 && j>0 && j<1000)
+			if (i>0 && i<145 && j>0 && j<1000)
 				delete_block(i-1, j-1);
-			if (i>0 && i<150 && j>0 && j < 1000)
+			if (i>0 && i<145 && j>0 && j < 1000)
 				delete_block(i, j);
 		}	
 
@@ -266,9 +266,9 @@ void World::create_cave_left(int x, int y) {
 	for (int i = x; i < x + cave_height; i++) {
 		int cave_width = random_number.get_random(6, 8);
 		for (int j = y; j > y - cave_width; j--) {
-			if (i > 0 && i < 150 && j>0 && j < 1000)
+			if (i > 0 && i < 145 && j>0 && j < 1000)
 				delete_block(i - 1, j + 1);
-			if (i > 0 && i < 150 && j>0 && j < 1000)
+			if (i > 0 && i < 145 && j>0 && j < 1000)
 				delete_block(i, j);
 		}
 
