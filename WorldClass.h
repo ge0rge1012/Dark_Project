@@ -20,8 +20,8 @@ namespace Textures
 {
 	enum ID { NUL = 0, MENU, VAMPIRE, VAMPIREL,
 		ORANGE, ITEMS, GREY, ROCK, DIRT, IRON, WOOD, LEAVES, LADDER_LEFT,
-	LADDER_RIGHT, LADDER, GRASS, IRON_ING, ORICHALCUM, ORICHALCUM_ING,
-	};
+		LADDER_RIGHT, LADDER, GRASS, IRON_ING, ORICHALCUM, ORICHALCUM_ING,
+		WORKBENCH, BOX, BAKE };
 }
 
 class Randomizer {
@@ -67,11 +67,13 @@ public:
 	bool breakable();
 	Textures::ID get_id();
 	void set_id(Textures::ID id);
+	bool functional();
 
 private:
 	Textures::ID id = Textures::ID::NUL;
 	bool isPassable = false;
 	bool isBreakable = false;
+	bool isFunctional = false;
 
 	sf::Vector2f coordinates;
 	sf::Sprite block;

@@ -923,10 +923,12 @@ void Game::start_game()
 	texture_holder.load(Textures::LADDER_RIGHT, "media/textures/blocks/ladder/ladder_right.png", 2);
 	texture_holder.load(Textures::LADDER, "media/textures/blocks/ladder/ladder.png", 2);
 	texture_holder.load(Textures::GRASS, "media/textures/blocks/grass/grass_32_32.png", 2);
+	texture_holder.load(Textures::WORKBENCH, "media/textures/blocks/block_workbench/workbench.png", 2);
+	texture_holder.load(Textures::BOX, "media/textures/blocks/block_box/box.png", 2);
+	texture_holder.load(Textures::BAKE, "media/textures/blocks/block_bake/bake.png", 2);
 
 	//std::cout << "LEAVES ITEM TYPE" << texture_holder.get_type(Textures::ID::LEAVES) << std::endl;
 	//std::cout << "VAMPIRE ITEM TYPE" << texture_holder.get_type(Textures::ID::VAMPIRE) << std::endl;
-
 
 	font_holder.load(Fonts::OLD, "media/fonts/CyrilicOld.ttf");
 

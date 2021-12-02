@@ -74,6 +74,11 @@ bool Block::breakable()
 	return isBreakable;
 }
 
+bool Block::functional()
+{
+	return isFunctional;
+}
+
 // let standart texture be just dirt with ORANGE
 Block::Block()
 {
@@ -89,6 +94,10 @@ Block::Block(Textures::ID id):id(id)
 	block.setTexture(texture);
 
 	if (id == Textures::ID::LADDER_LEFT || id == Textures::ID::LADDER_RIGHT || id == Textures::ID::GRASS) {
+		isPassable = true;
+	}
+
+	if (false) {
 		isPassable = true;
 	}
 }
@@ -118,13 +127,16 @@ void Block::set_id(Textures::ID id) {
 	if (id == Textures::ID::LADDER_LEFT || id == Textures::ID::LADDER_RIGHT || id == Textures::ID::GRASS) {
 		isPassable = true;
 	}
+
+	if (false) {
+		isFunctional = true;
+	}
 }
 
 sf::FloatRect Block::getGlobalBound()
 {
 	return block.getGlobalBounds();
 }
-
 
 World::World() 
 {
