@@ -228,12 +228,15 @@ void World::create_surface() {
 			line_of_horizon += random_number.get_random(0, 3);
 		else
 			line_of_horizon += random_number.get_random(-1, 1);
+		if (random_number.get_random(0, 7) == 7)
+			set_block(line_of_horizon - 1, j, Textures::ID::GRASS);
 
 		//std::cout << line_of_horizon << std::endl;
 
 		for (int i = line_of_horizon; i < WORLD_HEIGHT; i++) {
 			//if (i < line_of_horizon)
 			//	delete_block(i, j);
+
 			if (i >= line_of_horizon && i < line_of_horizon + 3)
 				set_block(i, j, Textures::ID::ORANGE);
 			else
