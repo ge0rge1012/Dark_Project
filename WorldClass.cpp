@@ -238,14 +238,20 @@ void World::create_surface() {
 }
 
 void World::create_cave(int x, int y) {
-	int cave_height = random_number.get_random(70, 135);
+	int cave_height = random_number.get_random(100, 135);
 	//std::cout << "CAVE HEIGHT" << cave_height << std::endl;
 	for (int i = x; i < x + cave_height; i++) {
 		int cave_width = random_number.get_random(6, 8);
 		for (int j = y; j < y + cave_width; j++) {
-			delete_block(i, j);
-		}
-		y+=cave_width%3;
+			if (i>0 && i<150 && j>0 && j<1000)
+				delete_block(i-1, j-1);
+			if (i>0 && i<150 && j>0 && j < 1000)
+				delete_block(i, j);
+		}	
+
+		y += random_number.get_random(-1,3);
+		if (random_number.get_random(0, 5) == 5)
+			i -= random_number.get_random(1, 2);
 	}
 }
 
@@ -304,7 +310,7 @@ void World::generate_world() {
 	World::create_surface();
 	World::create_mountain();
 	World::spawn_resources();
-	World::create_cave(0, random_number.get_random(25, 60));
+	World::create_cave(40, 1/*random_number.get_random(25, 60)*/);
 
 }
 
