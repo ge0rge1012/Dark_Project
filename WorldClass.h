@@ -7,6 +7,10 @@
 #include <stdlib.h>
 #include <time.h>
 #include <map>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <memory>
 #include "settings.h"
 
 const int WORLD_WIDTH = 1000;
