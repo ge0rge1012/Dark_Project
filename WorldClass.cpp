@@ -329,8 +329,12 @@ void World::create_mountain() {
 		for (int i = mount_level-3; i < WORLD_HEIGHT-82; i++) {
 			//if (i < line_of_horizon)
 			//	delete_block(i, j);
-			if (i >= mount_level-3 && i < mount_level)
-				set_block(i, j, Textures::ID::ORANGE);
+			if (i >= mount_level-3 && i < mount_level) {
+				if (tilemap[i][j] != nullptr)
+					if (tilemap[i][j]->get_id() == Textures::ID::ROCK)
+						break;
+				set_block(i, j, Textures::ID::ORANGE);	
+			}
 			else
 				set_block(i, j, Textures::ID::ROCK);
 		}
