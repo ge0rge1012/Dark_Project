@@ -146,12 +146,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="EngineClasses.cpp" />
+    <ClCompile Include="InventoryClasses.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="NickAndFonts.cpp" />
     <ClCompile Include="settings.cpp" />
     <ClCompile Include="WorldClass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EngineClasses.h" />
+    <ClInclude Include="InventoryClasses.h" />
+    <ClInclude Include="NickAndFonts.h" />
     <ClInclude Include="settings.h" />
     <ClInclude Include="WorldClass.h" />
   </ItemGroup>

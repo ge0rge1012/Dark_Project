@@ -13,18 +13,27 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Исходные файлы\mainfiles">
+      <UniqueIdentifier>{1442905e-6ed3-49fa-a238-beb4c52888ae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="EngineClasses.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="settings.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="EngineClasses.cpp">
+      <Filter>Исходные файлы\mainfiles</Filter>
+    </ClCompile>
     <ClCompile Include="WorldClass.cpp">
+      <Filter>Исходные файлы\mainfiles</Filter>
+    </ClCompile>
+    <ClCompile Include="InventoryClasses.cpp">
+      <Filter>Исходные файлы\mainfiles</Filter>
+    </ClCompile>
+    <ClCompile Include="NickAndFonts.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
@@ -36,6 +45,12 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="WorldClass.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="InventoryClasses.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="NickAndFonts.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

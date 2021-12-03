@@ -2,6 +2,7 @@
 
 TextureHolder::TextureHolder() { }
 Randomizer random_number;
+settings mysetts;
 
 Randomizer::Randomizer() {
 	srand(time(NULL));
