@@ -154,18 +154,28 @@ void Inventory::update_statement()
 
 	inventory_sprite.setPosition(back_x, back_y);
 
-	int slot_x = back_x + 13;
+	int slot_x = back_x + 14;
 	int slot_y = back_y + 111;
 
-	for (int i = 0; i < 3; i++) { //some shitcode of right positioning inventory slots, cz our designer fucked up with sizes.
-		slot_x = back_x + 13;
+	//for (int i = 0; i < 3; i++) { //some shitcode of right positioning inventory slots, cz our designer fucked up with sizes.
+	//	slot_x = back_x + 13;
+	//	for (int j = 0; j < 10; j++) {
+	//		if ((i * 10 + j > 0 && i * 10 + j < 9) || (i * 10 + j > 10 && i * 10 + j < 19) || i * 10 + j==20)
+	//			slots[i * 10 + j].setPosition(slot_x + 1, slot_y);
+	//		else if (i*10+j>20 && i*10+j<30)
+	//			slots[i * 10 + j].setPosition(slot_x+2, slot_y);
+	//		else 
+	//			slots[i * 10 + j].setPosition(slot_x, slot_y);
+	//		slot_x += 43;
+	//	}
+	//	if (i == 0) slot_y += 43;
+	//	else slot_y += 53;
+	//}
+
+	for (int i = 0; i < 3; i++) { //right code for slots
+		slot_x = back_x + 14;
 		for (int j = 0; j < 10; j++) {
-			if ((i * 10 + j > 0 && i * 10 + j < 9) || (i * 10 + j > 10 && i * 10 + j < 19) || i * 10 + j==20)
-				slots[i * 10 + j].setPosition(slot_x + 1, slot_y);
-			else if (i*10+j>20 && i*10+j<30)
-				slots[i * 10 + j].setPosition(slot_x+2, slot_y);
-			else 
-				slots[i * 10 + j].setPosition(slot_x, slot_y);
+			slots[i * 10 + j].setPosition(slot_x, slot_y);
 			slot_x += 43;
 		}
 		if (i == 0) slot_y += 43;
