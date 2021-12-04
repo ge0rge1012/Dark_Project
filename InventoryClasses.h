@@ -54,6 +54,7 @@ private:
 	sf::RectangleShape inv_line;
 	int current_item = 0;
 
+	std::array<InvItem, 20> inv_items;
 	sf::Sprite inventory_sprite;
 	std::array<sf::Sprite, 30> slots;
 	bool inventory_on = false;
