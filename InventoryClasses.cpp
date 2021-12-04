@@ -148,6 +148,11 @@ void Inventory::update_statement()
 		++i;
 		if (i == 8) break;
 	}
+
+	int back_x = g_view.getCenter().x - 225;
+	int back_y = g_view.getCenter().y - 125;
+
+	Background.setPosition(back_x, back_y);
 }
 
 void Inventory::decrease_item()
@@ -208,6 +213,8 @@ Inventory::Inventory()
 	inv_line.setSize(sf::Vector2f(400.f, 40.f));
 	inv_line.setFillColor(sf::Color::Yellow);
 
+	sf::Texture& texture = texture_holder.get(Textures::GUIBACK);
+	Background.setTexture(texture);
 }
 
 void Inventory::drawU(sf::RenderWindow& window)
@@ -264,4 +271,21 @@ void Inventory::add_item(Textures::ID id, int kolvo)
 		}
 	}
 	// std::cout << "amount" << (*(items.begin())).get_amount();
+}
+
+void Inventory::drawGUI(int type, sf::RenderWindow& window) {
+	if (GUI_on)
+		drawBack(window);
+}
+
+void Inventory::drawBack(sf::RenderWindow& window) {
+	window.draw(Background);
+}
+
+void Inventory::turnGUI(bool on) {
+	GUI_on = on;
+}
+
+bool Inventory::getGUIturn() {
+	return GUI_on;
 }
