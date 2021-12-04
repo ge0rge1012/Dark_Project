@@ -346,17 +346,17 @@ void Inventory::add_invent_item(Textures::ID id, int kolvo) {
 }
 
 void Inventory::drawGUI(int type, sf::RenderWindow& window) {
-	if (inventory_on)
+	if (inventory_on) //если инвентарь включен (меняется булевая при нажатии Е)
 	{
-		drawBack(window);
-		for (int i = 0; i < 30; i++) {
+		drawBack(window); //отрисовка бекгрунда (фона инвентаря)
+		for (int i = 0; i < 30; i++) { //отрисовка 30 слотов
 			window.draw(slots[i]);
 		}
-		for (int i = 0; i < 20; i++) {
+		for (int i = 0; i < 20; i++) { //если в слоте больше 0 то отрисовывается то что лежит в соответствующем слоте инвентаря
 			if(inv_items[i].get_amount()>0)
 				inv_items[i].drawU(window);
 		}
-		for (int i = 0; i < 20; i++) {
+		for (int i = 0; i < 20; i++) { //также отрисовывается циферка с количеством
 			if (inv_items[i].get_amount() > 0) {
 				std::string kol = std::to_string(inv_items[i].get_amount());
 				sf::Text text(kol, font_holder.get(Fonts::ID::OLD), 8);
