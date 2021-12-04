@@ -181,6 +181,20 @@ void Inventory::update_statement()
 		if (i == 0) slot_y += 43;
 		else slot_y += 53;
 	}
+
+	if (inventory_on) {
+		i = 0;
+		for (auto it = items.begin(); it != items.end(); it++)
+		{
+			if (i == current_item - 1)
+				(*it).set_position(slots[20 + i].getPosition() + sf::Vector2f(13.f, 15.f));
+			else
+				(*it).set_position(slots[20 + i].getPosition() + sf::Vector2f(13.f, 15.f));
+
+			++i;
+			if (i == 8) break;
+		}
+	}
 }
 
 void Inventory::decrease_item()

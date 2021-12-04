@@ -668,8 +668,8 @@ void Game::draw_objects()              // so here we can order for all objects t
 		(*it).drawU(g_window);
 
 	nick_under_head.drawU(g_window);
-	inventory.drawU(g_window);
 	inventory.drawGUI(1, g_window);
+	inventory.drawU(g_window);
 }
 
 //______________________________________________________________________________________________________
