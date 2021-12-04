@@ -47,14 +47,15 @@ public:
 	void drawBakeGUI(sf::RenderWindow& window);
 
 	void turnGUI(bool on);
-	bool getGUIturn();
+	bool get_invent_on();
 private:
 	std::list<InvItem> items;
 	std::array<sf::RectangleShape, 8> cubes;
 	sf::RectangleShape inv_line;
 	int current_item = 0;
 
-	sf::Sprite Background;
-	bool GUI_on = false;
+	sf::Sprite inventory_sprite;
+	std::array<sf::Sprite, 30> slots;
+	bool inventory_on = false;
 
 };

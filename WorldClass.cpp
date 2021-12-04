@@ -308,7 +308,7 @@ void World::create_cave_left(int x, int y) {
 
 void World::create_mountain() {
 	int mount_start_y = random_number.get_random(20, 950);
-	int mount_start_x;
+	int mount_start_x = 60;
 	int mount_width = random_number.get_random(10, 35);
 	int mount_level = WORLD_HEIGHT - 82;
 	for (int i = WORLD_HEIGHT - 82; ; i--) {
