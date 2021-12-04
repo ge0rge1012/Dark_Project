@@ -455,7 +455,6 @@ void Game::start_game()
 	texture_holder.load(Textures::MENU, "media/images/backgroundv1.png", 0);
 	texture_holder.load(Textures::GUIBACK, "media/GUI.png", 0);
 
-
 	texture_holder.load(Textures::IRON_ING, "media/textures/blocks/none.png", 1);
 	texture_holder.load(Textures::ORICHALCUM_ING, "media/textures/blocks/none.png", 1);
 
@@ -583,7 +582,6 @@ void Game::update(const sf::Time delta_time)
 	sf::Vector2f cam_pos = g_view.getCenter();
 	menu.setPosition(cam_pos.x - mysetts.get_width()/2, cam_pos.y - mysetts.get_height()/2);
 	inventory.update_statement();
-	GUI.update_statement();
 
 }
 
@@ -665,7 +663,7 @@ void Game::draw_objects()              // so here we can order for all objects t
 
 	nick_under_head.drawU(g_window);
 	inventory.drawU(g_window);
-	GUI.drawGUI(1,g_window);
+	//inventory.drawGUI(1, g_window);
 }
 
 //______________________________________________________________________________________________________

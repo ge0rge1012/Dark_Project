@@ -94,7 +94,6 @@ private:
 	void boot_screen();
 	std::vector<std::vector<std::string>> tiles;
 	Inventory inventory;
-	BlockGUI GUI;
 
 
 	void process_events();                                 // observing for players action (pressing keys)

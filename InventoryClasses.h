@@ -40,24 +40,18 @@ public:
 	int set_current(int num);
 	void decrease_item();
 
+	void drawGUI(int type, sf::RenderWindow& window);
+	void drawBack(sf::RenderWindow& window);
+	void drawWorkbenchGUI(sf::RenderWindow& window);
+	void drawChestGUI(sf::RenderWindow& window);
+	void drawBakeGUI(sf::RenderWindow& window);
+
 private:
 	std::list<InvItem> items;
 	std::array<sf::RectangleShape, 8> cubes;
 	sf::RectangleShape inv_line;
 	int current_item = 0;
 
-};
-
-class BlockGUI
-{
-public:
-	BlockGUI();
-	void drawGUI(int type, sf::RenderWindow& window);
-	void drawBack(sf::RenderWindow& window);
-	void drawWorkbenchGUI(sf::RenderWindow& window);
-	void drawChestGUI(sf::RenderWindow& window);
-	void drawBakeGUI(sf::RenderWindow& window);
-	void update_statement();
-private:
 	sf::Sprite Background;
+
 };
