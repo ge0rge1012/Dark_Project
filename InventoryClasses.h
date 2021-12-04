@@ -47,3 +47,17 @@ private:
 	int current_item = 0;
 
 };
+
+class BlockGUI
+{
+public:
+	BlockGUI();
+	void drawGUI(int type, sf::RenderWindow& window);
+	void drawBack(sf::RenderWindow& window);
+	void drawWorkbenchGUI(sf::RenderWindow& window);
+	void drawChestGUI(sf::RenderWindow& window);
+	void drawBakeGUI(sf::RenderWindow& window);
+	void update_statement();
+private:
+	sf::Sprite Background;
+};

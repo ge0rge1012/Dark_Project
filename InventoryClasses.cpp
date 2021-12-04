@@ -265,3 +265,24 @@ void Inventory::add_item(Textures::ID id, int kolvo)
 	}
 	// std::cout << "amount" << (*(items.begin())).get_amount();
 }
+
+BlockGUI::BlockGUI() {
+
+	sf::Texture& texture = texture_holder.get(Textures::GUIBACK);
+	Background.setTexture(texture);
+}
+
+void BlockGUI::drawGUI(int type, sf::RenderWindow& window) {
+	drawBack(window);
+}
+
+void BlockGUI::drawBack(sf::RenderWindow& window) {
+	window.draw(Background);
+}
+
+void BlockGUI::update_statement() {
+	int scr_x = g_view.getCenter().x - 225;
+	int scr_y = g_view.getCenter().y - 125;
+
+	Background.setPosition(scr_x, scr_y);
+}

@@ -3,8 +3,8 @@
 class settings 
 {
 private:
-	int width = 640;
-	int height = 480;
+	int width = 1920;
+	int height = 1080;
 	int frames_per_second = 60;
 public:
 	settings();
