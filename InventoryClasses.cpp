@@ -152,7 +152,25 @@ void Inventory::update_statement()
 	int back_x = g_view.getCenter().x - 225;
 	int back_y = g_view.getCenter().y - 125;
 
-	Background.setPosition(back_x, back_y);
+	inventory_sprite.setPosition(back_x, back_y);
+
+	int slot_x = back_x + 13;
+	int slot_y = back_y + 111;
+
+	for (int i = 0; i < 3; i++) { //some shitcode of right positioning inventory slots, cz our designer fucked up with sizes.
+		slot_x = back_x + 13;
+		for (int j = 0; j < 10; j++) {
+			if ((i * 10 + j > 0 && i * 10 + j < 9) || (i * 10 + j > 10 && i * 10 + j < 19) || i * 10 + j==20)
+				slots[i * 10 + j].setPosition(slot_x + 1, slot_y);
+			else if (i*10+j>20 && i*10+j<30)
+				slots[i * 10 + j].setPosition(slot_x+2, slot_y);
+			else 
+				slots[i * 10 + j].setPosition(slot_x, slot_y);
+			slot_x += 43;
+		}
+		if (i == 0) slot_y += 43;
+		else slot_y += 53;
+	}
 }
 
 void Inventory::decrease_item()
@@ -213,8 +231,13 @@ Inventory::Inventory()
 	inv_line.setSize(sf::Vector2f(400.f, 40.f));
 	inv_line.setFillColor(sf::Color::Yellow);
 
-	sf::Texture& texture = texture_holder.get(Textures::GUIBACK);
-	Background.setTexture(texture);
+	sf::Texture& texture = texture_holder.get(Textures::INVENTORY);
+	inventory_sprite.setTexture(texture);
+
+	sf::Texture& texture_slot = texture_holder.get(Textures::SLOT);
+	for (int i = 0; i < 30; i++) {
+		slots[i].setTexture(texture_slot);
+	}
 }
 
 void Inventory::drawU(sf::RenderWindow& window)
@@ -274,18 +297,24 @@ void Inventory::add_item(Textures::ID id, int kolvo)
 }
 
 void Inventory::drawGUI(int type, sf::RenderWindow& window) {
-	if (GUI_on)
+	if (inventory_on)
+	{
 		drawBack(window);
+		for (int i = 0; i < 30; i++) {
+			window.draw(slots[i]);
+		}
+	}
+
 }
 
 void Inventory::drawBack(sf::RenderWindow& window) {
-	window.draw(Background);
+	window.draw(inventory_sprite);
 }
 
 void Inventory::turnGUI(bool on) {
-	GUI_on = on;
+	inventory_on = on;
 }
 
-bool Inventory::getGUIturn() {
-	return GUI_on;
+bool Inventory::get_invent_on() {
+	return inventory_on;
 }
