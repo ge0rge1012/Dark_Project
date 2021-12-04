@@ -46,6 +46,8 @@ public:
 	void drawChestGUI(sf::RenderWindow& window);
 	void drawBakeGUI(sf::RenderWindow& window);
 
+	void turnGUI(bool on);
+	bool getGUIturn();
 private:
 	std::list<InvItem> items;
 	std::array<sf::RectangleShape, 8> cubes;
@@ -53,5 +55,6 @@ private:
 	int current_item = 0;
 
 	sf::Sprite Background;
+	bool GUI_on = false;
 
 };

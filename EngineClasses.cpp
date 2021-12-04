@@ -453,7 +453,7 @@ void Game::start_game()
 	texture_holder.load(Textures::VAMPIREL, "media/textures/animals/gg_32_64l.png", 0);
 	texture_holder.load(Textures::GREY,     "media/textures/animals/skeleton_grey.png", 0);
 	texture_holder.load(Textures::MENU, "media/images/backgroundv1.png", 0);
-	texture_holder.load(Textures::GUIBACK, "media/GUI.png", 0);
+	texture_holder.load(Textures::GUIBACK, "media/inventory_450_250.png", 0);
 
 	texture_holder.load(Textures::IRON_ING, "media/textures/blocks/none.png", 1);
 	texture_holder.load(Textures::ORICHALCUM_ING, "media/textures/blocks/none.png", 1);
@@ -602,6 +602,11 @@ void Game::handle_events(sf::Keyboard::Key key, bool isPressed)
 		player->key_reaction(key, isPressed);
 	if ((static_cast<int>(key) >= sf::Keyboard::Num1 && static_cast<int>(key) <= static_cast<int>(sf::Keyboard::Num9)) && isPressed)
 		inventory.key_reaction(key);
+
+	if (!inventory.getGUIturn() && key == sf::Keyboard::E && isPressed) //Inventory on E button
+		inventory.turnGUI(true);
+	else if (inventory.getGUIturn() && key == sf::Keyboard::E && isPressed)
+		inventory.turnGUI(false);
 }
 
 void Game::mouse_processor()
@@ -663,7 +668,7 @@ void Game::draw_objects()              // so here we can order for all objects t
 
 	nick_under_head.drawU(g_window);
 	inventory.drawU(g_window);
-	//inventory.drawGUI(1, g_window);
+	inventory.drawGUI(1, g_window);
 }
 
 //______________________________________________________________________________________________________

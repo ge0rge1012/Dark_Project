@@ -274,9 +274,18 @@ void Inventory::add_item(Textures::ID id, int kolvo)
 }
 
 void Inventory::drawGUI(int type, sf::RenderWindow& window) {
-	drawBack(window);
+	if (GUI_on)
+		drawBack(window);
 }
 
 void Inventory::drawBack(sf::RenderWindow& window) {
 	window.draw(Background);
+}
+
+void Inventory::turnGUI(bool on) {
+	GUI_on = on;
+}
+
+bool Inventory::getGUIturn() {
+	return GUI_on;
 }
