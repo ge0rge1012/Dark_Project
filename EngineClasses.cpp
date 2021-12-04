@@ -455,6 +455,8 @@ void Game::start_game()
 	texture_holder.load(Textures::MENU, "media/images/backgroundv1.png", 0);
 	texture_holder.load(Textures::INVENTORY, "media/inventory_450_250.png", 0);
 	texture_holder.load(Textures::SLOT, "media/textures/instruments/inventory_set.png", 0);
+	texture_holder.load(Textures::NUL, "media/textures/textures/null.png", 0);
+
 
 	texture_holder.load(Textures::IRON_ING, "media/textures/blocks/none.png", 1);
 	texture_holder.load(Textures::ORICHALCUM_ING, "media/textures/blocks/none.png", 1);
@@ -510,6 +512,7 @@ Game::Game() : g_window(sf::VideoMode(mysetts.get_width(), mysetts.get_height())
 	inventory.add_item(Textures::ROCK, 40);
 	inventory.add_item(Textures::LEAVES, 666);
 	inventory.add_item(Textures::LADDER, 100);
+	inventory.add_invent_item(Textures::WOOD, 250);
 }
 
 void Game::run()

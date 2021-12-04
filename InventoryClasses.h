@@ -9,6 +9,7 @@ class InvItem
 public:
 	Textures::ID get_id();
 	int get_amount();
+	InvItem();
 	InvItem(Textures::ID id);
 	InvItem(Textures::ID id, int kolvo);
 	void add_one();
@@ -18,7 +19,7 @@ public:
 	void substract_one();
 	void set_position(sf::Vector2f pos);
 	void drawU(sf::RenderWindow& window);
-	int set_item_type(Textures::ID id);
+	void set_item_type(Textures::ID id);
 
 private:
 	int item_type;
@@ -48,6 +49,8 @@ public:
 
 	void turnGUI(bool on);
 	bool get_invent_on();
+
+	void add_invent_item(Textures::ID id, int kolvo = 1);
 private:
 	std::list<InvItem> items;
 	std::array<sf::RectangleShape, 8> cubes;

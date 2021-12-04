@@ -10,6 +10,15 @@ Textures::ID InvItem::get_id()
 	return id;
 }
 
+InvItem::InvItem() {
+}
+
+void InvItem::set_item_type(Textures::ID id) {
+	sf::Texture& texture = texture_holder.get(id);
+	sprite.setTexture(texture);
+	sprite.setScale(0.3, 0.3);
+}
+
 InvItem::InvItem(Textures::ID id) : id(id)
 {
 	amount = 0;
@@ -173,13 +182,19 @@ void Inventory::update_statement()
 	//}
 
 	for (int i = 0; i < 3; i++) { //right code for slots
-		slot_x = back_x + 14;
+		slot_x = back_x + 13;
 		for (int j = 0; j < 10; j++) {
 			slots[i * 10 + j].setPosition(slot_x, slot_y);
 			slot_x += 43;
 		}
 		if (i == 0) slot_y += 43;
-		else slot_y += 53;
+		else slot_y += 51;
+	}
+
+	if (inventory_on) {
+		for (int i = 0; i < 20; i++) {
+			inv_items[i].set_position(slots[i].getPosition() + sf::Vector2f(13.f, 15.f));
+		}
 	}
 
 	if (inventory_on) {
@@ -195,6 +210,7 @@ void Inventory::update_statement()
 			if (i == 8) break;
 		}
 	}
+
 }
 
 void Inventory::decrease_item()
@@ -240,7 +256,7 @@ Textures::ID Inventory::get_current()
 
 }
 
-Inventory::Inventory()
+Inventory::Inventory() 
 {
 	for (int i = 0; i < 8; ++i)
 	{
@@ -262,6 +278,10 @@ Inventory::Inventory()
 	for (int i = 0; i < 30; i++) {
 		slots[i].setTexture(texture_slot);
 	}
+
+	for (int i = 0; i < 20; i++) {
+		inv_items[i].set_item_type(Textures::ID::DIRT);
+	}
 }
 
 void Inventory::drawU(sf::RenderWindow& window)
@@ -274,7 +294,7 @@ void Inventory::drawU(sf::RenderWindow& window)
 	for (auto it = items.begin(); it != items.end(); it++)
 	{
 		std::string kol = std::to_string((*it).get_amount());
-		sf::Text text(kol, font_holder.get(Fonts::ID::OLD), 10);
+		sf::Text text(kol, font_holder.get(Fonts::ID::OLD), 8);
 		text.setFillColor(sf::Color::Black);
 
 		if (i == current_item - 1)
@@ -286,7 +306,6 @@ void Inventory::drawU(sf::RenderWindow& window)
 		i++;
 		;		if (i == 8) break;
 	}
-
 }
 
 void Inventory::add_item(Textures::ID id, int kolvo)
@@ -320,6 +339,12 @@ void Inventory::add_item(Textures::ID id, int kolvo)
 	// std::cout << "amount" << (*(items.begin())).get_amount();
 }
 
+void Inventory::add_invent_item(Textures::ID id, int kolvo) {
+
+	inv_items[0].set_item_type(id);
+	inv_items[0].add_plenty(kolvo);
+}
+
 void Inventory::drawGUI(int type, sf::RenderWindow& window) {
 	if (inventory_on)
 	{
@@ -327,8 +352,21 @@ void Inventory::drawGUI(int type, sf::RenderWindow& window) {
 		for (int i = 0; i < 30; i++) {
 			window.draw(slots[i]);
 		}
-	}
+		for (int i = 0; i < 20; i++) {
+			if(inv_items[i].get_amount()>0)
+				inv_items[i].drawU(window);
+		}
+		for (int i = 0; i < 20; i++) {
+			if (inv_items[i].get_amount() > 0) {
+				std::string kol = std::to_string(inv_items[i].get_amount());
+				sf::Text text(kol, font_holder.get(Fonts::ID::OLD), 8);
+				text.setFillColor(sf::Color::Black);
+				text.setPosition(inv_items[i].get_position() + sf::Vector2f(10.f, -12.f));
+				window.draw(text);
+			}
+		}
 
+	}
 }
 
 void Inventory::drawBack(sf::RenderWindow& window) {
