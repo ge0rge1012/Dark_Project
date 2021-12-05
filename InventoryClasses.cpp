@@ -19,6 +19,10 @@ void InvItem::set_item_type(Textures::ID id) {
 	sprite.setScale(0.3, 0.3);
 }
 
+void InvItem::set_sprite(sf::Sprite new_sprite) {
+	sprite = new_sprite;
+}
+
 InvItem::InvItem(Textures::ID id) : id(id)
 {
 	amount = 0;
@@ -26,6 +30,15 @@ InvItem::InvItem(Textures::ID id) : id(id)
 	sf::Texture& texture = texture_holder.get(id);
 	sprite.setTexture(texture);
 	sprite.setScale(0.3, 0.3);
+}
+
+void InvItem::set_id(Textures::ID id) {
+	sf::Texture& texture = texture_holder.get(id);
+	sprite.setTexture(texture);
+}
+
+void InvItem::set_amount(int amount) {
+	this->amount = amount;
 }
 
 int InvItem::get_amount()
@@ -76,6 +89,15 @@ InvItem::InvItem(Textures::ID id, int kolvo) : id(id)
 	sprite.setTexture(texture);
 	sprite.setScale(0.3, 0.3);
 }
+
+int InvItem::get_item_type() {
+	return item_type;
+}
+
+sf::Sprite InvItem::get_sprite() {
+	return sprite;
+}
+
 
 
 //____________________________________________________________________
@@ -346,17 +368,17 @@ void Inventory::add_invent_item(Textures::ID id, int kolvo) {
 }
 
 void Inventory::drawGUI(int type, sf::RenderWindow& window) {
-	if (inventory_on)
+	if (inventory_on) //если инвентарь включен (меняется булевая при нажатии Е)
 	{
-		drawBack(window);
-		for (int i = 0; i < 30; i++) {
+		drawBack(window); //отрисовка бекгрунда (фона инвентаря)
+		for (int i = 0; i < 30; i++) { //отрисовка 30 слотов
 			window.draw(slots[i]);
 		}
-		for (int i = 0; i < 20; i++) {
+		for (int i = 0; i < 20; i++) { //если в слоте больше 0 то отрисовывается то что лежит в соответствующем слоте инвентаря
 			if(inv_items[i].get_amount()>0)
 				inv_items[i].drawU(window);
 		}
-		for (int i = 0; i < 20; i++) {
+		for (int i = 0; i < 20; i++) { //также отрисовывается циферка с количеством
 			if (inv_items[i].get_amount() > 0) {
 				std::string kol = std::to_string(inv_items[i].get_amount());
 				sf::Text text(kol, font_holder.get(Fonts::ID::OLD), 8);
@@ -369,6 +391,38 @@ void Inventory::drawGUI(int type, sf::RenderWindow& window) {
 	}
 }
 
+int Inventory::get_pos_now(sf::Vector2i m_position) {
+	int slot_now = 21;
+	for (int i = 0; i < 20; i++) {
+		if ((slots[i].getPosition().x < m_position.x) && (slots[i].getPosition().x + 38 > m_position.x)
+			&& (slots[i].getPosition().y < m_position.y) && (slots[i].getPosition().y + 38 > m_position.y))
+			slot_now = i;
+	}
+	if (slot_now<20)
+		return slot_now;
+}
+
+void Inventory::change_slots(int new_slot, int old_slot) {
+	Textures::ID temp_id = inv_items[new_slot].get_id();
+	int temp_amount = inv_items[new_slot].get_amount();
+	sf::Sprite temp_sprite = inv_items[new_slot].get_sprite();
+
+	inv_items[new_slot].set_item_type(inv_items[old_slot].get_id());
+	inv_items[new_slot].set_id(inv_items[old_slot].get_id());
+	inv_items[new_slot].set_sprite(inv_items[old_slot].get_sprite());
+	inv_items[new_slot].set_amount(inv_items[old_slot].get_amount());
+
+	inv_items[old_slot].set_item_type(temp_id);
+	inv_items[old_slot].set_id(temp_id);
+	inv_items[old_slot].set_sprite(temp_sprite);
+	inv_items[old_slot].set_amount(temp_amount);
+}
+
+bool Inventory::is_slot_empty(int slot) {
+	if (inv_items[slot].get_amount() == 0) return true;
+	else return false;
+}
+
 void Inventory::drawBack(sf::RenderWindow& window) {
 	window.draw(inventory_sprite);
 }
@@ -379,4 +433,19 @@ void Inventory::turnGUI(bool on) {
 
 bool Inventory::get_invent_on() {
 	return inventory_on;
+}
+
+bool Inventory::is_in_hand() {
+	return in_hand;
+}
+void Inventory::turn_in_hand(bool on) {
+	in_hand = on;
+}
+
+int Inventory::get_save_slot() {
+	return saved_slot;
+}
+
+void Inventory::save_slot(int slot) {
+	saved_slot = slot;
 }

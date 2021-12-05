@@ -626,8 +626,24 @@ void Game::mouse_processor()
 	sf::Vector2i real_pos = sf::Vector2i((cam_pos.x - (mysetts.get_width() / 2) + static_cast<float>(mouse_pos.x) / (static_cast<float>(g_window.getSize().x / static_cast<float>(mysetts.get_width())))),
 		                                 (cam_pos.y - (mysetts.get_height() / 2) + static_cast<float>(mouse_pos.y) / (static_cast<float>(g_window.getSize().y / static_cast<float>(mysetts.get_height())))));
 	
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && inventory.get_invent_on()) {
+		int clicked_slot = inventory.get_pos_now(real_pos);
+		if (clicked_slot < 20 && clicked_slot >= 0) {
+			if (!inventory.is_in_hand()) {
+				inventory.turn_in_hand(true);
+				std::cout << inventory.is_in_hand() << std::endl;
+				inventory.save_slot(clicked_slot);
+			}
+			else if (inventory.is_in_hand()) {
+				inventory.turn_in_hand(false);
+				std::cout << inventory.is_in_hand() << std::endl;
+				int old_slot = inventory.get_save_slot();
+				inventory.change_slots(clicked_slot, old_slot);
 
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			}
+		}
+	}
+	else if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 	{
 		//std::cout << "mousecoord " << mouse_pos.x << " " << mouse_pos.y << std::endl;
 		//std::cout << "realcoord " << real_pos.x << " " << real_pos.y << std::endl;
