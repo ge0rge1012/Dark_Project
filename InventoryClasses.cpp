@@ -216,6 +216,17 @@ void Inventory::update_statement()
 		else slot_y += 51;
 	}
 
+	slot_y = back_y + 10;
+
+	for (int i = 0; i < 2; i++) { 
+		slot_x = back_x + 31;
+		for (int j = 0; j < 2; j++) {
+			armor_slots[i * 2 + j].setPosition(slot_x, slot_y);
+			slot_x += 43;
+		}
+		slot_y += 43;
+	}
+
 	if (inventory_on) {
 		for (int i = 0; i < 20; i++) {
 			inv_items[i].set_position(slots[i].getPosition() + sf::Vector2f(13.f, 15.f));
@@ -307,6 +318,10 @@ Inventory::Inventory()
 	for (int i = 0; i < 20; i++) {
 		inv_items[i].set_item_id(Textures::ID::DIRT);
 	}
+
+	for (int i = 0; i < 4; i++) { //отрисовка 30 слотов
+		armor_slots[i].setTexture(texture_slot);
+	}
 }
 
 void Inventory::drawU(sf::RenderWindow& window)
@@ -391,6 +406,9 @@ void Inventory::drawGUI(int type, sf::RenderWindow& window) {
 		drawBack(window); //отрисовка бекгрунда (фона инвентаря)
 		for (int i = 0; i < 30; i++) { //отрисовка 30 слотов
 			window.draw(slots[i]);
+		}
+		for (int i = 0; i < 4; i++) { //отрисовка 30 слотов
+			window.draw(armor_slots[i]);
 		}
 		for (int i = 0; i < 20; i++) { //если в слоте больше 0 то отрисовывается то что лежит в соответствующем слоте инвентаря
 			if(inv_items[i].get_amount()>0)

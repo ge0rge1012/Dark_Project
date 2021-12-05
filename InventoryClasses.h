@@ -63,7 +63,6 @@ public:
 	void add_invent_item(Textures::ID id, int kolvo = 1);
 
 	int get_pos_now(sf::Vector2i m_position);
-	void get_in_hand(sf::Vector2i m_position);
 private:
 	std::list<InvItem> items;
 	std::array<sf::RectangleShape, 8> cubes;
@@ -76,5 +75,8 @@ private:
 	bool in_hand = false;
 	bool inventory_on = false;
 	int saved_slot;
+
+	std::array<InvItem, 4> armor_items;
+	std::array<sf::Sprite, 4> armor_slots;
 
 };
