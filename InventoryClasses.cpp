@@ -13,10 +13,14 @@ Textures::ID InvItem::get_id()
 InvItem::InvItem() {
 }
 
-void InvItem::set_item_type(Textures::ID id) {
+void InvItem::set_item_id(Textures::ID id) {
 	sf::Texture& texture = texture_holder.get(id);
 	sprite.setTexture(texture);
 	sprite.setScale(0.3, 0.3);
+
+	this->id = id;
+
+	item_type = texture_holder.get_type(id);
 }
 
 void InvItem::set_sprite(sf::Sprite new_sprite) {
@@ -30,11 +34,10 @@ InvItem::InvItem(Textures::ID id) : id(id)
 	sf::Texture& texture = texture_holder.get(id);
 	sprite.setTexture(texture);
 	sprite.setScale(0.3, 0.3);
-}
 
-void InvItem::set_id(Textures::ID id) {
-	sf::Texture& texture = texture_holder.get(id);
-	sprite.setTexture(texture);
+	this->id = id;
+
+	item_type = texture_holder.get_type(id);
 }
 
 void InvItem::set_amount(int amount) {
@@ -302,7 +305,7 @@ Inventory::Inventory()
 	}
 
 	for (int i = 0; i < 20; i++) {
-		inv_items[i].set_item_type(Textures::ID::DIRT);
+		inv_items[i].set_item_id(Textures::ID::DIRT);
 	}
 }
 
@@ -363,8 +366,23 @@ void Inventory::add_item(Textures::ID id, int kolvo)
 
 void Inventory::add_invent_item(Textures::ID id, int kolvo) {
 
-	inv_items[0].set_item_type(id);
-	inv_items[0].add_plenty(kolvo);
+	bool isAdded = false;
+	for (int i = 0; i < 20; i++) {
+		if (inv_items[i].get_id() == id)
+		{
+			inv_items[i].add_plenty(kolvo);
+			isAdded = true;
+			break;
+		}
+		if (!isAdded)
+		{
+			if (inv_items[i].get_id() == Textures::NUL || inv_items[i].get_amount() == 0) {
+				inv_items[i].set_item_id(id);
+				inv_items[i].set_amount(kolvo);
+				break;
+			}
+		}
+	}
 }
 
 void Inventory::drawGUI(int type, sf::RenderWindow& window) {
@@ -407,13 +425,13 @@ void Inventory::change_slots(int new_slot, int old_slot) {
 	int temp_amount = inv_items[new_slot].get_amount();
 	sf::Sprite temp_sprite = inv_items[new_slot].get_sprite();
 
-	inv_items[new_slot].set_item_type(inv_items[old_slot].get_id());
-	inv_items[new_slot].set_id(inv_items[old_slot].get_id());
+	inv_items[new_slot].set_item_id(inv_items[old_slot].get_id());
+	//inv_items[new_slot].set_id(inv_items[old_slot].get_id());
 	inv_items[new_slot].set_sprite(inv_items[old_slot].get_sprite());
 	inv_items[new_slot].set_amount(inv_items[old_slot].get_amount());
 
-	inv_items[old_slot].set_item_type(temp_id);
-	inv_items[old_slot].set_id(temp_id);
+	inv_items[old_slot].set_item_id(temp_id);
+	//inv_items[old_slot].set_id(temp_id);
 	inv_items[old_slot].set_sprite(temp_sprite);
 	inv_items[old_slot].set_amount(temp_amount);
 }

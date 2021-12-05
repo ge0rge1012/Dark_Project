@@ -8,7 +8,7 @@ class InvItem
 {
 public:
 	Textures::ID get_id();
-	void set_id(Textures::ID id);
+	void set_item_id(Textures::ID id);
 	void set_amount(int amount);
 	int get_amount();
 	InvItem();
@@ -21,7 +21,6 @@ public:
 	void substract_one();
 	void set_position(sf::Vector2f pos);
 	void drawU(sf::RenderWindow& window);
-	void set_item_type(Textures::ID id);
 	int get_item_type();
 	sf::Sprite get_sprite();
 	void set_sprite(sf::Sprite new_sprite);
