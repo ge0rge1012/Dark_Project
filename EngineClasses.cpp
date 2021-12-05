@@ -456,6 +456,8 @@ void Game::start_game()
 	texture_holder.load(Textures::INVENTORY, "media/inventory_450_250.png", 0);
 	texture_holder.load(Textures::SLOT, "media/textures/instruments/inventory_set.png", 0);
 	texture_holder.load(Textures::NUL, "media/textures/textures/null.png", 0);
+	texture_holder.load(Textures::EARTHBACKGROUND, "media/textures/bigbackground.png", 0);
+
 
 
 	texture_holder.load(Textures::IRON_ING, "media/textures/blocks/none.png", 1);
@@ -496,6 +498,10 @@ Game::Game() : g_window(sf::VideoMode(mysetts.get_width(), mysetts.get_height())
 	sf::Texture& men = texture_holder.get(Textures::ID::MENU);
 	menu.setTexture(men);
 	menu.setColor(sf::Color(64, 64, 64, 255));
+
+	sf::Texture& back = texture_holder.get(Textures::ID::EARTHBACKGROUND);
+	earthbackground.setTexture(back);
+	earthbackground.setPosition(sf::Vector2f(0.f, 2080.f));
 
 	// chunk.test_world();
 	chunk.generate_world();
@@ -589,7 +595,6 @@ void Game::update(const sf::Time delta_time)
 	sf::Vector2f cam_pos = g_view.getCenter();
 	menu.setPosition(cam_pos.x - mysetts.get_width()/2, cam_pos.y - mysetts.get_height()/2);
 	inventory.update_statement();
-
 }
 
 void Game::render()
@@ -680,6 +685,7 @@ void Game::mouse_processor()
 void Game::draw_objects()              // so here we can order for all objects to draw themselves
 {
 	g_window.draw(menu);
+	g_window.draw(earthbackground);
 	player->drawU(g_window);
 
 	chunk.drawU(g_window, sf::Vector2f(player->getplayercoordinateX(), player->getplayercoordinateY()));

@@ -367,7 +367,7 @@ void World::generate_world() {
 		create_mountain();
 	}
 	spawn_resources();
-	create_cave_right(40, 1/*random_number.get_random(25, 60)*/);
+	create_cave_right(40, random_number.get_random(25, 60));
 
 }
 
