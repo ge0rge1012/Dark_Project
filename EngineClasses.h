@@ -112,6 +112,7 @@ private:
 	std::string nick = "";
 	NickName nick_under_head;
 	sf::Sprite menu;
+	sf::Sprite earthbackground;
 
 	// can be vectors of different objects
 	Player* player;
