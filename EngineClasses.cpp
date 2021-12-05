@@ -513,6 +513,9 @@ Game::Game() : g_window(sf::VideoMode(mysetts.get_width(), mysetts.get_height())
 	inventory.add_item(Textures::LEAVES, 666);
 	inventory.add_item(Textures::LADDER, 100);
 	inventory.add_invent_item(Textures::WOOD, 250);
+	inventory.add_invent_item(Textures::ORANGE, 20);
+	inventory.add_invent_item(Textures::WOOD, 20);
+	inventory.add_invent_item(Textures::ROCK, 40);
 }
 
 void Game::run()
