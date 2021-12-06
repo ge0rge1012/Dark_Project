@@ -38,8 +38,10 @@ void set_view(float x, float y)
 	//if (y < 240) y = 240;
 	//if (y > 554) y = 554;*/
 
+
 	if (x < 220) x_cor = 220;
 	if (x > WORLD_WIDTH * 32 - 420) x_cor = WORLD_WIDTH * 32 - 420;
+	if (y > WORLD_HEIGHT * 32 - 240) y_cor = WORLD_HEIGHT * 32 - 240;
 
 	g_view.setCenter(x_cor + 100, y_cor);
 }
@@ -337,6 +339,7 @@ void Player::screen_collision(int win_width, int win_height)
 
 	if (character.getPosition().y + character.getGlobalBounds().height > WORLD_HEIGHT*32)
 	{
+		std::cout << "worked";
 		character.setPosition(character.getPosition().x, WORLD_HEIGHT*32 - character.getGlobalBounds().height);
 	}
 }
