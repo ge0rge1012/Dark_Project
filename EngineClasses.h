@@ -60,8 +60,7 @@ private:
 	float jumpVelocity = 230;
 	sf::Vector2f player_position;
 	sf::FloatRect p_hitbox;
-	sf::Texture& plR;
-	sf::Texture& plL;
+	std::list<sf::Texture> texts;
 
 public:
 	Player();
