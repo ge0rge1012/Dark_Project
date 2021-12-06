@@ -439,6 +439,152 @@ void Game::boot_screen()
 	}
 }
 
+void Game::menu_settings()
+{
+	sf::Image menu_back;
+	menu_back.loadFromFile("media/images/menu_640_480.png");
+	sf::Texture menuback;
+	menuback.loadFromImage(menu_back);
+	sf::Sprite menu_b;
+	menu_b.setTexture(menuback);
+	menu_b.setPosition(0, 0);
+	while (g_window.isOpen())
+	{
+		g_window.clear();
+		g_window.draw(menu_b);
+
+		sf::Event event;
+		while (g_window.pollEvent(event))
+		{
+			switch (event.type)
+			{
+			case sf::Event::Closed:
+				g_window.close();
+				break;
+
+			case sf::Event::KeyPressed:
+				if (event.key.code == sf::Keyboard::Escape)
+					return;
+				break;
+
+			default:
+				break;
+			}
+		}
+		g_window.display();
+	}
+}
+
+void Game::main_menu()
+{
+	sf::Image menu_back, menu_name, menu_start, menu_settings, menu_exit;
+	menu_back.loadFromFile("media/images/menu_640_480.png");
+	menu_name.loadFromFile("media/images/darklogo.png");
+	menu_start.loadFromFile("media/images/start.png");
+	menu_settings.loadFromFile("media/images/settings.png");
+	menu_exit.loadFromFile("media/images/exit.png");
+
+	sf::Texture menuback, menuname, menustart, menusett, menuexit;
+	menuback.loadFromImage(menu_back);
+	menuname.loadFromImage(menu_name);
+	menustart.loadFromImage(menu_start);
+	menusett.loadFromImage(menu_settings);
+	menuexit.loadFromImage(menu_exit);
+
+	sf::Sprite menu_b, menu_n, menu_s, menu_set, menu_e;
+	menu_b.setTexture(menuback);
+	menu_b.setPosition(0, 0);
+
+	menu_n.setTexture(menuname);
+	menu_n.setPosition(200, 30);
+
+	menu_s.setTexture(menustart);
+	menu_s.setPosition(200, 90);
+
+	menu_set.setTexture(menusett);
+	menu_set.setPosition(200, 150);
+
+	menu_e.setTexture(menuexit);
+	menu_e.setPosition(200, 210);
+
+	int Main_menuNum = 0;
+
+	while (g_window.isOpen())
+	{
+		menu_n.setColor(sf::Color::White);
+		menu_s.setColor(sf::Color::White);
+		menu_set.setColor(sf::Color::White);
+		menu_e.setColor(sf::Color::White);
+
+		Main_menuNum = 0;
+
+		g_window.clear();
+		g_window.draw(menu_b);
+		g_window.draw(menu_n);
+		g_window.draw(menu_s);
+		g_window.draw(menu_set);
+		g_window.draw(menu_e);
+		g_window.display();
+
+		bool mousebotton = false;
+		sf::Event event_mouse;
+		while (g_window.pollEvent(event_mouse))
+		{
+			// after all of this ugly calculations mouse_pos will become necessary coordinates of our mouse in any window size
+			sf::Vector2i mouse_pos = sf::Mouse::getPosition(g_window);
+			sf::View cur_view = g_window.getView();
+			sf::Vector2f cam_pos = cur_view.getCenter();
+			mouse_pos = sf::Vector2i((cam_pos.x - (mysetts.get_width() / 2) + static_cast<float>(mouse_pos.x) / (static_cast<float>(g_window.getSize().x / static_cast<float>(mysetts.get_width())))),
+				(cam_pos.y - (mysetts.get_height() / 2) + static_cast<float>(mouse_pos.y) / (static_cast<float>(g_window.getSize().y / static_cast<float>(mysetts.get_height())))));
+			switch (event_mouse.type)
+			{
+			case sf::Event::Closed:
+				g_window.close();
+				break;
+
+			case sf::Event::MouseButtonPressed:
+				if (sf::IntRect(200, 90, 300, 50).contains(mouse_pos))
+				{
+					menu_s.setColor(sf::Color::Red);
+					Main_menuNum = 1;
+				}
+				if (sf::IntRect(200, 150, 300, 50).contains(mouse_pos))
+				{
+					menu_set.setColor(sf::Color::Red);
+					Main_menuNum = 2;
+				}
+				if (sf::IntRect(200, 210, 300, 50).contains(mouse_pos))
+				{
+					menu_e.setColor(sf::Color::Red);
+					Main_menuNum = 3;
+				}
+				if (event_mouse.mouseButton.button == sf::Mouse::Left)
+				{
+					if (Main_menuNum == 1)
+					{
+						mousebotton = true;
+						break;
+					}
+
+					if (Main_menuNum == 2)
+					{
+						this->menu_settings();
+						Main_menuNum = 1;
+					}
+
+					if (Main_menuNum == 3)
+					{
+						g_window.close();
+						mousebotton = false;  // does it make sense?
+					}
+				}
+				break;
+			}
+		}
+		if (mousebotton) break;
+	}
+}
+
 void Game::start_game()
 {
 	// make configurations: game mode, choose character model and etc.
@@ -533,6 +679,7 @@ void Game::run()
 	nick_under_head.set_string(nick);
 	nick_under_head.set_coordinates(player->getplayercoordinateX(), player->getplayercoordinateY());*/
 
+	//main_menu();
 	sf::Clock clock;
 	sf::Time timeSinceLastUpdate = sf::Time::Zero;
 
