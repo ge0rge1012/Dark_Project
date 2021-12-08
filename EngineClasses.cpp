@@ -525,25 +525,21 @@ void Game::main_menu()
 	menu_b.setPosition(0, 0);
 
 	menu_n.setTexture(menuname);
-	menu_n.setPosition(200, 30);
+	menu_n.setPosition(230, 20);
 
 	menu_s.setTexture(menustart);
-	menu_s.setPosition(200, 90);
+	menu_s.setPosition(260, 120);
 
 	menu_set.setTexture(menusett);
-	menu_set.setPosition(200, 150);
+	menu_set.setPosition(260, 180);
 
 	menu_e.setTexture(menuexit);
-	menu_e.setPosition(200, 210);
+	menu_e.setPosition(260, 240);
 
 	int Main_menuNum = 0;
 
 	while (g_window.isOpen())
 	{
-		menu_n.setColor(sf::Color::White);
-		menu_s.setColor(sf::Color::White);
-		menu_set.setColor(sf::Color::White);
-		menu_e.setColor(sf::Color::White);
 
 		Main_menuNum = 0;
 
@@ -559,34 +555,53 @@ void Game::main_menu()
 		sf::Event event_mouse;
 		while (g_window.pollEvent(event_mouse))
 		{
-			// after all of this ugly calculations mouse_pos will become necessary coordinates of our mouse in any window size
 			sf::Vector2i mouse_pos = sf::Mouse::getPosition(g_window);
 			sf::View cur_view = g_window.getView();
 			sf::Vector2f cam_pos = cur_view.getCenter();
 			mouse_pos = sf::Vector2i((cam_pos.x - (mysetts.get_width() / 2) + static_cast<float>(mouse_pos.x) / (static_cast<float>(g_window.getSize().x / static_cast<float>(mysetts.get_width())))),
 				(cam_pos.y - (mysetts.get_height() / 2) + static_cast<float>(mouse_pos.y) / (static_cast<float>(g_window.getSize().y / static_cast<float>(mysetts.get_height())))));
+
+			sf::IntRect start_button = sf::IntRect(menu_s.getPosition().x, menu_s.getPosition().y, 56, 26);
+			sf::IntRect settings_button = sf::IntRect(menu_set.getPosition().x, menu_set.getPosition().y, 78, 26);
+			sf::IntRect exit_button = sf::IntRect(menu_e.getPosition().x, menu_e.getPosition().y, 44, 26);
+
+			if (start_button.contains(mouse_pos))
+			{
+				menu_s.setColor(sf::Color::Red);
+			}
+			else menu_s.setColor(sf::Color::White);
+
+			if (settings_button.contains(mouse_pos))
+			{
+				menu_set.setColor(sf::Color::Red);
+			}
+			else menu_set.setColor(sf::Color::White);
+
+			if (exit_button.contains(mouse_pos))
+			{
+				menu_e.setColor(sf::Color::Red);
+			}
+			else menu_e.setColor(sf::Color::White);
+
 			switch (event_mouse.type)
 			{
 			case sf::Event::Closed:
 				g_window.close();
 				break;
-
 			case sf::Event::MouseButtonPressed:
-				if (sf::IntRect(200, 90, 300, 50).contains(mouse_pos))
+				if (start_button.contains(mouse_pos))
 				{
-					menu_s.setColor(sf::Color::Red);
 					Main_menuNum = 1;
 				}
-				if (sf::IntRect(200, 150, 300, 50).contains(mouse_pos))
+				if (settings_button.contains(mouse_pos))
 				{
-					menu_set.setColor(sf::Color::Red);
 					Main_menuNum = 2;
 				}
-				if (sf::IntRect(200, 210, 300, 50).contains(mouse_pos))
+				if (exit_button.contains(mouse_pos))
 				{
-					menu_e.setColor(sf::Color::Red);
 					Main_menuNum = 3;
 				}
+
 				if (event_mouse.mouseButton.button == sf::Mouse::Left)
 				{
 					if (Main_menuNum == 1)
@@ -604,7 +619,6 @@ void Game::main_menu()
 					if (Main_menuNum == 3)
 					{
 						g_window.close();
-						mousebotton = false;  // does it make sense?
 					}
 				}
 				break;
