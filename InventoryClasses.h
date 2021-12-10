@@ -65,9 +65,11 @@ public:
 	void add_invent_item(Textures::ID id, int count = 1);
 	void remove_invent_item(Textures::ID id, int count = 1);
 
-	int get_pos_now(sf::Vector2i m_position);
+	int getInvSlotNow(sf::Vector2i m_position);
+	int getCraftSlotNow(sf::Vector2i m_position);
 
 	void updateCrafts();
+	void craftItem(int slot);
 	bool isCraftable(Textures::ID id);
 
 
