@@ -366,8 +366,6 @@ Inventory::Inventory()
 		craftItems[i].setScale(0.48, 0.48);
 	}
 
-	inv_items[19].set_item_id(Textures::ROCK);
-	inv_items[19].set_amount(20);
 }
 
 void Inventory::drawU(sf::RenderWindow& window)
