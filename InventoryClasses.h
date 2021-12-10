@@ -45,8 +45,9 @@ public:
 	int set_current(int num);
 	void decrease_item();
 
-	void drawGUI(int type, sf::RenderWindow& window);
-	void drawBack(sf::RenderWindow& window);
+	void drawGUI(sf::RenderWindow& window);
+	void drawInventoryBack(sf::RenderWindow& window);
+	void drawGUIBack(sf::RenderWindow& window);
 	void drawWorkbenchGUI(sf::RenderWindow& window);
 	void drawChestGUI(sf::RenderWindow& window);
 	void drawBakeGUI(sf::RenderWindow& window);
@@ -59,10 +60,17 @@ public:
 	int get_save_slot();
 	void change_slots(int new_slot, int old_slot);
 	bool is_slot_empty(int slot);
+	bool inventoryContains(Textures::ID id, int numb);
 
-	void add_invent_item(Textures::ID id, int kolvo = 1);
+	void add_invent_item(Textures::ID id, int count = 1);
+	void remove_invent_item(Textures::ID id, int count = 1);
 
 	int get_pos_now(sf::Vector2i m_position);
+
+	void updateCrafts();
+	bool isCraftable(Textures::ID id);
+
+
 private:
 	std::list<InvItem> items;
 	std::array<sf::RectangleShape, 8> cubes;
@@ -76,7 +84,12 @@ private:
 	bool inventory_on = false;
 	int saved_slot;
 
-	std::array<InvItem, 4> armor_items;
-	std::array<sf::Sprite, 4> armor_slots;
+	sf::Sprite BackgroundGUI;
+	std::array<sf::RectangleShape, 10> craftSlots;
+	std::array<sf::Sprite, 10> craftItems;
+	bool workbenchOn = false;
+
+	std::array<InvItem, 4> armor_items; //i think we dont have time to realize armor
+	std::array<sf::Sprite, 4> armor_slots; //anyway i will leave it here for better times
 
 };

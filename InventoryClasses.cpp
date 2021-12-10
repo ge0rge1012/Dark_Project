@@ -16,7 +16,7 @@ InvItem::InvItem() {
 void InvItem::set_item_id(Textures::ID id) {
 	sf::Texture& texture = texture_holder.get(id);
 	sprite.setTexture(texture);
-	sprite.setScale(0.3, 0.3);
+	sprite.setScale(0.4, 0.4);
 
 	this->id = id;
 
@@ -33,7 +33,7 @@ InvItem::InvItem(Textures::ID id) : id(id)
 
 	sf::Texture& texture = texture_holder.get(id);
 	sprite.setTexture(texture);
-	sprite.setScale(0.3, 0.3);
+	sprite.setScale(0.4, 0.4);
 
 	this->id = id;
 
@@ -90,7 +90,7 @@ InvItem::InvItem(Textures::ID id, int kolvo) : id(id)
 
 	sf::Texture& texture = texture_holder.get(id);
 	sprite.setTexture(texture);
-	sprite.setScale(0.3, 0.3);
+	sprite.setScale(0.4, 0.4);
 }
 
 int InvItem::get_item_type() {
@@ -187,6 +187,24 @@ void Inventory::update_statement()
 	int back_y = g_view.getCenter().y - 125;
 
 	inventory_sprite.setPosition(back_x, back_y);
+	BackgroundGUI.setPosition(inventory_sprite.getPosition().x + 148, 
+		inventory_sprite.getPosition().y + 10);
+
+	int guiBackX = BackgroundGUI.getPosition().x + 24;
+	int guiBackY = BackgroundGUI.getPosition().y + 3;
+
+	for (int i = 0; i < 2; i++) { //right code for slots
+		guiBackX = BackgroundGUI.getPosition().x+15;
+		for (int j = 0; j < 5; j++) {
+			craftSlots[i * 5 + j].setPosition(guiBackX, guiBackY);
+			guiBackX += 52;
+		}
+		guiBackY += 43;
+	}
+
+	for (int i = 0; i < 10; i++) {
+		craftItems[i].setPosition(craftSlots[i].getPosition() + sf::Vector2f(8.f, 8.f));
+	}
 
 	int slot_x = back_x + 14;
 	int slot_y = back_y + 111;
@@ -229,7 +247,7 @@ void Inventory::update_statement()
 
 	if (inventory_on) {
 		for (int i = 0; i < 20; i++) {
-			inv_items[i].set_position(slots[i].getPosition() + sf::Vector2f(13.f, 15.f));
+			inv_items[i].set_position(slots[i].getPosition() + sf::Vector2f(12.f, 14.f));
 		}
 	}
 
@@ -238,9 +256,9 @@ void Inventory::update_statement()
 		for (auto it = items.begin(); it != items.end(); it++)
 		{
 			if (i == current_item - 1)
-				(*it).set_position(slots[20 + i].getPosition() + sf::Vector2f(13.f, 15.f));
+				(*it).set_position(slots[20 + i].getPosition() + sf::Vector2f(12.f, 14.f));
 			else
-				(*it).set_position(slots[20 + i].getPosition() + sf::Vector2f(13.f, 15.f));
+				(*it).set_position(slots[20 + i].getPosition() + sf::Vector2f(12.f, 14.f));
 
 			++i;
 			if (i == 8) break;
@@ -307,8 +325,12 @@ Inventory::Inventory()
 	inv_line.setSize(sf::Vector2f(400.f, 40.f));
 	inv_line.setFillColor(sf::Color::Yellow);
 
+
 	sf::Texture& texture = texture_holder.get(Textures::INVENTORY);
 	inventory_sprite.setTexture(texture);
+
+	sf::Texture& textureGUI = texture_holder.get(Textures::GUIBACK);
+	BackgroundGUI.setTexture(textureGUI);
 
 	sf::Texture& texture_slot = texture_holder.get(Textures::SLOT);
 	for (int i = 0; i < 30; i++) {
@@ -322,6 +344,28 @@ Inventory::Inventory()
 	for (int i = 0; i < 4; i++) { //отрисовка 30 слотов
 		armor_slots[i].setTexture(texture_slot);
 	}
+
+	for (int i = 0; i < 10; i++) {
+		craftSlots[i].setSize(sf::Vector2f(31.f, 31.f));
+		craftSlots[i].setFillColor(sf::Color(120, 83, 32));
+		craftSlots[i].setOutlineColor(sf::Color(171, 0, 0));
+		craftSlots[i].setOutlineThickness(1.f);
+	}
+
+	craftItems[0].setTexture(texture_holder.get(Textures::WORKBENCH));
+	craftItems[1].setTexture(texture_holder.get(Textures::BOX));
+	craftItems[2].setTexture(texture_holder.get(Textures::BAKE));
+	craftItems[3].setTexture(texture_holder.get(Textures::STICK));
+	craftItems[4].setTexture(texture_holder.get(Textures::SWORD_IR));
+	craftItems[5].setTexture(texture_holder.get(Textures::SWORD_OR));
+	craftItems[6].setTexture(texture_holder.get(Textures::PICK_TR));
+	craftItems[7].setTexture(texture_holder.get(Textures::PICK_ST));
+	craftItems[8].setTexture(texture_holder.get(Textures::PICK_IR));
+	craftItems[9].setTexture(texture_holder.get(Textures::PICK_OR));
+	for (int i = 0; i < 10; i++) {
+		craftItems[i].setScale(0.48, 0.48);
+	}
+
 }
 
 void Inventory::drawU(sf::RenderWindow& window)
@@ -379,13 +423,13 @@ void Inventory::add_item(Textures::ID id, int kolvo)
 	// std::cout << "amount" << (*(items.begin())).get_amount();
 }
 
-void Inventory::add_invent_item(Textures::ID id, int kolvo) {
-
+void Inventory::add_invent_item(Textures::ID id, int count) {
 	bool isAdded = false;
 	for (int i = 0; i < 20; i++) {
 		if (inv_items[i].get_id() == id)
 		{
-			inv_items[i].add_plenty(kolvo);
+			inv_items[i].add_plenty(count);
+			updateCrafts();
 			isAdded = true;
 			break;
 		}
@@ -393,17 +437,38 @@ void Inventory::add_invent_item(Textures::ID id, int kolvo) {
 		{
 			if (inv_items[i].get_id() == Textures::NUL || inv_items[i].get_amount() == 0) {
 				inv_items[i].set_item_id(id);
-				inv_items[i].set_amount(kolvo);
+				inv_items[i].set_amount(count);
+				updateCrafts();
 				break;
 			}
 		}
 	}
 }
 
-void Inventory::drawGUI(int type, sf::RenderWindow& window) {
+void Inventory::drawGUIBack(sf::RenderWindow& window) {
+	window.draw(BackgroundGUI);
+}
+
+void Inventory::drawWorkbenchGUI(sf::RenderWindow& window) {
+	if (inventory_on)
+	{
+		drawGUIBack(window);
+		for (int i = 0; i < 10; i++) {
+			window.draw(craftSlots[i]);
+		}
+
+		for (int i = 0; i < 10; i++) {
+			window.draw(craftItems[i]);
+		}
+		
+
+	}
+}
+
+void Inventory::drawGUI(sf::RenderWindow& window) {
 	if (inventory_on) //если инвентарь включен (меняется булевая при нажатии Е)
 	{
-		drawBack(window); //отрисовка бекгрунда (фона инвентаря)
+		drawInventoryBack(window); //отрисовка бекгрунда (фона инвентаря)
 		for (int i = 0; i < 30; i++) { //отрисовка 30 слотов
 			window.draw(slots[i]);
 		}
@@ -424,6 +489,8 @@ void Inventory::drawGUI(int type, sf::RenderWindow& window) {
 			}
 		}
 
+		drawWorkbenchGUI(window);
+
 	}
 }
 
@@ -436,6 +503,114 @@ int Inventory::get_pos_now(sf::Vector2i m_position) {
 	}
 	if (slot_now<20)
 		return slot_now;
+}
+
+bool Inventory::inventoryContains(Textures::ID id, int numb) {
+	for (int i = 0; i < 20; i++) {
+		if ((inv_items[i].get_id() == id) && (inv_items[i].get_amount() >= numb)) {
+			return true;
+			break;
+		}
+	}
+	return false;
+}
+
+bool Inventory::isCraftable(Textures::ID id) {
+	switch (id) {
+
+		case Textures::WORKBENCH:
+			return (inventoryContains(Textures::WOOD, 4));
+			break;
+
+		case Textures::BAKE:
+			return (inventoryContains(Textures::ROCK, 10));
+			break;
+
+		case Textures::BOX:
+			return (inventoryContains(Textures::WOOD, 10));
+			break;
+
+		case Textures::STICK:
+			return (inventoryContains(Textures::WOOD, 2));
+			break;
+
+		case Textures::SWORD_IR:
+			return ((inventoryContains(Textures::STICK, 2) &&
+				inventoryContains(Textures::IRON_ING, 4)));
+			break;
+
+		case Textures::SWORD_OR:
+			return ((inventoryContains(Textures::STICK, 2) &&
+				inventoryContains(Textures::ORICHALCUM_ING, 4)));
+			break;
+
+		case Textures::PICK_TR:
+			return ((inventoryContains(Textures::STICK, 2) &&
+				inventoryContains(Textures::WOOD, 4)));
+			break;
+
+		case Textures::PICK_ST:
+			return ((inventoryContains(Textures::STICK, 2) &&
+				inventoryContains(Textures::ROCK, 4)));
+			break;
+
+		case Textures::PICK_IR:
+			return ((inventoryContains(Textures::STICK, 2) &&
+				inventoryContains(Textures::IRON_ING, 4)));
+			break;
+
+		case Textures::PICK_OR:
+			return ((inventoryContains(Textures::STICK, 2)) &&
+				(inventoryContains(Textures::ORICHALCUM_ING, 4)));
+			break;
+
+		default: return false;
+	}
+
+}
+
+void Inventory::updateCrafts() {
+	if (isCraftable(Textures::WORKBENCH)) //WB
+		craftSlots[0].setOutlineColor(sf::Color(20, 105, 20));
+	else craftSlots[0].setOutlineColor(sf::Color(178, 0, 0));
+
+	if (isCraftable(Textures::BOX)) //CHEST
+		craftSlots[1].setOutlineColor(sf::Color(20, 105, 20));
+	else craftSlots[1].setOutlineColor(sf::Color(178, 0, 0));
+
+	if (isCraftable(Textures::BAKE)) {//BAKE
+		std::cout << "SETTED WHITE" << std::endl;
+		craftSlots[2].setOutlineColor(sf::Color(20, 105, 20));
+	}
+	else craftSlots[2].setOutlineColor(sf::Color(178, 0, 0));
+
+	if (isCraftable(Textures::STICK)) //STICK
+		craftSlots[3].setOutlineColor(sf::Color(20, 105, 20));
+	else craftSlots[3].setOutlineColor(sf::Color(178, 0, 0));
+
+	if (isCraftable(Textures::SWORD_IR)) //SW_IR
+		craftSlots[4].setOutlineColor(sf::Color(20, 105, 20));
+	else craftSlots[4].setOutlineColor(sf::Color(178, 0, 0));
+
+	if (isCraftable(Textures::SWORD_OR)) //SW_OR
+		craftSlots[5].setOutlineColor(sf::Color(20, 105, 20));
+	else craftSlots[5].setOutlineColor(sf::Color(178, 0, 0));
+
+	if (isCraftable(Textures::PICK_TR)) //PC_TR
+		craftSlots[6].setOutlineColor(sf::Color(20, 105, 20));
+	else craftSlots[6].setOutlineColor(sf::Color(178, 0, 0));
+
+	if (isCraftable(Textures::PICK_ST)) //PC_ST
+		craftSlots[7].setOutlineColor(sf::Color(20, 105, 20));
+	else craftSlots[7].setOutlineColor(sf::Color(178, 0, 0));
+
+	if (isCraftable(Textures::PICK_IR)) //PC_IR
+		craftSlots[8].setOutlineColor(sf::Color(20, 105, 20));
+	else craftSlots[8].setOutlineColor(sf::Color(178, 0, 0));
+
+	if (isCraftable(Textures::PICK_OR)) //PC_OR
+		craftSlots[9].setOutlineColor(sf::Color(20, 105, 20));
+	else craftSlots[9].setOutlineColor(sf::Color(178, 0, 0));
 }
 
 void Inventory::change_slots(int new_slot, int old_slot) {
@@ -459,7 +634,7 @@ bool Inventory::is_slot_empty(int slot) {
 	else return false;
 }
 
-void Inventory::drawBack(sf::RenderWindow& window) {
+void Inventory::drawInventoryBack(sf::RenderWindow& window) {
 	window.draw(inventory_sprite);
 }
 
