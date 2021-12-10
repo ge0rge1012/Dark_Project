@@ -38,8 +38,10 @@ void set_view(float x, float y)
 	//if (y < 240) y = 240;
 	//if (y > 554) y = 554;*/
 
+
 	if (x < 220) x_cor = 220;
 	if (x > WORLD_WIDTH * 32 - 420) x_cor = WORLD_WIDTH * 32 - 420;
+	if (y > WORLD_HEIGHT * 32 - 240) y_cor = WORLD_HEIGHT * 32 - 240;
 
 	g_view.setCenter(x_cor + 100, y_cor);
 }
@@ -50,9 +52,18 @@ void set_view(float x, float y)
 
 //____________________________________________________________________
 
-Player::Player(): plR(texture_holder.get(Textures::VAMPIRE)), plL(texture_holder.get(Textures::VAMPIREL))
+Player::Player()
 {
-	character.setTexture(plR);
+	texts.push_back(texture_holder.get(Textures::ID::VAMPIRE));
+	texts.push_back(texture_holder.get(Textures::ID::VAMPIRE1));
+	texts.push_back(texture_holder.get(Textures::ID::VAMPIRE2));
+	texts.push_back(texture_holder.get(Textures::ID::VAMPIRE3));
+	texts.push_back(texture_holder.get(Textures::ID::VAMPIRE4));
+	texts.push_back(texture_holder.get(Textures::ID::VAMPIRE5));
+	texts.push_back(texture_holder.get(Textures::ID::VAMPIRE6));
+	texts.push_back(texture_holder.get(Textures::ID::VAMPIRE7));
+
+	character.setTexture(*(texts.begin()));
 	character.setTextureRect(sf::IntRect(0, 0, 32, 60));
 	player_position = sf::Vector2f(5*32.f, 45*32.f);
 	character.setPosition(player_position);
@@ -97,6 +108,8 @@ void Player::update_statement(const sf::Time delta_time, const World& chunk)
 	sf::FloatRect nextPos;
 	bool jump = false;
 	const float x_crop = 8.f;
+	static float time_counter = 0;
+	bool mov_dir_changed = false;
 
 
 	bool smth_is_under = false;
@@ -160,14 +173,29 @@ void Player::update_statement(const sf::Time delta_time, const World& chunk)
 	
 	// if (isMovingDown)  movement.y += player_speed;   // going down by pressing keys, when we have gravity? lol
 	if (isMovingLeft) {
-		movement.x -= player_speed; 
-		character.setTexture(plL);
-		character.setTextureRect(sf::IntRect(0, 0, 32, 60));
+		if (time_counter >= 8) time_counter = 0;
+		std::cout << std::endl << time_counter << std::endl;
+		auto it = texts.begin();
+		for (int i = 1; i <= time_counter; ++i)
+			it++;
+
+		movement.x -= player_speed;
+		character.setTexture(*it);
+		// character.setTexture(plL);
+		character.setTextureRect(sf::IntRect(32, 0, -32, 60));
+		time_counter += 16 * delta_time.asSeconds();
 	}
 	if (isMovingRigth) {
+		if (time_counter >= 8) time_counter = 0;
+		std::cout << std::endl << time_counter << std::endl;
+		auto it = texts.begin();
+		for (int i = 1; i <= time_counter; ++i)
+			it++;
+
 		movement.x += player_speed;
-		character.setTexture(plR);
+		character.setTexture(*it);
 		character.setTextureRect(sf::IntRect(0, 0, 32, 60));
+		time_counter += 16 * delta_time.asSeconds();
 	}
 
 	//int blockX = character.getPosition().y / 32;
@@ -311,6 +339,7 @@ void Player::screen_collision(int win_width, int win_height)
 
 	if (character.getPosition().y + character.getGlobalBounds().height > WORLD_HEIGHT*32)
 	{
+		std::cout << "worked";
 		character.setPosition(character.getPosition().x, WORLD_HEIGHT*32 - character.getGlobalBounds().height);
 	}
 }
@@ -439,6 +468,166 @@ void Game::boot_screen()
 	}
 }
 
+void Game::menu_settings()
+{
+	sf::Image menu_back;
+	menu_back.loadFromFile("media/images/menu_640_480.png");
+	sf::Texture menuback;
+	menuback.loadFromImage(menu_back);
+	sf::Sprite menu_b;
+	menu_b.setTexture(menuback);
+	menu_b.setPosition(0, 0);
+	while (g_window.isOpen())
+	{
+		g_window.clear();
+		g_window.draw(menu_b);
+
+		sf::Event event;
+		while (g_window.pollEvent(event))
+		{
+			switch (event.type)
+			{
+			case sf::Event::Closed:
+				g_window.close();
+				break;
+
+			case sf::Event::KeyPressed:
+				if (event.key.code == sf::Keyboard::Escape)
+					return;
+				break;
+
+			default:
+				break;
+			}
+		}
+		g_window.display();
+	}
+}
+
+void Game::main_menu()
+{
+	sf::Image menu_back, menu_name, menu_start, menu_settings, menu_exit;
+	menu_back.loadFromFile("media/images/menu_640_480.png");
+	menu_name.loadFromFile("media/images/darklogo.png");
+	menu_start.loadFromFile("media/images/start.png");
+	menu_settings.loadFromFile("media/images/settings.png");
+	menu_exit.loadFromFile("media/images/exit.png");
+
+	sf::Texture menuback, menuname, menustart, menusett, menuexit;
+	menuback.loadFromImage(menu_back);
+	menuname.loadFromImage(menu_name);
+	menustart.loadFromImage(menu_start);
+	menusett.loadFromImage(menu_settings);
+	menuexit.loadFromImage(menu_exit);
+
+	sf::Sprite menu_b, menu_n, menu_s, menu_set, menu_e;
+	menu_b.setTexture(menuback);
+	menu_b.setPosition(0, 0);
+
+	menu_n.setTexture(menuname);
+	menu_n.setPosition(230, 20);
+
+	menu_s.setTexture(menustart);
+	menu_s.setPosition(260, 120);
+
+	menu_set.setTexture(menusett);
+	menu_set.setPosition(260, 180);
+
+	menu_e.setTexture(menuexit);
+	menu_e.setPosition(260, 240);
+
+	int Main_menuNum = 0;
+
+	while (g_window.isOpen())
+	{
+
+		Main_menuNum = 0;
+
+		g_window.clear();
+		g_window.draw(menu_b);
+		g_window.draw(menu_n);
+		g_window.draw(menu_s);
+		g_window.draw(menu_set);
+		g_window.draw(menu_e);
+		g_window.display();
+
+		bool mousebotton = false;
+		sf::Event event_mouse;
+		while (g_window.pollEvent(event_mouse))
+		{
+			sf::Vector2i mouse_pos = sf::Mouse::getPosition(g_window);
+			sf::View cur_view = g_window.getView();
+			sf::Vector2f cam_pos = cur_view.getCenter();
+			mouse_pos = sf::Vector2i((cam_pos.x - (mysetts.get_width() / 2) + static_cast<float>(mouse_pos.x) / (static_cast<float>(g_window.getSize().x / static_cast<float>(mysetts.get_width())))),
+				(cam_pos.y - (mysetts.get_height() / 2) + static_cast<float>(mouse_pos.y) / (static_cast<float>(g_window.getSize().y / static_cast<float>(mysetts.get_height())))));
+
+			sf::IntRect start_button = sf::IntRect(menu_s.getPosition().x, menu_s.getPosition().y, 56, 26);
+			sf::IntRect settings_button = sf::IntRect(menu_set.getPosition().x, menu_set.getPosition().y, 78, 26);
+			sf::IntRect exit_button = sf::IntRect(menu_e.getPosition().x, menu_e.getPosition().y, 44, 26);
+
+			if (start_button.contains(mouse_pos))
+			{
+				menu_s.setColor(sf::Color::Red);
+			}
+			else menu_s.setColor(sf::Color::White);
+
+			if (settings_button.contains(mouse_pos))
+			{
+				menu_set.setColor(sf::Color::Red);
+			}
+			else menu_set.setColor(sf::Color::White);
+
+			if (exit_button.contains(mouse_pos))
+			{
+				menu_e.setColor(sf::Color::Red);
+			}
+			else menu_e.setColor(sf::Color::White);
+
+			switch (event_mouse.type)
+			{
+			case sf::Event::Closed:
+				g_window.close();
+				break;
+			case sf::Event::MouseButtonPressed:
+				if (start_button.contains(mouse_pos))
+				{
+					Main_menuNum = 1;
+				}
+				if (settings_button.contains(mouse_pos))
+				{
+					Main_menuNum = 2;
+				}
+				if (exit_button.contains(mouse_pos))
+				{
+					Main_menuNum = 3;
+				}
+
+				if (event_mouse.mouseButton.button == sf::Mouse::Left)
+				{
+					if (Main_menuNum == 1)
+					{
+						mousebotton = true;
+						break;
+					}
+
+					if (Main_menuNum == 2)
+					{
+						this->menu_settings();
+						Main_menuNum = 1;
+					}
+
+					if (Main_menuNum == 3)
+					{
+						g_window.close();
+					}
+				}
+				break;
+			}
+		}
+		if (mousebotton) break;
+	}
+}
+
 void Game::start_game()
 {
 	// make configurations: game mode, choose character model and etc.
@@ -450,7 +639,14 @@ void Game::start_game()
 	//		3 - ITEM_TOOL; 
 	//		4 - ITEM_FOOD;
 	texture_holder.load(Textures::VAMPIRE,  "media/textures/animals/gg_32_64.png", 0); 
-	texture_holder.load(Textures::VAMPIREL, "media/textures/animals/gg_32_64l.png", 0);
+	texture_holder.load(Textures::VAMPIRE1, "media/textures/animals/frames_gg_go/gg_go_2.png", 0);
+	texture_holder.load(Textures::VAMPIRE2, "media/textures/animals/frames_gg_go/gg_go_3.png", 0);
+	texture_holder.load(Textures::VAMPIRE3, "media/textures/animals/frames_gg_go/gg_go_4.png", 0);
+	texture_holder.load(Textures::VAMPIRE4, "media/textures/animals/frames_gg_go/gg_go_5.png", 0);
+	texture_holder.load(Textures::VAMPIRE5, "media/textures/animals/frames_gg_go/gg_go_6.png", 0);
+	texture_holder.load(Textures::VAMPIRE6, "media/textures/animals/frames_gg_go/gg_go_7.png", 0);
+	texture_holder.load(Textures::VAMPIRE7, "media/textures/animals/frames_gg_go/gg_go_8.png", 0);
+
 	texture_holder.load(Textures::GREY,     "media/textures/animals/skeleton_grey.png", 0);
 	texture_holder.load(Textures::MENU, "media/images/backgroundv1.png", 0);
 	texture_holder.load(Textures::INVENTORY, "media/inventory_450_250.png", 0);
@@ -533,6 +729,7 @@ void Game::run()
 	nick_under_head.set_string(nick);
 	nick_under_head.set_coordinates(player->getplayercoordinateX(), player->getplayercoordinateY());*/
 
+	main_menu();
 	sf::Clock clock;
 	sf::Time timeSinceLastUpdate = sf::Time::Zero;
 

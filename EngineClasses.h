@@ -60,8 +60,7 @@ private:
 	float jumpVelocity = 230;
 	sf::Vector2f player_position;
 	sf::FloatRect p_hitbox;
-	sf::Texture& plR;
-	sf::Texture& plL;
+	std::list<sf::Texture> texts;
 
 public:
 	Player();
@@ -92,6 +91,8 @@ public:
 private:
 	void run();                  // starting game loop (main loop)
 	void boot_screen();
+	void main_menu();
+	void menu_settings();
 	std::vector<std::vector<std::string>> tiles;
 	Inventory inventory;
 
