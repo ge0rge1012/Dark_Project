@@ -16,7 +16,7 @@ InvItem::InvItem() {
 void InvItem::set_item_id(Textures::ID id) {
 	sf::Texture& texture = texture_holder.get(id);
 	sprite.setTexture(texture);
-	sprite.setScale(0.3, 0.3);
+	sprite.setScale(0.4, 0.4);
 
 	this->id = id;
 
@@ -33,7 +33,7 @@ InvItem::InvItem(Textures::ID id) : id(id)
 
 	sf::Texture& texture = texture_holder.get(id);
 	sprite.setTexture(texture);
-	sprite.setScale(0.3, 0.3);
+	sprite.setScale(0.4, 0.4);
 
 	this->id = id;
 
@@ -90,7 +90,7 @@ InvItem::InvItem(Textures::ID id, int kolvo) : id(id)
 
 	sf::Texture& texture = texture_holder.get(id);
 	sprite.setTexture(texture);
-	sprite.setScale(0.3, 0.3);
+	sprite.setScale(0.4, 0.4);
 }
 
 int InvItem::get_item_type() {
@@ -247,7 +247,7 @@ void Inventory::update_statement()
 
 	if (inventory_on) {
 		for (int i = 0; i < 20; i++) {
-			inv_items[i].set_position(slots[i].getPosition() + sf::Vector2f(13.f, 15.f));
+			inv_items[i].set_position(slots[i].getPosition() + sf::Vector2f(12.f, 14.f));
 		}
 	}
 
@@ -256,9 +256,9 @@ void Inventory::update_statement()
 		for (auto it = items.begin(); it != items.end(); it++)
 		{
 			if (i == current_item - 1)
-				(*it).set_position(slots[20 + i].getPosition() + sf::Vector2f(13.f, 15.f));
+				(*it).set_position(slots[20 + i].getPosition() + sf::Vector2f(12.f, 14.f));
 			else
-				(*it).set_position(slots[20 + i].getPosition() + sf::Vector2f(13.f, 15.f));
+				(*it).set_position(slots[20 + i].getPosition() + sf::Vector2f(12.f, 14.f));
 
 			++i;
 			if (i == 8) break;
@@ -424,12 +424,12 @@ void Inventory::add_item(Textures::ID id, int kolvo)
 }
 
 void Inventory::add_invent_item(Textures::ID id, int count) {
-	updateCrafts();
 	bool isAdded = false;
 	for (int i = 0; i < 20; i++) {
 		if (inv_items[i].get_id() == id)
 		{
 			inv_items[i].add_plenty(count);
+			updateCrafts();
 			isAdded = true;
 			break;
 		}
@@ -438,6 +438,7 @@ void Inventory::add_invent_item(Textures::ID id, int count) {
 			if (inv_items[i].get_id() == Textures::NUL || inv_items[i].get_amount() == 0) {
 				inv_items[i].set_item_id(id);
 				inv_items[i].set_amount(count);
+				updateCrafts();
 				break;
 			}
 		}
@@ -506,74 +507,62 @@ int Inventory::get_pos_now(sf::Vector2i m_position) {
 
 bool Inventory::inventoryContains(Textures::ID id, int numb) {
 	for (int i = 0; i < 20; i++) {
-		if (inv_items[i].get_id() == Textures::ROCK) {
-			std::cout << "Im inside" << std::endl;
-			std::cout << inv_items[2].get_id() << " numb"<< inv_items[2].get_amount() << std::endl;
-			std::cout << id << " numb" << numb << std::endl;
-		}
-		if (inv_items[i].get_id() == id && inv_items[i].get_amount() >= numb)
-		{
+		if ((inv_items[i].get_id() == id) && (inv_items[i].get_amount() >= numb)) {
 			return true;
 			break;
 		}
-		else 
-			return false;
 	}
+	return false;
 }
 
 bool Inventory::isCraftable(Textures::ID id) {
 	switch (id) {
 
 		case Textures::WORKBENCH:
-			if (inventoryContains(Textures::WOOD, 4)) return true;
-			else return false;
+			return (inventoryContains(Textures::WOOD, 4));
 			break;
 
 		case Textures::BAKE:
-			if (inventoryContains(Textures::ROCK, 10)) return true;
-			else return false;
+			return (inventoryContains(Textures::ROCK, 10));
 			break;
 
 		case Textures::BOX:
-			if (inventoryContains(Textures::WOOD, 10)) return true;
-			else return false;
+			return (inventoryContains(Textures::WOOD, 10));
 			break;
 
 		case Textures::STICK:
-			if (inventoryContains(Textures::WOOD, 2)) return true;
-			else return false;
+			return (inventoryContains(Textures::WOOD, 2));
 			break;
 
 		case Textures::SWORD_IR:
-			if (inventoryContains(Textures::STICK, 2) &&
-				inventoryContains(Textures::IRON_ING, 4)) return true;
-			else return false;
+			return ((inventoryContains(Textures::STICK, 2) &&
+				inventoryContains(Textures::IRON_ING, 4)));
 			break;
 
 		case Textures::SWORD_OR:
-			if (inventoryContains(Textures::STICK, 2) &&
-				inventoryContains(Textures::ORICHALCUM_ING, 4)) return true;
-			else return false;
+			return ((inventoryContains(Textures::STICK, 2) &&
+				inventoryContains(Textures::ORICHALCUM_ING, 4)));
+			break;
 
 		case Textures::PICK_TR:
-			if (inventoryContains(Textures::STICK, 2) &&
-				inventoryContains(Textures::WOOD, 4)) return true;
-			else return false;
+			return ((inventoryContains(Textures::STICK, 2) &&
+				inventoryContains(Textures::WOOD, 4)));
+			break;
 
 		case Textures::PICK_ST:
-			if (inventoryContains(Textures::STICK, 2) &&
-				inventoryContains(Textures::ROCK, 4)) return true;
-			else return false;
+			return ((inventoryContains(Textures::STICK, 2) &&
+				inventoryContains(Textures::ROCK, 4)));
+			break;
 
 		case Textures::PICK_IR:
-			if (inventoryContains(Textures::STICK, 2) &&
-				inventoryContains(Textures::IRON_ING, 4)) return true;
-			else return false;
+			return ((inventoryContains(Textures::STICK, 2) &&
+				inventoryContains(Textures::IRON_ING, 4)));
+			break;
 
 		case Textures::PICK_OR:
-			if (inventoryContains(Textures::STICK, 2) &&
-				inventoryContains(Textures::ORICHALCUM_ING, 4)) return true;
-			else return false;
+			return ((inventoryContains(Textures::STICK, 2)) &&
+				(inventoryContains(Textures::ORICHALCUM_ING, 4)));
+			break;
 
 		default: return false;
 	}
@@ -585,15 +574,15 @@ void Inventory::updateCrafts() {
 		craftSlots[0].setOutlineColor(sf::Color(20, 105, 20));
 	else craftSlots[0].setOutlineColor(sf::Color(178, 0, 0));
 
+	if (isCraftable(Textures::BOX)) //CHEST
+		craftSlots[1].setOutlineColor(sf::Color(20, 105, 20));
+	else craftSlots[1].setOutlineColor(sf::Color(178, 0, 0));
+
 	if (isCraftable(Textures::BAKE)) {//BAKE
 		std::cout << "SETTED WHITE" << std::endl;
 		craftSlots[2].setOutlineColor(sf::Color(20, 105, 20));
 	}
 	else craftSlots[2].setOutlineColor(sf::Color(178, 0, 0));
-
-	if (isCraftable(Textures::BOX)) //CHEST
-		craftSlots[1].setOutlineColor(sf::Color(20, 105, 20));
-	else craftSlots[1].setOutlineColor(sf::Color(178, 0, 0));
 
 	if (isCraftable(Textures::STICK)) //STICK
 		craftSlots[3].setOutlineColor(sf::Color(20, 105, 20));

@@ -734,17 +734,19 @@ Game::Game() : g_window(sf::VideoMode(mysetts.get_width(), mysetts.get_height())
 	inventory.add_invent_item(Textures::ORANGE, 20);
 	inventory.add_invent_item(Textures::WOOD, 20);
 	inventory.add_invent_item(Textures::ROCK, 120);
+	inventory.add_invent_item(Textures::STICK, 50);
+	inventory.add_invent_item(Textures::IRON_ING, 50);
 
-	inventory.add_invent_item(Textures::ORICHALCUM_ING, 1);
-	inventory.add_invent_item(Textures::IRON_ING, 1);
-	inventory.add_invent_item(Textures::PICK_IR, 1);
-	inventory.add_invent_item(Textures::PICK_TR, 1);
-	inventory.add_invent_item(Textures::PICK_OR, 1);
-	inventory.add_invent_item(Textures::PICK_ST, 1);
-	inventory.add_invent_item(Textures::SWORD_ST, 1);
-	inventory.add_invent_item(Textures::SWORD_TR, 1);
-	inventory.add_invent_item(Textures::SWORD_OR, 1);
-	inventory.add_invent_item(Textures::SWORD_IR, 1);
+	//inventory.add_invent_item(Textures::ORICHALCUM_ING, 1);
+	//inventory.add_invent_item(Textures::IRON_ING, 1);
+	//inventory.add_invent_item(Textures::PICK_IR, 1);
+	//inventory.add_invent_item(Textures::PICK_TR, 1);
+	//inventory.add_invent_item(Textures::PICK_OR, 1);
+	//inventory.add_invent_item(Textures::PICK_ST, 1);
+	//inventory.add_invent_item(Textures::SWORD_ST, 1);
+	//inventory.add_invent_item(Textures::SWORD_TR, 1);
+	//inventory.add_invent_item(Textures::SWORD_OR, 1);
+	//inventory.add_invent_item(Textures::SWORD_IR, 1);
 }
 
 void Game::run()
