@@ -677,7 +677,7 @@ void Game::start_game()
 	texture_holder.load(Textures::BAKE, "media/textures/blocks/block_bake/bake.png", 2);
 
 
-	texture_holder.load(Textures::PICK_TR, "media/textures/instruments/pick_tree.png", 3);
+	texture_holder.load(Textures::PICK_TR, "media/textures/instruments/pick_treev2.png", 3);
 	texture_holder.load(Textures::PICK_ST, "media/textures/instruments/pick_stone.png", 3);
 	texture_holder.load(Textures::PICK_IR, "media/textures/instruments/pick_iron.png", 3);
 	texture_holder.load(Textures::PICK_OR, "media/textures/instruments/pick_orichalcum.png", 3);
