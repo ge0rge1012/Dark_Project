@@ -60,12 +60,15 @@ public:
 	int get_save_slot();
 	void change_slots(int new_slot, int old_slot);
 	bool is_slot_empty(int slot);
+	bool inventoryContains(Textures::ID id, int numb);
 
 	void add_invent_item(Textures::ID id, int count = 1);
+	void remove_invent_item(Textures::ID id, int count = 1);
 
 	int get_pos_now(sf::Vector2i m_position);
 
-
+	void updateCrafts();
+	bool isCraftable(Textures::ID id);
 
 
 private:
