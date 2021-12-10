@@ -730,7 +730,7 @@ Game::Game() : g_window(sf::VideoMode(mysetts.get_width(), mysetts.get_height())
 	inventory.add_item(Textures::LEAVES, 666);
 	inventory.add_item(Textures::LADDER, 100);
 	inventory.add_item(Textures::PICK_OR, 1);
-	inventory.add_invent_item(Textures::WOOD, 250);
+	inventory.add_invent_item(Textures::WOOD, 23);
 	inventory.add_invent_item(Textures::ORANGE, 20);
 	inventory.add_invent_item(Textures::WOOD, 20);
 	inventory.add_invent_item(Textures::ROCK, 120);
@@ -861,22 +861,29 @@ void Game::mouse_processor()
 		                                 (cam_pos.y - (mysetts.get_height() / 2) + static_cast<float>(mouse_pos.y) / (static_cast<float>(g_window.getSize().y / static_cast<float>(mysetts.get_height())))));
 	
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && inventory.get_invent_on()) {
-		int clicked_slot = inventory.get_pos_now(real_pos);
-		if (clicked_slot < 20 && clicked_slot >= 0) {
+		int clickedSlot = inventory.getInvSlotNow(real_pos);
+		if (clickedSlot < 20 && clickedSlot >= 0) {
 			if (!inventory.is_in_hand()) {
 				inventory.turn_in_hand(true);
-				std::cout << inventory.is_in_hand() << std::endl;
-				inventory.save_slot(clicked_slot);
+				//std::cout << inventory.is_in_hand() << std::endl;
+				inventory.save_slot(clickedSlot);
 			}
 			else if (inventory.is_in_hand()) {
 				inventory.turn_in_hand(false);
-				std::cout << inventory.is_in_hand() << std::endl;
+				//std::cout << inventory.is_in_hand() << std::endl;
 				int old_slot = inventory.get_save_slot();
-				inventory.change_slots(clicked_slot, old_slot);
+				inventory.change_slots(clickedSlot, old_slot);
 
 			}
 		}
+
+		int clickedCraft = inventory.getCraftSlotNow(real_pos);
+		if (clickedCraft < 10 && clickedCraft >= 0) {
+			inventory.craftItem(clickedCraft);
+		}
+
 	}
+
 	else if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 	{
 		//std::cout << "mousecoord " << mouse_pos.x << " " << mouse_pos.y << std::endl;
