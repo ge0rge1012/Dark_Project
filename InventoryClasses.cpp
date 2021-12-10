@@ -187,6 +187,23 @@ void Inventory::update_statement()
 	int back_y = g_view.getCenter().y - 125;
 
 	inventory_sprite.setPosition(back_x, back_y);
+	BackgroundGUI.setPosition(inventory_sprite.getPosition().x + 148, 
+		inventory_sprite.getPosition().y + 10);
+
+	int guiBackX = BackgroundGUI.getPosition().x + 24;
+	int guiBackY = BackgroundGUI.getPosition().y + 3;
+
+	for (int i = 0; i < 2; i++) { //right code for slots
+		guiBackX = BackgroundGUI.getPosition().x+15;
+		for (int j = 0; j < 5; j++) {
+			craftSlots[i * 5 + j].setPosition(guiBackX, guiBackY);
+			guiBackX += 52;
+		}
+		guiBackY += 43;
+	}
+
+
+
 
 	int slot_x = back_x + 14;
 	int slot_y = back_y + 111;
@@ -307,8 +324,12 @@ Inventory::Inventory()
 	inv_line.setSize(sf::Vector2f(400.f, 40.f));
 	inv_line.setFillColor(sf::Color::Yellow);
 
+
 	sf::Texture& texture = texture_holder.get(Textures::INVENTORY);
 	inventory_sprite.setTexture(texture);
+
+	sf::Texture& textureGUI = texture_holder.get(Textures::GUIBACK);
+	BackgroundGUI.setTexture(textureGUI);
 
 	sf::Texture& texture_slot = texture_holder.get(Textures::SLOT);
 	for (int i = 0; i < 30; i++) {
@@ -322,6 +343,25 @@ Inventory::Inventory()
 	for (int i = 0; i < 4; i++) { //отрисовка 30 слотов
 		armor_slots[i].setTexture(texture_slot);
 	}
+
+	for (int i = 0; i < 10; i++) {
+		craftSlots[i].setSize(sf::Vector2f(31.f, 31.f));
+		craftSlots[i].setFillColor(sf::Color(120, 83, 32));
+		craftSlots[i].setOutlineColor(sf::Color(171, 0, 0));
+		craftSlots[i].setOutlineThickness(1.f);
+	}
+
+	craftItems[0].setTexture(texture_holder.get(Textures::WORKBENCH));
+	craftItems[1].setTexture(texture_holder.get(Textures::BOX));
+	craftItems[2].setTexture(texture_holder.get(Textures::BAKE));
+	craftItems[3].setTexture(texture_holder.get(Textures::STICK));
+	craftItems[4].setTexture(texture_holder.get(Textures::SWORD_IR));
+	craftItems[5].setTexture(texture_holder.get(Textures::SWORD_OR));
+	craftItems[6].setTexture(texture_holder.get(Textures::PICK_TR));
+	craftItems[7].setTexture(texture_holder.get(Textures::PICK_ST));
+	craftItems[8].setTexture(texture_holder.get(Textures::PICK_IR));
+	craftItems[9].setTexture(texture_holder.get(Textures::PICK_OR));
+
 }
 
 void Inventory::drawU(sf::RenderWindow& window)
@@ -379,13 +419,13 @@ void Inventory::add_item(Textures::ID id, int kolvo)
 	// std::cout << "amount" << (*(items.begin())).get_amount();
 }
 
-void Inventory::add_invent_item(Textures::ID id, int kolvo) {
+void Inventory::add_invent_item(Textures::ID id, int count) {
 
 	bool isAdded = false;
 	for (int i = 0; i < 20; i++) {
 		if (inv_items[i].get_id() == id)
 		{
-			inv_items[i].add_plenty(kolvo);
+			inv_items[i].add_plenty(count);
 			isAdded = true;
 			break;
 		}
@@ -393,21 +433,34 @@ void Inventory::add_invent_item(Textures::ID id, int kolvo) {
 		{
 			if (inv_items[i].get_id() == Textures::NUL || inv_items[i].get_amount() == 0) {
 				inv_items[i].set_item_id(id);
-				inv_items[i].set_amount(kolvo);
+				inv_items[i].set_amount(count);
 				break;
 			}
 		}
 	}
 }
 
-void Inventory::drawWorkbenchGUI(sf::RenderWindow& window) {
+void Inventory::drawGUIBack(sf::RenderWindow& window) {
+	window.draw(BackgroundGUI);
+}
 
+void Inventory::drawWorkbenchGUI(sf::RenderWindow& window) {
+	if (inventory_on)
+	{
+		drawGUIBack(window);
+		for (int i = 0; i < 10; i++) {
+			window.draw(craftSlots[i]);
+		}
+
+		
+
+	}
 }
 
 void Inventory::drawGUI(sf::RenderWindow& window) {
 	if (inventory_on) //если инвентарь включен (меняется булевая при нажатии Е)
 	{
-		drawBack(window); //отрисовка бекгрунда (фона инвентаря)
+		drawInventoryBack(window); //отрисовка бекгрунда (фона инвентаря)
 		for (int i = 0; i < 30; i++) { //отрисовка 30 слотов
 			window.draw(slots[i]);
 		}
@@ -427,6 +480,8 @@ void Inventory::drawGUI(sf::RenderWindow& window) {
 				window.draw(text);
 			}
 		}
+
+		drawWorkbenchGUI(window);
 
 	}
 }
@@ -463,7 +518,7 @@ bool Inventory::is_slot_empty(int slot) {
 	else return false;
 }
 
-void Inventory::drawBack(sf::RenderWindow& window) {
+void Inventory::drawInventoryBack(sf::RenderWindow& window) {
 	window.draw(inventory_sprite);
 }
 

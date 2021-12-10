@@ -653,11 +653,14 @@ void Game::start_game()
 	texture_holder.load(Textures::SLOT, "media/textures/instruments/inventory_set.png", 0);
 	texture_holder.load(Textures::NUL, "media/textures/textures/null.png", 0);
 	texture_holder.load(Textures::EARTHBACKGROUND, "media/textures/bigbackground.png", 0);
+	texture_holder.load(Textures::GUIBACK, "media/textures/guiback.png", 0);
 
 
 
-	texture_holder.load(Textures::IRON_ING, "media/textures/blocks/none.png", 1);
-	texture_holder.load(Textures::ORICHALCUM_ING, "media/textures/blocks/none.png", 1);
+
+	texture_holder.load(Textures::IRON_ING, "media/textures/instruments/iron_ingot.png", 1);
+	texture_holder.load(Textures::ORICHALCUM_ING, "media/textures/instruments/orichalcum_ingot.png", 1);
+	texture_holder.load(Textures::STICK, "media/textures/instruments/stick.png", 1);
 
 	texture_holder.load(Textures::ORANGE,   "media/textures/blocks/block_orange/block_orange_32_32.png", 2);
 	texture_holder.load(Textures::ROCK,     "media/textures/blocks/block_rock/block_rock_32_32v2.png", 2);
@@ -672,6 +675,18 @@ void Game::start_game()
 	texture_holder.load(Textures::WORKBENCH, "media/textures/blocks/block_workbench/workbench.png", 2);
 	texture_holder.load(Textures::BOX, "media/textures/blocks/block_box/box.png", 2);
 	texture_holder.load(Textures::BAKE, "media/textures/blocks/block_bake/bake.png", 2);
+
+
+	texture_holder.load(Textures::PICK_TR, "media/textures/instruments/pick_tree.png", 3);
+	texture_holder.load(Textures::PICK_ST, "media/textures/instruments/pick_stone.png", 3);
+	texture_holder.load(Textures::PICK_IR, "media/textures/instruments/pick_iron.png", 3);
+	texture_holder.load(Textures::PICK_OR, "media/textures/instruments/pick_orichalcum.png", 3);
+
+	texture_holder.load(Textures::SWORD_TR, "media/textures/instruments/sword_tree.png", 3);
+	texture_holder.load(Textures::SWORD_ST, "media/textures/instruments/sword_stone.png", 3);
+	texture_holder.load(Textures::SWORD_IR, "media/textures/instruments/sword_iron.png", 3);
+	texture_holder.load(Textures::SWORD_OR, "media/textures/instruments/sword_orichalcum.png", 3);
+
 
 
 	//std::cout << "LEAVES ITEM TYPE" << texture_holder.get_type(Textures::ID::LEAVES) << std::endl;
@@ -714,10 +729,22 @@ Game::Game() : g_window(sf::VideoMode(mysetts.get_width(), mysetts.get_height())
 	inventory.add_item(Textures::ROCK, 40);
 	inventory.add_item(Textures::LEAVES, 666);
 	inventory.add_item(Textures::LADDER, 100);
+	inventory.add_item(Textures::PICK_OR, 1);
 	inventory.add_invent_item(Textures::WOOD, 250);
 	inventory.add_invent_item(Textures::ORANGE, 20);
 	inventory.add_invent_item(Textures::WOOD, 20);
 	inventory.add_invent_item(Textures::ROCK, 40);
+
+	inventory.add_invent_item(Textures::ORICHALCUM_ING, 1);
+	inventory.add_invent_item(Textures::IRON_ING, 1);
+	inventory.add_invent_item(Textures::PICK_IR, 1);
+	inventory.add_invent_item(Textures::PICK_TR, 1);
+	inventory.add_invent_item(Textures::PICK_OR, 1);
+	inventory.add_invent_item(Textures::PICK_ST, 1);
+	inventory.add_invent_item(Textures::SWORD_ST, 1);
+	inventory.add_invent_item(Textures::SWORD_TR, 1);
+	inventory.add_invent_item(Textures::SWORD_OR, 1);
+	inventory.add_invent_item(Textures::SWORD_IR, 1);
 }
 
 void Game::run()
