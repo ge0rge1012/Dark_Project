@@ -660,7 +660,7 @@ void Game::start_game()
 
 	texture_holder.load(Textures::IRON_ING, "media/textures/instruments/iron_ingot.png", 1);
 	texture_holder.load(Textures::ORICHALCUM_ING, "media/textures/instruments/orichalcum_ingot.png", 1);
-	texture_holder.load(Textures::STICK, "media/textures/instruments/stick.png", 1);
+	texture_holder.load(Textures::STICK, "media/textures/instruments/stickv2.png", 1);
 
 	texture_holder.load(Textures::ORANGE,   "media/textures/blocks/block_orange/block_orange_32_32.png", 2);
 	texture_holder.load(Textures::ROCK,     "media/textures/blocks/block_rock/block_rock_32_32v2.png", 2);
