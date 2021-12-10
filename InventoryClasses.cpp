@@ -400,7 +400,11 @@ void Inventory::add_invent_item(Textures::ID id, int kolvo) {
 	}
 }
 
-void Inventory::drawGUI(int type, sf::RenderWindow& window) {
+void Inventory::drawWorkbenchGUI(sf::RenderWindow& window) {
+
+}
+
+void Inventory::drawGUI(sf::RenderWindow& window) {
 	if (inventory_on) //если инвентарь включен (меняется булевая при нажатии Е)
 	{
 		drawBack(window); //отрисовка бекгрунда (фона инвентаря)

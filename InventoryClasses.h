@@ -45,7 +45,7 @@ public:
 	int set_current(int num);
 	void decrease_item();
 
-	void drawGUI(int type, sf::RenderWindow& window);
+	void drawGUI(sf::RenderWindow& window);
 	void drawBack(sf::RenderWindow& window);
 	void drawWorkbenchGUI(sf::RenderWindow& window);
 	void drawChestGUI(sf::RenderWindow& window);
@@ -76,7 +76,8 @@ private:
 	bool inventory_on = false;
 	int saved_slot;
 
-	std::array<InvItem, 4> armor_items;
-	std::array<sf::Sprite, 4> armor_slots;
+
+	std::array<InvItem, 4> armor_items; //i think we dont have time to realize armor
+	std::array<sf::Sprite, 4> armor_slots; //anyway i will leave it here for better times
 
 };
