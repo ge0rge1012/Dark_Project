@@ -359,9 +359,19 @@ void Game::raising_items()
 		if (player->getGlobalBounds().intersects((*it).getGlobalBounds()))
 		{
 			std::cout << std::endl << " raising " << (*it).get_amount() << " of " << World::get_id_name((*it).get_id()) << std::endl;
-			inventory.add_item((*it).get_id(), (*it).get_amount());
-			chunk.gitems.erase(it);
-			break;
+			if (inventory.add_item_fast((*it).get_id(), (*it).get_amount()))
+			{
+				chunk.gitems.erase(it);
+				break;
+			}
+
+			else if (inventory.add_invent_item((*it).get_id(), (*it).get_amount()))
+			{
+				chunk.gitems.erase(it);
+				break;
+			}
+
+			else break;
 		}
 	}
 }
@@ -651,6 +661,7 @@ void Game::start_game()
 	texture_holder.load(Textures::MENU, "media/images/backgroundv1.png", 0);
 	texture_holder.load(Textures::INVENTORY, "media/inventory_450_250.png", 0);
 	texture_holder.load(Textures::SLOT, "media/textures/instruments/inventory_set.png", 0);
+	texture_holder.load(Textures::LINE, "media/textures/instruments//inventory/inventory_450_50.png", 0);
 	texture_holder.load(Textures::NUL, "media/textures/textures/null.png", 0);
 	texture_holder.load(Textures::EARTHBACKGROUND, "media/textures/bigbackground.png", 0);
 	texture_holder.load(Textures::GUIBACK, "media/textures/guiback.png", 0);
@@ -722,14 +733,14 @@ Game::Game() : g_window(sf::VideoMode(mysetts.get_width(), mysetts.get_height())
 	chunk.set_block(42, 5, Textures::ID::LADDER_LEFT);
 	chunk.set_block(43, 5, Textures::ID::LADDER_LEFT);
 
-	inventory.add_item(Textures::DIRT, 10);
-	inventory.add_item(Textures::ORANGE, 666);
-	inventory.add_item(Textures::WOOD, 666);
-	inventory.add_item(Textures::IRON, 5);
-	inventory.add_item(Textures::ROCK, 40);
-	inventory.add_item(Textures::LEAVES, 666);
-	inventory.add_item(Textures::LADDER, 100);
-	inventory.add_item(Textures::PICK_OR, 1);
+	inventory.add_item_fast(Textures::DIRT, 10);
+	inventory.add_item_fast(Textures::ORANGE, 666);
+	inventory.add_item_fast(Textures::WOOD, 666);
+	inventory.add_item_fast(Textures::IRON, 5);
+	inventory.add_item_fast(Textures::ROCK, 40);
+	inventory.add_item_fast(Textures::LEAVES, 666);
+	inventory.add_item_fast(Textures::LADDER, 100);
+	inventory.add_item_fast(Textures::PICK_OR, 1);
 	inventory.add_invent_item(Textures::WOOD, 23);
 	inventory.add_invent_item(Textures::ORANGE, 20);
 	inventory.add_invent_item(Textures::WOOD, 20);
@@ -862,7 +873,7 @@ void Game::mouse_processor()
 	if (inventory.get_invent_on()) {
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 			int clickedSlot = inventory.getInvSlotNow(real_pos);
-			if (clickedSlot < 20 && clickedSlot >= 0) {
+			if (clickedSlot < 30 && clickedSlot >= 0) {
 				if (!inventory.is_in_hand()) {
 					inventory.turn_in_hand(true);
 					//std::cout << inventory.is_in_hand() << std::endl;
@@ -932,7 +943,6 @@ void Game::draw_objects()              // so here we can order for all objects t
 
 	nick_under_head.drawU(g_window);
 	inventory.drawGUI(g_window);
-	inventory.drawU(g_window);
 }
 
 //______________________________________________________________________________________________________
