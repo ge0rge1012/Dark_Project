@@ -852,9 +852,13 @@ void Game::handle_events(sf::Keyboard::Key key, bool isPressed)
 	if ((static_cast<int>(key) >= sf::Keyboard::Num1 && static_cast<int>(key) <= static_cast<int>(sf::Keyboard::Num9)) && isPressed)
 		inventory.key_reaction(key);
 
-	if (!inventory.get_invent_on() && key == sf::Keyboard::E && isPressed) //Inventory on E button
-		inventory.turnGUI(true);
-	else if (inventory.get_invent_on() && key == sf::Keyboard::E && isPressed)
+	if (key == sf::Keyboard::E && isPressed) { //Inventory on E button
+		if (!inventory.get_invent_on())
+			inventory.turnGUI(true);
+		else 
+			inventory.turnGUI(false);
+	}
+	if (inventory.get_invent_on() && key == sf::Keyboard::Escape && isPressed)
 		inventory.turnGUI(false);
 }
 
