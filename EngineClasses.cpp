@@ -359,9 +359,19 @@ void Game::raising_items()
 		if (player->getGlobalBounds().intersects((*it).getGlobalBounds()))
 		{
 			std::cout << std::endl << " raising " << (*it).get_amount() << " of " << World::get_id_name((*it).get_id()) << std::endl;
-			inventory.add_invent_item((*it).get_id(), (*it).get_amount());
-			chunk.gitems.erase(it);
-			break;
+			if (inventory.add_item_fast((*it).get_id(), (*it).get_amount()))
+			{
+				chunk.gitems.erase(it);
+				break;
+			}
+
+			else if (inventory.add_invent_item((*it).get_id(), (*it).get_amount()))
+			{
+				chunk.gitems.erase(it);
+				break;
+			}
+
+			else break;
 		}
 	}
 }

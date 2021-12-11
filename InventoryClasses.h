@@ -37,7 +37,7 @@ class Inventory
 public:
 	Inventory();
 	void update_statement();
-	void add_item_fast(Textures::ID id, int kolvo = 1); // adding items  to line. if isnt added - returns false, so we need to add item in inventory
+	bool add_item_fast(Textures::ID id, int kolvo = 1); // adding items  to line. if isnt added - returns false, so we need to add item in inventory
 	Textures::ID get_current();
 	void key_reaction(sf::Keyboard::Key key);
 	int set_current(int num);
@@ -60,7 +60,7 @@ public:
 	bool is_slot_empty(int slot);
 	bool inventoryContains(Textures::ID id, int numb);
 
-	void add_invent_item(Textures::ID id, int count = 1);
+	bool add_invent_item(Textures::ID id, int count = 1);
 	void remove_invent_item(Textures::ID id, int count = 1);
 
 	int getInvSlotNow(sf::Vector2i m_position);

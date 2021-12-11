@@ -324,51 +324,47 @@ Inventory::Inventory()
 
 }
 
-void Inventory::add_item_fast(Textures::ID id, int kolvo)
+bool Inventory::add_item_fast(Textures::ID id, int kolvo)
 {
-	bool isAdded = false;
 	for (int i = 20; i < 30; i++) {
 		if (inv_items[i].get_id() == id && inv_items[i].get_amount() != 0)
 		{
 			inv_items[i].add_plenty(kolvo);
 			updateCrafts();
-			isAdded = true;
-			break;
+			return true;
 		}
 	}
-		if (!isAdded)
-		{
-			for (int i = 20; i < 30; i++) {
-				if (inv_items[i].get_id() == Textures::NUL || inv_items[i].get_amount() == 0) {
-					inv_items[i].set_item_id(id);
-					inv_items[i].set_amount(kolvo);
-					updateCrafts();
-					break;
-				}
+		for (int i = 20; i < 30; i++) {
+			if (inv_items[i].get_id() == Textures::NUL || inv_items[i].get_amount() == 0) {
+				inv_items[i].set_item_id(id);
+				inv_items[i].set_amount(kolvo);
+				updateCrafts();
+				return true;
 			}
 		}
+		return false;
 }
 
-void Inventory::add_invent_item(Textures::ID id, int count) {
-	bool isAdded = false;
+bool Inventory::add_invent_item(Textures::ID id, int count) {
+	
 	for (int i = 0; i < 30; i++) {
-		if (inv_items[i].get_id() == id)
+		if (inv_items[i].get_id() == id && inv_items[i].get_amount() != 0)
 		{
 			inv_items[i].add_plenty(count);
 			updateCrafts();
-			isAdded = true;
-			break;
-		}
-		if (!isAdded)
-		{
-			if (inv_items[i].get_id() == Textures::NUL || inv_items[i].get_amount() == 0) {
-				inv_items[i].set_item_id(id);
-				inv_items[i].set_amount(count);
-				updateCrafts();
-				break;
-			}
+			return true;
 		}
 	}
+	for (int i = 0; i < 30; i++) {
+		if (inv_items[i].get_id() == Textures::NUL || inv_items[i].get_amount() == 0) {
+			inv_items[i].set_item_id(id);
+			inv_items[i].set_amount(count);
+			updateCrafts();
+			return true;
+		}
+	}
+
+	return false;
 }
 
 void Inventory::drawGUIBack(sf::RenderWindow& window) {
