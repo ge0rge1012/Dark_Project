@@ -30,16 +30,14 @@ private:
 	Textures::ID id;
 	sf::Sprite sprite;
 	int amount;
-
 };
 
 class Inventory
 {
 public:
-	void drawU(sf::RenderWindow& window);
 	Inventory();
 	void update_statement();
-	void add_item(Textures::ID id, int kolvo = 1);
+	void add_item_fast(Textures::ID id, int kolvo = 1); // adding items  to line. if isnt added - returns false, so we need to add item in inventory
 	Textures::ID get_current();
 	void key_reaction(sf::Keyboard::Key key);
 	int set_current(int num);
@@ -74,12 +72,10 @@ public:
 
 
 private:
-	std::list<InvItem> items;
-	std::array<sf::RectangleShape, 8> cubes;
-	sf::RectangleShape inv_line;
+	sf::Sprite invLine;
 	int current_item = 0;
 
-	std::array<InvItem, 20> inv_items;
+	std::array<InvItem, 30> inv_items;
 	sf::Sprite inventory_sprite;
 	std::array<sf::Sprite, 30> slots;
 	bool in_hand = false;

@@ -107,48 +107,45 @@ sf::Sprite InvItem::get_sprite() {
 
 void Inventory::key_reaction(sf::Keyboard::Key key)
 {
-	bool first_current = false;
-	if (current_item <= 0 || current_item > 8)
+	if (!inventory_on)
 	{
-		current_item = key;
-		first_current = true;
-	}
-
-	if (first_current)
-	{
-		current_item = static_cast<int>(key) - 26;
-		cubes[current_item - 1].setOutlineColor(sf::Color::Red);
-	}
-
-	else
-	{
-		int prev_cur = current_item;
-		cubes[current_item - 1].setOutlineColor(sf::Color::Green);
-		current_item = static_cast<int>(key) - 26;
-		cubes[current_item - 1].setOutlineColor(sf::Color::Red);
-
-		int i = 1;
-		for (auto it = items.begin(); it != items.end(); it++)
+		bool first_current = false;
+		if (current_item < 0 || current_item > 10)
 		{
-			if (i == prev_cur)
+			current_item = key;
+			if (current_item == 0) current_item = 10;
+			first_current = true;
+		}
+
+		if (first_current)
+		{
+			current_item = static_cast<int>(key) - 26;
+			if (current_item == 0) current_item = 10;
+		}
+
+		else
+		{
+			int prev_cur = current_item;
+			current_item = static_cast<int>(key) - 26;
+
+			for (int j = 20; j < 30; j++)
 			{
-				(*it).set_scale(sf::Vector2f(0.3, 0.3));
+				if (j == prev_cur)
+				{
+					inv_items[j].set_scale(sf::Vector2f(0.3, 0.3));
+					break;
+				}
+			}
+		}
+
+		for (int j = 20; j < 30; j++)
+		{
+			if (j == current_item)
+			{
+				inv_items[j].set_scale(sf::Vector2f(0.5, 0.5));
 				break;
 			}
-			++i;
 		}
-	}
-
-
-	int i = 1;
-	for (auto it = items.begin(); it != items.end(); it++)
-	{
-		if (i == current_item)
-		{
-			(*it).set_scale(sf::Vector2f(0.5, 0.5));
-			break;
-		}
-		++i;
 	}
 }
 
@@ -157,134 +154,112 @@ void Inventory::update_statement()
 	int scr_x = g_view.getCenter().x - mysetts.get_width() / 2;
 	int scr_y = g_view.getCenter().y - mysetts.get_height() / 2;
 
-	int pos_x = 164;
-	int pos_y = 448;
-	for (int i = 0; i < 8; ++i)
+	int pos_x = 108;
+	int pos_y = 438;
+	for (int i = 20; i < 30; ++i)
 	{
-		cubes[i].setPosition(sf::Vector2f(scr_x + pos_x, scr_y + pos_y));
-		pos_x += 40;
+		slots[i].setPosition(sf::Vector2f(scr_x + pos_x, scr_y + pos_y));
+		pos_x += 43;
 	}
 
-	inv_line.setPosition(sf::Vector2f(scr_x + 120, scr_y + 440));
-
-	for (auto it = items.begin(); it != items.end(); it++)
-		if ((*it).get_amount() == 0)
-			items.erase(it);
+	invLine.setPosition(sf::Vector2f(scr_x + 95, scr_y + 430));
 
 	int i = 0;
-	for (auto it = items.begin(); it != items.end(); it++)
+	for (int j = 20; j < 30; ++j)
 	{
 		if (i == current_item - 1)
-			(*it).set_position(cubes[i].getPosition() + sf::Vector2f(4.f, 4.f));
+			inv_items[j].set_position(slots[j].getPosition() + sf::Vector2f(5.f, 6.f));
 		else
-			(*it).set_position(cubes[i].getPosition() + sf::Vector2f(10.f, 10.f));
+			inv_items[j].set_position(slots[j].getPosition() + sf::Vector2f(12.f, 14.f));
 
 		++i;
-		if (i == 8) break;
+		if (i == 10) break;
 	}
 
-	int back_x = g_view.getCenter().x - 225;
-	int back_y = g_view.getCenter().y - 125;
-
-	inventory_sprite.setPosition(back_x, back_y);
-	BackgroundGUI.setPosition(inventory_sprite.getPosition().x + 148, 
-		inventory_sprite.getPosition().y + 10);
-
-	int guiBackX = BackgroundGUI.getPosition().x + 24;
-	int guiBackY = BackgroundGUI.getPosition().y + 3;
-
-	for (int i = 0; i < 2; i++) { //right code for slots
-		guiBackX = BackgroundGUI.getPosition().x+15;
-		for (int j = 0; j < 5; j++) {
-			craftSlots[i * 5 + j].setPosition(guiBackX, guiBackY);
-			guiBackX += 52;
-		}
-		guiBackY += 43;
-	}
-
-	for (int i = 0; i < 10; i++) {
-		craftItems[i].setPosition(craftSlots[i].getPosition() + sf::Vector2f(8.f, 8.f));
-	}
-
-	int slot_x = back_x + 14;
-	int slot_y = back_y + 111;
-
-	//for (int i = 0; i < 3; i++) { //some shitcode of right positioning inventory slots, cz our designer fucked up with sizes.
-	//	slot_x = back_x + 13;
-	//	for (int j = 0; j < 10; j++) {
-	//		if ((i * 10 + j > 0 && i * 10 + j < 9) || (i * 10 + j > 10 && i * 10 + j < 19) || i * 10 + j==20)
-	//			slots[i * 10 + j].setPosition(slot_x + 1, slot_y);
-	//		else if (i*10+j>20 && i*10+j<30)
-	//			slots[i * 10 + j].setPosition(slot_x+2, slot_y);
-	//		else 
-	//			slots[i * 10 + j].setPosition(slot_x, slot_y);
-	//		slot_x += 43;
-	//	}
-	//	if (i == 0) slot_y += 43;
-	//	else slot_y += 53;
-	//}
-
-	for (int i = 0; i < 3; i++) { //right code for slots
-		slot_x = back_x + 13;
-		for (int j = 0; j < 10; j++) {
-			slots[i * 10 + j].setPosition(slot_x, slot_y);
-			slot_x += 43;
-		}
-		if (i == 0) slot_y += 43;
-		else slot_y += 51;
-	}
-
-	slot_y = back_y + 10;
-
-	for (int i = 0; i < 2; i++) { 
-		slot_x = back_x + 31;
-		for (int j = 0; j < 2; j++) {
-			armor_slots[i * 2 + j].setPosition(slot_x, slot_y);
-			slot_x += 43;
-		}
-		slot_y += 43;
-	}
+//__________________________________________
 
 	if (inventory_on) {
-		for (int i = 0; i < 20; i++) {
+		int back_x = g_view.getCenter().x - 225;
+		int back_y = g_view.getCenter().y - 125;
+
+		inventory_sprite.setPosition(back_x, back_y);
+		BackgroundGUI.setPosition(inventory_sprite.getPosition().x + 148,
+			inventory_sprite.getPosition().y + 10);
+
+		int guiBackX = BackgroundGUI.getPosition().x + 24;
+		int guiBackY = BackgroundGUI.getPosition().y + 3;
+
+		for (int i = 0; i < 2; i++) { //right code for slots
+			guiBackX = BackgroundGUI.getPosition().x + 15;
+			for (int j = 0; j < 5; j++) {
+				craftSlots[i * 5 + j].setPosition(guiBackX, guiBackY);
+				guiBackX += 52;
+			}
+			guiBackY += 43;
+		}
+
+		for (int i = 0; i < 10; i++) {
+			craftItems[i].setPosition(craftSlots[i].getPosition() + sf::Vector2f(8.f, 8.f));
+		}
+
+		int slot_x = back_x + 14;
+		int slot_y = back_y + 111;
+
+		//for (int i = 0; i < 3; i++) { //some shitcode of right positioning inventory slots, cz our designer fucked up with sizes.
+		//	slot_x = back_x + 13;
+		//	for (int j = 0; j < 10; j++) {
+		//		if ((i * 10 + j > 0 && i * 10 + j < 9) || (i * 10 + j > 10 && i * 10 + j < 19) || i * 10 + j==20)
+		//			slots[i * 10 + j].setPosition(slot_x + 1, slot_y);
+		//		else if (i*10+j>20 && i*10+j<30)
+		//			slots[i * 10 + j].setPosition(slot_x+2, slot_y);
+		//		else 
+		//			slots[i * 10 + j].setPosition(slot_x, slot_y);
+		//		slot_x += 43;
+		//	}
+		//	if (i == 0) slot_y += 43;
+		//	else slot_y += 53;
+		//}
+
+		for (int i = 0; i < 3; i++) { //right code for slots
+			slot_x = back_x + 13;
+			for (int j = 0; j < 10; j++) {
+				slots[i * 10 + j].setPosition(slot_x, slot_y);
+				slot_x += 43;
+			}
+			if (i == 0) slot_y += 43;
+			else slot_y += 51;
+		}
+
+		slot_y = back_y + 10;
+
+		for (int i = 0; i < 2; i++) {
+			slot_x = back_x + 31;
+			for (int j = 0; j < 2; j++) {
+				armor_slots[i * 2 + j].setPosition(slot_x, slot_y);
+				slot_x += 43;
+			}
+			slot_y += 43;
+		}
+
+	
+		for (int i = 0; i < 30; i++) {
 			inv_items[i].set_position(slots[i].getPosition() + sf::Vector2f(12.f, 14.f));
 		}
-	}
 
-	if (inventory_on) {
-		i = 0;
-		for (auto it = items.begin(); it != items.end(); it++)
+		for (int j = 20; j < 30; ++j)
 		{
-			if (i == current_item - 1)
-				(*it).set_position(slots[20 + i].getPosition() + sf::Vector2f(12.f, 14.f));
-			else
-				(*it).set_position(slots[20 + i].getPosition() + sf::Vector2f(12.f, 14.f));
-
-			++i;
-			if (i == 8) break;
+			inv_items[j].set_position(slots[j].getPosition() + sf::Vector2f(12.f, 14.f));
 		}
+		
 	}
-
 }
 
 void Inventory::decrease_item()
 {
-	if (current_item > items.size()) return;
+	 if (inv_items[current_item + 19].get_amount() == 0) return;
 
-	int i = 1;
-	for (auto it = items.begin(); it != items.end(); it++)
-	{
-		if (i == current_item)
-		{
-			if ((*it).get_amount() == 1)
-				items.erase(it);
-
-			else
-				(*it).substract_one();
-			return;
-		}
-		++i;
-	}
+	inv_items[current_item + 19].substract_one();
+	updateCrafts();
 }
 
 int Inventory::set_current(int num)
@@ -294,40 +269,21 @@ int Inventory::set_current(int num)
 
 Textures::ID Inventory::get_current()
 {
-	if (current_item > items.size() || current_item <= 0)
+	if (current_item > 9 || current_item < 0 || inv_items[current_item + 19].get_amount() == 0)
 		return Textures::ID::NUL;
 
-	int i = 1;
-	for (auto it = items.begin(); it != items.end(); it++)
-	{
-		if (i == current_item)
-		{
-			return (*it).get_id();
-		}
-		++i;
-	}
-	return Textures::ID::DIRT;
-
+	return inv_items[current_item + 19].get_id();
 }
 
 Inventory::Inventory() 
 {
-	for (int i = 0; i < 8; ++i)
-	{
-		cubes[i].setSize(sf::Vector2f(32.f, 32.f));
-		cubes[i].setFillColor(sf::Color(128, 128, 128));
-		cubes[i].setOutlineThickness(3.f);
-		cubes[i].setOutlineColor(sf::Color::Green);
+	
+	sf::Texture& lineTexture = texture_holder.get(Textures::LINE); 
+	invLine.setTexture(lineTexture);
 
-	}
-	// cubes[0].setOutlineColor(sf::Color::Red);
-
-	inv_line.setSize(sf::Vector2f(400.f, 40.f));
-	inv_line.setFillColor(sf::Color::Yellow);
-
-
-	sf::Texture& texture = texture_holder.get(Textures::INVENTORY);
-	inventory_sprite.setTexture(texture);
+// _______________________________________________________________________
+	sf::Texture& invTexture = texture_holder.get(Textures::INVENTORY);
+	inventory_sprite.setTexture(invTexture);
 
 	sf::Texture& textureGUI = texture_holder.get(Textures::GUIBACK);
 	BackgroundGUI.setTexture(textureGUI);
@@ -337,7 +293,7 @@ Inventory::Inventory()
 		slots[i].setTexture(texture_slot);
 	}
 
-	for (int i = 0; i < 20; i++) {
+	for (int i = 0; i < 30; i++) {
 		inv_items[i].set_item_id(Textures::ID::DIRT);
 	}
 
@@ -368,64 +324,34 @@ Inventory::Inventory()
 
 }
 
-void Inventory::drawU(sf::RenderWindow& window)
+void Inventory::add_item_fast(Textures::ID id, int kolvo)
 {
-	window.draw(inv_line);
-	for (auto it = cubes.begin(); it != cubes.end(); it++)
-		window.draw(*it);
-
-	int i = 0;
-	for (auto it = items.begin(); it != items.end(); it++)
-	{
-		std::string kol = std::to_string((*it).get_amount());
-		sf::Text text(kol, font_holder.get(Fonts::ID::OLD), 8);
-		text.setFillColor(sf::Color::Black);
-
-		if (i == current_item - 1)
-			text.setPosition((*it).get_position() + sf::Vector2f(16.f, -12.f));
-		else
-			text.setPosition((*it).get_position() + sf::Vector2f(10.f, -12.f));
-		((*it).drawU(window));
-		window.draw(text);
-		i++;
-		;		if (i == 8) break;
-	}
-}
-
-void Inventory::add_item(Textures::ID id, int kolvo)
-{
-	if (kolvo <= 0) return;
-	bool added_to_end = false;
-	auto iter = items.end();
-	for (auto it = items.begin(); it != items.end(); it++)
-		if ((*it).get_id() == id)
-			iter = it;
-	if (iter != items.end())
-		(*iter).add_plenty(kolvo);
-	else
-	{
-		items.push_back(InvItem(id, 0));
-		added_to_end = true;
-	}
-
-	if (added_to_end)
-	{
-		int i = 0;
-		for (auto it = items.begin(); it != items.end(); it++)
+	bool isAdded = false;
+	for (int i = 20; i < 30; i++) {
+		if (inv_items[i].get_id() == id && inv_items[i].get_amount() != 0)
 		{
-			if (i == items.size() - 1)
-			{
-				(*it).add_plenty(kolvo);
-			}
-			++i;
+			inv_items[i].add_plenty(kolvo);
+			updateCrafts();
+			isAdded = true;
+			break;
 		}
 	}
-	// std::cout << "amount" << (*(items.begin())).get_amount();
+		if (!isAdded)
+		{
+			for (int i = 20; i < 30; i++) {
+				if (inv_items[i].get_id() == Textures::NUL || inv_items[i].get_amount() == 0) {
+					inv_items[i].set_item_id(id);
+					inv_items[i].set_amount(kolvo);
+					updateCrafts();
+					break;
+				}
+			}
+		}
 }
 
 void Inventory::add_invent_item(Textures::ID id, int count) {
 	bool isAdded = false;
-	for (int i = 0; i < 20; i++) {
+	for (int i = 0; i < 30; i++) {
 		if (inv_items[i].get_id() == id)
 		{
 			inv_items[i].add_plenty(count);
@@ -475,11 +401,11 @@ void Inventory::drawGUI(sf::RenderWindow& window) {
 		for (int i = 0; i < 4; i++) { //отрисовка 30 слотов
 			window.draw(armor_slots[i]);
 		}
-		for (int i = 0; i < 20; i++) { //если в слоте больше 0 то отрисовываетс€ то что лежит в соответствующем слоте инвентар€
-			if(inv_items[i].get_amount()>0)
+		for (int i = 0; i < 30; i++) { //если в слоте больше 0 то отрисовываетс€ то что лежит в соответствующем слоте инвентар€
+			if (inv_items[i].get_amount() > 0)
 				inv_items[i].drawU(window);
 		}
-		for (int i = 0; i < 20; i++) { //также отрисовываетс€ циферка с количеством
+		for (int i = 0; i < 30; i++) { //также отрисовываетс€ циферка с количеством
 			if (inv_items[i].get_amount() > 0) {
 				std::string kol = std::to_string(inv_items[i].get_amount());
 				sf::Text text(kol, font_holder.get(Fonts::ID::OLD), 8);
@@ -492,11 +418,27 @@ void Inventory::drawGUI(sf::RenderWindow& window) {
 		drawWorkbenchGUI(window);
 
 	}
+	else {
+		window.draw(invLine);
+		for (int i = 20; i < 30; ++i)
+			window.draw(slots[i]);
+
+		for (int i = 20; i < 30; ++i)
+		{
+			if (inv_items[i].get_amount() <= 0) continue;
+			std::string kol = std::to_string(inv_items[i].get_amount());
+			sf::Text text(kol, font_holder.get(Fonts::ID::OLD), 8);
+			text.setFillColor(sf::Color::Black);
+			text.setPosition((inv_items[i]).get_position() + sf::Vector2f(10.f, -12.f));
+			window.draw(inv_items[i].get_sprite());
+			window.draw(text);
+		}
+	}
 }
 
 int Inventory::getInvSlotNow(sf::Vector2i m_position) {
 	int slotNow = 21;
-	for (int i = 0; i < 20; i++) {
+	for (int i = 0; i < 30; i++) {
 		if ((slots[i].getPosition().x < m_position.x) && (slots[i].getPosition().x + 38 > m_position.x)
 			&& (slots[i].getPosition().y < m_position.y) && (slots[i].getPosition().y + 38 > m_position.y))
 			slotNow = i;
@@ -518,7 +460,7 @@ int Inventory::getCraftSlotNow(sf::Vector2i m_position) {
 
 
 bool Inventory::inventoryContains(Textures::ID id, int numb) {
-	for (int i = 0; i < 20; i++) {
+	for (int i = 0; i < 30; i++) {
 		if ((inv_items[i].get_id() == id) && (inv_items[i].get_amount() >= numb)) {
 			return true;
 			break;
@@ -582,7 +524,7 @@ bool Inventory::isCraftable(Textures::ID id) {
 }
 
 void Inventory::remove_invent_item(Textures::ID id, int count) {
-	for (int i = 0; i < 20; i++) {
+	for (int i = 0; i < 30; i++) {
 		if (inv_items[i].get_id() == id) {
 			inv_items[i].set_amount(inv_items[i].get_amount() - count);
 			updateCrafts();
