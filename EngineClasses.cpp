@@ -859,31 +859,33 @@ void Game::mouse_processor()
 	// std::cout << g_view.getCenter().x << " " << g_view.getCenter().y << std::endl;
 	sf::Vector2i real_pos = sf::Vector2i((cam_pos.x - (mysetts.get_width() / 2) + static_cast<float>(mouse_pos.x) / (static_cast<float>(g_window.getSize().x / static_cast<float>(mysetts.get_width())))),
 		                                 (cam_pos.y - (mysetts.get_height() / 2) + static_cast<float>(mouse_pos.y) / (static_cast<float>(g_window.getSize().y / static_cast<float>(mysetts.get_height())))));
-	
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && inventory.get_invent_on()) {
-		int clickedSlot = inventory.getInvSlotNow(real_pos);
-		if (clickedSlot < 20 && clickedSlot >= 0) {
-			if (!inventory.is_in_hand()) {
-				inventory.turn_in_hand(true);
-				//std::cout << inventory.is_in_hand() << std::endl;
-				inventory.save_slot(clickedSlot);
-			}
-			else if (inventory.is_in_hand()) {
-				inventory.turn_in_hand(false);
-				//std::cout << inventory.is_in_hand() << std::endl;
-				int old_slot = inventory.get_save_slot();
-				inventory.change_slots(clickedSlot, old_slot);
+	if (inventory.get_invent_on()) {
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+			int clickedSlot = inventory.getInvSlotNow(real_pos);
+			if (clickedSlot < 20 && clickedSlot >= 0) {
+				if (!inventory.is_in_hand()) {
+					inventory.turn_in_hand(true);
+					//std::cout << inventory.is_in_hand() << std::endl;
+					inventory.save_slot(clickedSlot);
+				}
+				else if (inventory.is_in_hand()) {
+					inventory.turn_in_hand(false);
+					//std::cout << inventory.is_in_hand() << std::endl;
+					int old_slot = inventory.get_save_slot();
+					inventory.change_slots(clickedSlot, old_slot);
 
+				}
 			}
 		}
-
-		int clickedCraft = inventory.getCraftSlotNow(real_pos);
-		if (clickedCraft < 10 && clickedCraft >= 0) {
-			inventory.craftItem(clickedCraft);
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
+			int clickedCraft = inventory.getCraftSlotNow(real_pos);
+			std::cout << clickedCraft << std::endl;
+			if (clickedCraft < 10 && clickedCraft >= 0) {
+				inventory.craftItem(clickedCraft);
+			}
 		}
-
+		
 	}
-
 	else if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 	{
 		//std::cout << "mousecoord " << mouse_pos.x << " " << mouse_pos.y << std::endl;
