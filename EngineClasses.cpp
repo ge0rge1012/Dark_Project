@@ -873,7 +873,7 @@ void Game::mouse_processor()
 	if (inventory.get_invent_on()) {
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 			int clickedSlot = inventory.getInvSlotNow(real_pos);
-			if (clickedSlot < 20 && clickedSlot >= 0) {
+			if (clickedSlot < 30 && clickedSlot >= 0) {
 				if (!inventory.is_in_hand()) {
 					inventory.turn_in_hand(true);
 					//std::cout << inventory.is_in_hand() << std::endl;
