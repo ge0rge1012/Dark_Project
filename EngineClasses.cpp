@@ -665,6 +665,8 @@ void Game::start_game()
 	texture_holder.load(Textures::NUL, "media/textures/textures/null.png", 0);
 	texture_holder.load(Textures::EARTHBACKGROUND, "media/textures/bigbackground.png", 0);
 	texture_holder.load(Textures::GUIBACK, "media/textures/guiback.png", 0);
+	texture_holder.load(Textures::ITEM_OPTIONS, "media/textures/item_options.png", 0);
+
 
 
 
@@ -878,12 +880,12 @@ void Game::mouse_processor()
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 			int clickedSlot = inventory.getInvSlotNow(real_pos);
 			if (clickedSlot < 30 && clickedSlot >= 0) {
-				if (!inventory.is_in_hand()) {
+				if (!inventory.is_in_hand() && !inventory.isItemOptionsOn()) {
 					inventory.turn_in_hand(true);
 					//std::cout << inventory.is_in_hand() << std::endl;
 					inventory.save_slot(clickedSlot);
 				}
-				else if (inventory.is_in_hand()) {
+				else if (inventory.is_in_hand() && !inventory.isItemOptionsOn()) {
 					inventory.turn_in_hand(false);
 					//std::cout << inventory.is_in_hand() << std::endl;
 					int old_slot = inventory.get_save_slot();
@@ -891,13 +893,34 @@ void Game::mouse_processor()
 
 				}
 			}
+			if (clickedSlot == 31)
+				inventory.turnItemOptions(false);
+
+			if (inventory.isItemOptionsOn()) {
+				int choose = inventory.getChoose(real_pos);
+				if (choose == 1) {
+					//food realisation (eating)
+				}
+				else if (choose == 2) {
+					inventory.deleteSlotItems(inventory.getOptionsSlot());
+					inventory.turnItemOptions(false);
+				}
+			}
 		}
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
 			int clickedCraft = inventory.getCraftSlotNow(real_pos);
-			std::cout << clickedCraft << std::endl;
 			if (clickedCraft < 10 && clickedCraft >= 0) {
 				inventory.craftItem(clickedCraft);
 			}
+			int clickedSlot = inventory.getInvSlotNow(real_pos);
+
+			if (clickedSlot < 30 && clickedSlot >= 0) {
+				inventory.setOptionsSlot(clickedSlot);
+				inventory.turnItemOptions(true);
+			}
+			if (clickedSlot == 31)
+				inventory.turnItemOptions(false);
+
 		}
 		
 	}

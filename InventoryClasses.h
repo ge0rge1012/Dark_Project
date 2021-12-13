@@ -49,6 +49,7 @@ public:
 	void drawWorkbenchGUI(sf::RenderWindow& window);
 	void drawChestGUI(sf::RenderWindow& window);
 	void drawBakeGUI(sf::RenderWindow& window);
+	void drawItemOptions(sf::RenderWindow& window);
 
 	void turnGUI(bool on);
 	void turn_in_hand(bool on);
@@ -70,6 +71,12 @@ public:
 	void craftItem(int slot);
 	bool isCraftable(Textures::ID id);
 
+	bool isItemOptionsOn();
+	void turnItemOptions(bool on);
+	int getOptionsSlot();
+	void setOptionsSlot(int slot);
+	int getChoose(sf::Vector2i m_position);
+	void deleteSlotItems(int slot);
 
 private:
 	sf::Sprite invLine;
@@ -78,6 +85,10 @@ private:
 	std::array<InvItem, 30> inv_items;
 	sf::Sprite inventory_sprite;
 	std::array<sf::Sprite, 30> slots;
+	sf::Sprite itemOptionsSprite;
+
+	bool itemOptionsOn = false;
+	int optionsSlot;
 	bool in_hand = false;
 	bool inventory_on = false;
 	int saved_slot;

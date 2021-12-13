@@ -241,7 +241,6 @@ void Inventory::update_statement()
 			slot_y += 43;
 		}
 
-	
 		for (int i = 0; i < 30; i++) {
 			inv_items[i].set_position(slots[i].getPosition() + sf::Vector2f(12.f, 14.f));
 		}
@@ -251,7 +250,18 @@ void Inventory::update_statement()
 			inv_items[j].set_position(slots[j].getPosition() + sf::Vector2f(12.f, 14.f));
 		}
 		
+		if (isItemOptionsOn()) {
+			itemOptionsSprite.setPosition(slots[optionsSlot].getPosition());
+		}
 	}
+}
+
+void Inventory::setOptionsSlot(int slot) {
+	optionsSlot = slot;
+}
+
+int Inventory::getOptionsSlot() {
+	return optionsSlot;
 }
 
 void Inventory::decrease_item()
@@ -308,6 +318,8 @@ Inventory::Inventory()
 		craftSlots[i].setOutlineThickness(1.f);
 	}
 
+	itemOptionsSprite.setTexture(texture_holder.get(Textures::ITEM_OPTIONS));
+
 	craftItems[0].setTexture(texture_holder.get(Textures::WORKBENCH));
 	craftItems[1].setTexture(texture_holder.get(Textures::BOX));
 	craftItems[2].setTexture(texture_holder.get(Textures::BAKE));
@@ -322,6 +334,10 @@ Inventory::Inventory()
 		craftItems[i].setScale(0.48, 0.48);
 	}
 
+}
+
+void Inventory::drawItemOptions(sf::RenderWindow& window) {
+	window.draw(itemOptionsSprite);
 }
 
 bool Inventory::add_item_fast(Textures::ID id, int kolvo)
@@ -410,7 +426,9 @@ void Inventory::drawGUI(sf::RenderWindow& window) {
 				window.draw(text);
 			}
 		}
-
+		if (isItemOptionsOn()) {
+			drawItemOptions(window);
+		}
 		drawWorkbenchGUI(window);
 
 	}
@@ -433,13 +451,26 @@ void Inventory::drawGUI(sf::RenderWindow& window) {
 }
 
 int Inventory::getInvSlotNow(sf::Vector2i m_position) {
-	int slotNow = 21;
+	int slotNow = 31;
 	for (int i = 0; i < 30; i++) {
 		if ((slots[i].getPosition().x < m_position.x) && (slots[i].getPosition().x + 38 > m_position.x)
 			&& (slots[i].getPosition().y < m_position.y) && (slots[i].getPosition().y + 38 > m_position.y))
 			slotNow = i;
 	}
 		return slotNow;
+}
+
+int Inventory::getChoose(sf::Vector2i m_position) {
+	int choose = 3;
+	if (isItemOptionsOn()) {
+		if ((slots[optionsSlot].getPosition().x < m_position.x) && (slots[optionsSlot].getPosition().x + 38 > m_position.x)
+			&& (slots[optionsSlot].getPosition().y < m_position.y) && (slots[optionsSlot].getPosition().y + 19 > m_position.y))
+			choose = 1;
+		if ((slots[optionsSlot].getPosition().x < m_position.x) && (slots[optionsSlot].getPosition().x + 38 > m_position.x)
+			&& (slots[optionsSlot].getPosition().y+19 < m_position.y) && (slots[optionsSlot].getPosition().y + 38 > m_position.y))
+			choose = 2;
+		return choose;
+	}
 }
 
 int Inventory::getCraftSlotNow(sf::Vector2i m_position) {
@@ -465,59 +496,7 @@ bool Inventory::inventoryContains(Textures::ID id, int numb) {
 	return false;
 }
 
-bool Inventory::isCraftable(Textures::ID id) {
-	switch (id) {
 
-		case Textures::WORKBENCH:
-			return (inventoryContains(Textures::WOOD, 4));
-			break;
-
-		case Textures::BOX:
-			return (inventoryContains(Textures::WOOD, 10));
-			break;
-
-		case Textures::BAKE:
-			return (inventoryContains(Textures::ROCK, 10));
-			break;
-
-		case Textures::STICK:
-			return (inventoryContains(Textures::WOOD, 2));
-			break;
-
-		case Textures::SWORD_IR:
-			return ((inventoryContains(Textures::STICK, 2) &&
-				inventoryContains(Textures::IRON_ING, 4)));
-			break;
-
-		case Textures::SWORD_OR:
-			return ((inventoryContains(Textures::STICK, 2) &&
-				inventoryContains(Textures::ORICHALCUM_ING, 4)));
-			break;
-
-		case Textures::PICK_TR:
-			return ((inventoryContains(Textures::STICK, 2) &&
-				inventoryContains(Textures::WOOD, 4)));
-			break;
-
-		case Textures::PICK_ST:
-			return ((inventoryContains(Textures::STICK, 2) &&
-				inventoryContains(Textures::ROCK, 4)));
-			break;
-
-		case Textures::PICK_IR:
-			return ((inventoryContains(Textures::STICK, 2) &&
-				inventoryContains(Textures::IRON_ING, 4)));
-			break;
-
-		case Textures::PICK_OR:
-			return ((inventoryContains(Textures::STICK, 2)) &&
-				(inventoryContains(Textures::ORICHALCUM_ING, 4)));
-			break;
-
-		default: return false;
-	}
-
-}
 
 void Inventory::remove_invent_item(Textures::ID id, int count) {
 	for (int i = 0; i < 30; i++) {
@@ -527,6 +506,74 @@ void Inventory::remove_invent_item(Textures::ID id, int count) {
 			break;
 		}
 	}
+}
+
+void Inventory::deleteSlotItems(int slot) {
+	inv_items[slot].set_amount(0);
+	updateCrafts();
+}
+
+void Inventory::change_slots(int new_slot, int old_slot) {
+	Textures::ID temp_id = inv_items[new_slot].get_id();
+	int temp_amount = inv_items[new_slot].get_amount();
+	
+	if ((inv_items[new_slot].get_id() == inv_items[old_slot].get_id()) 
+		&& (old_slot!=new_slot))
+	{
+		inv_items[new_slot].set_amount(inv_items[new_slot].get_amount() + inv_items[old_slot].get_amount());
+		inv_items[old_slot].set_amount(0);
+	}
+	else {
+		inv_items[new_slot].set_item_id(inv_items[old_slot].get_id());
+		//inv_items[new_slot].set_id(inv_items[old_slot].get_id());
+		inv_items[new_slot].set_amount(inv_items[old_slot].get_amount());
+
+		inv_items[old_slot].set_item_id(temp_id);
+		//inv_items[old_slot].set_id(temp_id);
+		inv_items[old_slot].set_amount(temp_amount);
+	}
+}
+
+void Inventory::turnItemOptions(bool on) {
+	itemOptionsOn = on;
+}
+
+
+
+bool Inventory::isItemOptionsOn() {
+	return itemOptionsOn;
+}
+
+bool Inventory::is_slot_empty(int slot) {
+	if (inv_items[slot].get_amount() == 0) return true;
+	else return false;
+}
+
+void Inventory::drawInventoryBack(sf::RenderWindow& window) {
+	window.draw(inventory_sprite);
+}
+
+void Inventory::turnGUI(bool on) {
+	inventory_on = on;
+}
+
+bool Inventory::get_invent_on() {
+	return inventory_on;
+}
+
+bool Inventory::is_in_hand() {
+	return in_hand;
+}
+void Inventory::turn_in_hand(bool on) {
+	in_hand = on;
+}
+
+int Inventory::get_save_slot() {
+	return saved_slot;
+}
+
+void Inventory::save_slot(int slot) {
+	saved_slot = slot;
 }
 
 void Inventory::craftItem(int slot) {
@@ -632,55 +679,56 @@ void Inventory::updateCrafts() {
 	else craftSlots[9].setOutlineColor(sf::Color(178, 0, 0));
 }
 
-void Inventory::change_slots(int new_slot, int old_slot) {
-	Textures::ID temp_id = inv_items[new_slot].get_id();
-	int temp_amount = inv_items[new_slot].get_amount();
-	
-	if ((inv_items[new_slot].get_id() == inv_items[old_slot].get_id()) 
-		&& (old_slot!=new_slot))
-	{
-		inv_items[new_slot].set_amount(inv_items[new_slot].get_amount() + inv_items[old_slot].get_amount());
-		inv_items[old_slot].set_amount(0);
+bool Inventory::isCraftable(Textures::ID id) {
+	switch (id) {
+
+	case Textures::WORKBENCH:
+		return (inventoryContains(Textures::WOOD, 4));
+		break;
+
+	case Textures::BOX:
+		return (inventoryContains(Textures::WOOD, 10));
+		break;
+
+	case Textures::BAKE:
+		return (inventoryContains(Textures::ROCK, 10));
+		break;
+
+	case Textures::STICK:
+		return (inventoryContains(Textures::WOOD, 2));
+		break;
+
+	case Textures::SWORD_IR:
+		return ((inventoryContains(Textures::STICK, 2) &&
+			inventoryContains(Textures::IRON_ING, 4)));
+		break;
+
+	case Textures::SWORD_OR:
+		return ((inventoryContains(Textures::STICK, 2) &&
+			inventoryContains(Textures::ORICHALCUM_ING, 4)));
+		break;
+
+	case Textures::PICK_TR:
+		return ((inventoryContains(Textures::STICK, 2) &&
+			inventoryContains(Textures::WOOD, 4)));
+		break;
+
+	case Textures::PICK_ST:
+		return ((inventoryContains(Textures::STICK, 2) &&
+			inventoryContains(Textures::ROCK, 4)));
+		break;
+
+	case Textures::PICK_IR:
+		return ((inventoryContains(Textures::STICK, 2) &&
+			inventoryContains(Textures::IRON_ING, 4)));
+		break;
+
+	case Textures::PICK_OR:
+		return ((inventoryContains(Textures::STICK, 2)) &&
+			(inventoryContains(Textures::ORICHALCUM_ING, 4)));
+		break;
+
+	default: return false;
 	}
-	else {
-		inv_items[new_slot].set_item_id(inv_items[old_slot].get_id());
-		//inv_items[new_slot].set_id(inv_items[old_slot].get_id());
-		inv_items[new_slot].set_amount(inv_items[old_slot].get_amount());
 
-		inv_items[old_slot].set_item_id(temp_id);
-		//inv_items[old_slot].set_id(temp_id);
-		inv_items[old_slot].set_amount(temp_amount);
-	}
-}
-
-bool Inventory::is_slot_empty(int slot) {
-	if (inv_items[slot].get_amount() == 0) return true;
-	else return false;
-}
-
-void Inventory::drawInventoryBack(sf::RenderWindow& window) {
-	window.draw(inventory_sprite);
-}
-
-void Inventory::turnGUI(bool on) {
-	inventory_on = on;
-}
-
-bool Inventory::get_invent_on() {
-	return inventory_on;
-}
-
-bool Inventory::is_in_hand() {
-	return in_hand;
-}
-void Inventory::turn_in_hand(bool on) {
-	in_hand = on;
-}
-
-int Inventory::get_save_slot() {
-	return saved_slot;
-}
-
-void Inventory::save_slot(int slot) {
-	saved_slot = slot;
 }
