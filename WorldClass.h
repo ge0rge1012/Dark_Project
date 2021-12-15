@@ -108,6 +108,7 @@ public:
 	void add_ground_item(Textures::ID id, sf::Vector2f coord, int kolvo);
 	void add_ground_item(Textures::ID id, sf::Vector2f coord);
 	static std::string get_id_name(Textures::ID id);
+	bool isWorkbenchClose(int playerX, int playerY);
 
 	void add_enemy(sf::Vector2f position, Textures::ID id);
 	// for test location

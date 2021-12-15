@@ -909,11 +909,15 @@ void Game::mouse_processor()
 		}
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
 			int clickedCraft = inventory.getCraftSlotNow(real_pos);
-			if (clickedCraft < 10 && clickedCraft >= 0) {
+
+			if (clickedCraft == 0) inventory.craftItem(clickedCraft);
+
+			if (clickedCraft < 10 && clickedCraft > 0 &&
+				chunk.isWorkbenchClose(player->getplayercoordinateX() / 32, player->getplayercoordinateY() / 32)) {
 				inventory.craftItem(clickedCraft);
 			}
-			int clickedSlot = inventory.getInvSlotNow(real_pos);
 
+			int clickedSlot = inventory.getInvSlotNow(real_pos);
 			if (clickedSlot < 30 && clickedSlot >= 0) {
 				inventory.setOptionsSlot(clickedSlot);
 				inventory.turnItemOptions(true);
