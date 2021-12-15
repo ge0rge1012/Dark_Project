@@ -792,6 +792,23 @@ void World::add_enemy(sf::Vector2f position, Textures::ID id)
 	enemies.push_back(Enemy(position, id));
 }
 
+bool World::isWorkbenchClose(int playerBlockX, int playerBlockY) {
+	int blockX = playerBlockY;
+	int blockY = playerBlockX - 2;
+	bool workbench = false;
+	for (int i = blockX; i < blockX + 3; i++) {
+		for (int j = blockY; j < blockY + 5; j++) {
+			std::cout << "Checkin block x" << i << "y" << j << std::endl;
+			if (tilemap[i][j] != nullptr) {
+				std::cout << "exist" << std::endl;
+				if (tilemap[i][j]->get_id() == Textures::WORKBENCH)
+					workbench = true;
+			}
+		}
+	}
+	return workbench;
+}
+
 
 //____________________________________________________________________
 
