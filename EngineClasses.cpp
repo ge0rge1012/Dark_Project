@@ -887,22 +887,22 @@ void Game::mouse_processor()
 			int clickedSlot = inventory.getInvSlotNow(real_pos);
 			int clickedBake = inventory.getBakeSlotNow(real_pos);
 
-			if (!inventory.is_in_hand()) {
-				if ((clickedSlot < 30 && clickedSlot >= 0) && (!inventory.is_in_hand())) {
+			if (!inventory.is_in_hand() && !inventory.isItemOptionsOn()) {
+				if ((clickedSlot < 30 && clickedSlot >= 0)) {
 					inventory.turn_in_hand(true);
 					inventory.setTempItem("invItem", clickedSlot);
 				}
-				if ((clickedBake < 2 && clickedBake >= 0) && (!inventory.is_in_hand())) {
+				if ((clickedBake < 2 && clickedBake >= 0)) {
 					inventory.turn_in_hand(true);
 					inventory.setTempItem("bakeItem", clickedBake);
 				}
 			}
 			else {
-				if ((clickedSlot < 30 && clickedSlot >= 0) && (inventory.is_in_hand())) {
+				if ((clickedSlot < 30 && clickedSlot >= 0)) {
 					inventory.turn_in_hand(false);
 					inventory.setFromTemp("invItem", clickedSlot);
 				}
-				if ((clickedBake < 2 && clickedBake >= 0) && (inventory.is_in_hand())) {
+				if ((clickedBake < 2 && clickedBake >= 0)) {
 					inventory.turn_in_hand(false);
 					inventory.setFromTemp("bakeItem", clickedBake);
 				}
@@ -959,7 +959,7 @@ void Game::mouse_processor()
 			}
 
 			int clickedSlot = inventory.getInvSlotNow(real_pos);
-			if (clickedSlot < 30 && clickedSlot >= 0) {
+			if (clickedSlot < 30 && clickedSlot >= 0 && !inventory.is_in_hand()) {
 				inventory.setOptionsSlot(clickedSlot);
 				inventory.turnItemOptions(true);
 			}
