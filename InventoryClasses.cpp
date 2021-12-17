@@ -387,7 +387,7 @@ void Inventory::setTempItem(std::string arr, int slot) {
 	}
 }
 
-void Inventory::setFromTemp(std::string arr, int slot) {
+void Inventory::setFromTemp(std::string arr, int slot) { //smart item moving
 	if (arr == "invItem") {
 		if (tempItem.get_amount() > 0) {
 			if (inv_items[slot].get_amount() > 0) {
