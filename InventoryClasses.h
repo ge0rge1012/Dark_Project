@@ -57,8 +57,7 @@ public:
 	void turn_in_hand(bool on);
 	bool get_invent_on();
 	bool is_in_hand();
-	void save_slot(int slot);
-	int get_save_slot();
+
 	void change_slots(int new_slot, int old_slot);
 	void insertInBake(int invSlot, int bakeSlot);
 	bool is_slot_empty(int slot);
@@ -109,8 +108,11 @@ private:
 	bool in_hand = false;
 
 	int optionsSlot;
-	int saved_slot;
+
 	InvItem tempItem;
+
+	std::array<InvItem, 10> boxItems;
+	std::array<sf::RectangleShape, 2> boxSlots;
 
 	std::array<InvItem, 2> bakeItems;
 	std::array<sf::RectangleShape, 2> bakeSlots;

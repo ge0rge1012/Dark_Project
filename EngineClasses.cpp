@@ -965,7 +965,7 @@ void Game::mouse_processor()
 			}
 			if (clickedSlot == 31)
 				inventory.turnItemOptions(false);
-
+			 
 		}
 		
 	}
@@ -983,6 +983,13 @@ void Game::mouse_processor()
 			if (chunk.tilemap[real_pos.y / 32][real_pos.x / 32]->get_id() == Textures::BAKE) {
 				inventory.turnGUI(true);
 				inventory.turnBakeOn(true);
+			}
+		if (chunk.tilemap[real_pos.y / 32][real_pos.x / 32] != nullptr)
+			if (chunk.tilemap[real_pos.y / 32][real_pos.x / 32]->get_id() == Textures::WORKBENCH) {
+				if (!inventory.get_invent_on()) {
+					inventory.turnGUI(true);
+					inventory.turnWorkbenchOn(true);
+				}
 			}
 
 		//std::cout << "mx=" << real_pos.x / 32<< "my=" << real_pos.y / 32 << " px=" 

@@ -726,14 +726,6 @@ void Inventory::turn_in_hand(bool on) {
 	in_hand = on;
 }
 
-int Inventory::get_save_slot() {
-	return saved_slot;
-}
-
-void Inventory::save_slot(int slot) {
-	saved_slot = slot;
-}
-
 void Inventory::craftItem(int slot) {
 	if (slot == 0 && isCraftable(Textures::WORKBENCH))
 	{
