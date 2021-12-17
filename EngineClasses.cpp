@@ -909,8 +909,6 @@ void Game::mouse_processor()
 			}
 
 
-
-
 			//if ((clickedSlot < 30 && clickedSlot >= 0) || (0 <= clickedBake < 2)) {
 			//	if (!inventory.is_in_hand() && !inventory.isItemOptionsOn()) {
 			//		inventory.turn_in_hand(true);
@@ -933,9 +931,6 @@ void Game::mouse_processor()
 
 			//	}
 			//}
-
-
-
 
 			if (clickedSlot == 31)
 				inventory.turnItemOptions(false);

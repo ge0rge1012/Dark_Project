@@ -374,23 +374,31 @@ Inventory::Inventory()
 
 void Inventory::setTempItem(std::string arr, int slot) {
 	if (arr == "invItem") {
-		tempItem = inv_items[slot];
-		inv_items[slot].set_amount(0);
+		if (inv_items[slot].get_amount() > 0) {
+			tempItem = inv_items[slot];
+			inv_items[slot].set_amount(0);
+		}
 	}
 	if (arr == "bakeItem") {
-		tempItem = bakeItems[slot];
-		bakeItems[slot].set_amount(0);
+		if (bakeItems[slot].get_amount() > 0) {
+			tempItem = bakeItems[slot];
+			bakeItems[slot].set_amount(0);
+		}
 	}
 }
 
 void Inventory::setFromTemp(std::string arr, int slot) {
 	if (arr == "invItem") {
-		inv_items[slot] = tempItem;
-		tempItem.set_amount(0);
+		if (tempItem.get_amount() > 0) {
+			inv_items[slot] = tempItem;
+			tempItem.set_amount(0);
+		}
 	}
 	if (arr == "bakeItem") {
-		bakeItems[slot] = tempItem;
-		tempItem.set_amount(0);
+		if (tempItem.get_amount() > 0) {
+			bakeItems[slot] = tempItem;
+			tempItem.set_amount(0);
+		}
 	}
 }
 
