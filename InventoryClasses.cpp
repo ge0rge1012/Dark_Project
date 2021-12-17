@@ -101,6 +101,14 @@ sf::Sprite InvItem::get_sprite() {
 	return sprite;
 }
 
+ InvItem& InvItem::operator=(const InvItem& item) {
+	 this->id = item.id;
+	 this->item_type = item.item_type;
+	 this->sprite = item.sprite;
+	 this->amount = item.amount;
+	 return *this;
+}
+
 
 
 //____________________________________________________________________
@@ -364,6 +372,54 @@ Inventory::Inventory()
 
 }
 
+void Inventory::setTempItem(std::string arr, int slot) {
+	if (arr == "invItem") {
+		if (inv_items[slot].get_amount() > 0) {
+			tempItem = inv_items[slot];
+			inv_items[slot].set_amount(0);
+		}
+	}
+	if (arr == "bakeItem") {
+		if (bakeItems[slot].get_amount() > 0) {
+			tempItem = bakeItems[slot];
+			bakeItems[slot].set_amount(0);
+		}
+	}
+}
+
+void Inventory::setFromTemp(std::string arr, int slot) {
+	if (arr == "invItem") {
+		if (tempItem.get_amount() > 0) {
+			if (inv_items[slot].get_amount() > 0) {
+				InvItem temp;
+				temp = inv_items[slot];
+				inv_items[slot] = tempItem;
+				tempItem = temp;
+				in_hand = true;
+			}
+			else {
+				inv_items[slot] = tempItem;
+				tempItem.set_amount(0);
+			}
+		}
+	}
+	if (arr == "bakeItem") {
+		if (tempItem.get_amount() > 0) {
+			if (bakeItems[slot].get_amount() > 0) {
+				InvItem temp;
+				temp = bakeItems[slot];
+				bakeItems[slot] = tempItem;
+				tempItem = temp;
+				in_hand = true;
+			}
+			else {
+				bakeItems[slot] = tempItem;
+				tempItem.set_amount(0);
+			}
+		}
+	}
+}
+
 void Inventory::drawItemOptions(sf::RenderWindow& window) {
 	window.draw(itemOptionsSprite);
 }
@@ -445,7 +501,7 @@ void Inventory::drawWorkbenchGUI(sf::RenderWindow& window) {
 	}
 }
 
-void Inventory::drawGUI(sf::RenderWindow& window) {
+void Inventory::drawGUI(sf::RenderWindow& window, sf::Vector2f m_position) {
 	if (inventoryOn) //если инвентарь включен (меняется булевая при нажатии Е)
 	{
 		drawInventoryBack(window); //отрисовка бекгрунда (фона инвентаря)
@@ -475,6 +531,11 @@ void Inventory::drawGUI(sf::RenderWindow& window) {
 			drawWorkbenchGUI(window);
 		if (bakeOn)
 			drawBakeGUI(window);
+		if (is_in_hand() && tempItem.get_amount() > 0) {
+			tempItem.set_position(m_position - sf::Vector2f(12.f, 12.f));
+			tempItem.drawU(window);
+		}
+		
 
 	}
 	else {
@@ -590,13 +651,9 @@ void Inventory::change_slots(int new_slot, int old_slot) {
 			inv_items[old_slot].set_amount(0);
 		}
 		else {
-			inv_items[new_slot].set_item_id(inv_items[old_slot].get_id());
-			//inv_items[new_slot].set_id(inv_items[old_slot].get_id());
-			inv_items[new_slot].set_amount(inv_items[old_slot].get_amount());
-
-			inv_items[old_slot].set_item_id(temp_id);
-			//inv_items[old_slot].set_id(temp_id);
-			inv_items[old_slot].set_amount(temp_amount);
+			tempItem = inv_items[new_slot];
+			inv_items[new_slot] = inv_items[old_slot];
+			inv_items[old_slot] = tempItem;
 		}
 	}
 }

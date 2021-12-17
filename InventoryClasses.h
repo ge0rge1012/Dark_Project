@@ -25,6 +25,8 @@ public:
 	sf::Sprite get_sprite();
 	void set_sprite(sf::Sprite new_sprite);
 
+	InvItem& operator=(const InvItem& item);
+
 private:
 	int item_type;
 	Textures::ID id;
@@ -43,7 +45,7 @@ public:
 	int set_current(int num);
 	void decrease_item();
 
-	void drawGUI(sf::RenderWindow& window);
+	void drawGUI(sf::RenderWindow& window, sf::Vector2f m_position);
 	void drawInventoryBack(sf::RenderWindow& window);
 	void drawGUIBack(sf::RenderWindow& window);
 	void drawWorkbenchGUI(sf::RenderWindow& window);
@@ -86,6 +88,9 @@ public:
 	bool isBakeOn();
 	void turnBakeOn(bool on);
 
+	void setTempItem(std::string arr, int slot);
+	void setFromTemp(std::string arr, int slot);
+
 private:
 	sf::Sprite invLine;
 	int current_item = 0;
@@ -105,6 +110,7 @@ private:
 
 	int optionsSlot;
 	int saved_slot;
+	InvItem tempItem;
 
 	std::array<InvItem, 2> bakeItems;
 	std::array<sf::RectangleShape, 2> bakeSlots;
