@@ -886,28 +886,55 @@ void Game::mouse_processor()
 
 			int clickedSlot = inventory.getInvSlotNow(real_pos);
 			int clickedBake = inventory.getBakeSlotNow(real_pos);
-			if ((clickedSlot < 30 && clickedSlot >= 0) || (0 <= clickedBake < 2)) {
-				if (!inventory.is_in_hand() && !inventory.isItemOptionsOn()) {
+
+			if (!inventory.is_in_hand()) {
+				if ((clickedSlot < 30 && clickedSlot >= 0) && (!inventory.is_in_hand())) {
 					inventory.turn_in_hand(true);
-					//std::cout << inventory.is_in_hand() << std::endl;
-					if (clickedSlot < 30)
-						inventory.save_slot(clickedSlot);
+					inventory.setTempItem("invItem", clickedSlot);
 				}
-				else if (inventory.is_in_hand() && !inventory.isItemOptionsOn()) {
-					inventory.turn_in_hand(false);
-					//std::cout << inventory.is_in_hand() << std::endl;
-
-					int old_slot = inventory.get_save_slot();
-					std::cout << "clickedbake=" << clickedBake << std::endl;
-					if (clickedBake == 0) {
-						inventory.insertInBake(clickedBake, old_slot);
-					}
-					else if (0 <= clickedSlot < 30) {
-						inventory.change_slots(clickedSlot, old_slot);
-					}
-
+				if ((clickedBake < 2 && clickedBake >= 0) && (!inventory.is_in_hand())) {
+					inventory.turn_in_hand(true);
+					inventory.setTempItem("bakeItem", clickedBake);
 				}
 			}
+			else {
+				if ((clickedSlot < 30 && clickedSlot >= 0) && (inventory.is_in_hand())) {
+					inventory.turn_in_hand(false);
+					inventory.setFromTemp("invItem", clickedSlot);
+				}
+				if ((clickedBake < 2 && clickedBake >= 0) && (inventory.is_in_hand())) {
+					inventory.turn_in_hand(false);
+					inventory.setFromTemp("bakeItem", clickedBake);
+				}
+			}
+
+
+
+
+			//if ((clickedSlot < 30 && clickedSlot >= 0) || (0 <= clickedBake < 2)) {
+			//	if (!inventory.is_in_hand() && !inventory.isItemOptionsOn()) {
+			//		inventory.turn_in_hand(true);
+			//		//std::cout << inventory.is_in_hand() << std::endl;
+			//		if (clickedSlot < 30)
+			//			inventory.save_slot(clickedSlot);
+			//	}
+			//	else if (inventory.is_in_hand() && !inventory.isItemOptionsOn()) {
+			//		inventory.turn_in_hand(false);
+			//		//std::cout << inventory.is_in_hand() << std::endl;
+
+			//		int old_slot = inventory.get_save_slot();
+			//		std::cout << "clickedbake=" << clickedBake << std::endl;
+			//		if (clickedBake == 0) {
+			//			inventory.insertInBake(clickedBake, old_slot);
+			//		}
+			//		else if (0 <= clickedSlot < 30) {
+			//			inventory.change_slots(clickedSlot, old_slot);
+			//		}
+
+			//	}
+			//}
+
+
 
 
 			if (clickedSlot == 31)
@@ -1000,7 +1027,15 @@ void Game::draw_objects()              // so here we can order for all objects t
 		(*it).drawU(g_window);
 
 	nick_under_head.drawU(g_window);
-	inventory.drawGUI(g_window);
+
+
+	sf::Vector2i mouse_pos = sf::Mouse::getPosition(g_window);
+	sf::Vector2f cam_pos = g_view.getCenter();
+	// std::cout << g_view.getCenter().x << " " << g_view.getCenter().y << std::endl;
+	sf::Vector2f real_pos = sf::Vector2f((cam_pos.x - (mysetts.get_width() / 2) + static_cast<float>(mouse_pos.x) / (static_cast<float>(g_window.getSize().x / static_cast<float>(mysetts.get_width())))),
+		(cam_pos.y - (mysetts.get_height() / 2) + static_cast<float>(mouse_pos.y) / (static_cast<float>(g_window.getSize().y / static_cast<float>(mysetts.get_height())))));
+	
+	inventory.drawGUI(g_window, real_pos);
 }
 
 //______________________________________________________________________________________________________
