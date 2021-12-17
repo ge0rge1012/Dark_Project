@@ -107,7 +107,7 @@ sf::Sprite InvItem::get_sprite() {
 
 void Inventory::key_reaction(sf::Keyboard::Key key)
 {
-	if (!inventory_on)
+	if (!inventoryOn)
 	{
 		bool first_current = false;
 		if (current_item < 0 || current_item > 10)
@@ -178,7 +178,7 @@ void Inventory::update_statement()
 
 //__________________________________________
 
-	if (inventory_on) {
+	if (inventoryOn) {
 		int back_x = g_view.getCenter().x - 225;
 		int back_y = g_view.getCenter().y - 125;
 
@@ -186,7 +186,7 @@ void Inventory::update_statement()
 		BackgroundGUI.setPosition(inventory_sprite.getPosition().x + 148,
 			inventory_sprite.getPosition().y + 10);
 
-		int guiBackX = BackgroundGUI.getPosition().x + 24;
+		int guiBackX = BackgroundGUI.getPosition().x;
 		int guiBackY = BackgroundGUI.getPosition().y + 3;
 
 		for (int i = 0; i < 2; i++) { //right code for slots
@@ -200,6 +200,20 @@ void Inventory::update_statement()
 
 		for (int i = 0; i < 10; i++) {
 			craftItems[i].setPosition(craftSlots[i].getPosition() + sf::Vector2f(8.f, 8.f));
+		}
+
+		guiBackX = BackgroundGUI.getPosition().x+74;
+		guiBackY = BackgroundGUI.getPosition().y+21;
+
+		arrow.setPosition(guiBackX + 44, guiBackY + 3);
+
+		for (int i = 0; i < 2; i++) {
+			bakeSlots[i].setPosition(guiBackX, guiBackY);
+			guiBackX += 80;
+		}
+
+		for (int i = 0; i < 2; i++) {
+			bakeItems[i].set_position(bakeSlots[i].getPosition() + sf::Vector2f(12.f, 14.f));
 		}
 
 		int slot_x = back_x + 14;
@@ -244,17 +258,13 @@ void Inventory::update_statement()
 		for (int i = 0; i < 30; i++) {
 			inv_items[i].set_position(slots[i].getPosition() + sf::Vector2f(12.f, 14.f));
 		}
-
-		for (int j = 20; j < 30; ++j)
-		{
-			inv_items[j].set_position(slots[j].getPosition() + sf::Vector2f(12.f, 14.f));
-		}
 		
 		if (isItemOptionsOn()) {
 			itemOptionsSprite.setPosition(slots[optionsSlot].getPosition());
 		}
 	}
 }
+
 
 void Inventory::setOptionsSlot(int slot) {
 	optionsSlot = slot;
@@ -301,6 +311,24 @@ Inventory::Inventory()
 	sf::Texture& texture_slot = texture_holder.get(Textures::SLOT);
 	for (int i = 0; i < 30; i++) {
 		slots[i].setTexture(texture_slot);
+	}
+
+	//for (int i = 0; i < 2; i++) { //tried to make bakeslots as Sprite
+	//	bakeSlots[i].setTexture(texture_slot);
+	//}
+	
+	arrow.setTexture(texture_holder.get(Textures::ARROW));
+
+	for (int i = 0; i < 2; i++) {
+		bakeSlots[i].setSize(sf::Vector2f(38.f, 38.f));
+		bakeSlots[i].setFillColor(sf::Color(120, 83, 32));
+		bakeSlots[i].setOutlineColor(sf::Color(255, 255, 255));
+		bakeSlots[i].setOutlineThickness(1.f);
+	}
+
+	for (int i = 0; i < 2; i++) {
+		bakeItems[i].set_item_id(Textures::ID::DIRT);
+		bakeItems[i].set_amount(0);
 	}
 
 	for (int i = 0; i < 30; i++) {
@@ -387,8 +415,22 @@ void Inventory::drawGUIBack(sf::RenderWindow& window) {
 	window.draw(BackgroundGUI);
 }
 
+void Inventory::drawBakeGUI(sf::RenderWindow& window) {
+	if (bakeOn) {
+		drawGUIBack(window);
+		for (int i = 0; i < 2; i++) {
+			window.draw(bakeSlots[i]);
+		}
+		for (int i = 0; i < 2; i++) {
+			if (bakeItems[i].get_amount()>0)
+				bakeItems[i].drawU(window);
+		}
+		window.draw(arrow);
+	}
+}
+
 void Inventory::drawWorkbenchGUI(sf::RenderWindow& window) {
-	if (inventory_on)
+	if (inventoryOn)
 	{
 		drawGUIBack(window);
 		for (int i = 0; i < 10; i++) {
@@ -404,7 +446,7 @@ void Inventory::drawWorkbenchGUI(sf::RenderWindow& window) {
 }
 
 void Inventory::drawGUI(sf::RenderWindow& window) {
-	if (inventory_on) //если инвентарь включен (меняется булевая при нажатии Е)
+	if (inventoryOn) //если инвентарь включен (меняется булевая при нажатии Е)
 	{
 		drawInventoryBack(window); //отрисовка бекгрунда (фона инвентаря)
 		for (int i = 0; i < 30; i++) { //отрисовка 30 слотов
@@ -429,7 +471,10 @@ void Inventory::drawGUI(sf::RenderWindow& window) {
 		if (isItemOptionsOn()) {
 			drawItemOptions(window);
 		}
-		drawWorkbenchGUI(window);
+		if (workbenchOn)
+			drawWorkbenchGUI(window);
+		if (bakeOn)
+			drawBakeGUI(window);
 
 	}
 	else {
@@ -449,6 +494,14 @@ void Inventory::drawGUI(sf::RenderWindow& window) {
 		}
 	}
 }
+
+bool Inventory::isWorkbenchOn() {
+	return workbenchOn;
+};
+
+void Inventory::turnWorkbenchOn(bool on) {
+	workbenchOn = on;
+};
 
 int Inventory::getInvSlotNow(sf::Vector2i m_position) {
 	int slotNow = 31;
@@ -471,6 +524,18 @@ int Inventory::getChoose(sf::Vector2i m_position) {
 			choose = 2;
 		return choose;
 	}
+}
+
+int Inventory::getBakeSlotNow(sf::Vector2i m_position) {
+	int slotNow = 3;
+	for (int i = 0; i < 2; i++) {
+		if ((bakeSlots[i].getPosition().x < m_position.x) &&
+			(bakeSlots[i].getPosition().x + 38 > m_position.x)
+			&& (bakeSlots[i].getPosition().y < m_position.y) &&
+			(bakeSlots[i].getPosition().y + 38 > m_position.y))
+			slotNow = i;
+	}
+	return slotNow;
 }
 
 int Inventory::getCraftSlotNow(sf::Vector2i m_position) {
@@ -514,25 +579,48 @@ void Inventory::deleteSlotItems(int slot) {
 }
 
 void Inventory::change_slots(int new_slot, int old_slot) {
-	Textures::ID temp_id = inv_items[new_slot].get_id();
-	int temp_amount = inv_items[new_slot].get_amount();
-	
-	if ((inv_items[new_slot].get_id() == inv_items[old_slot].get_id()) 
-		&& (old_slot!=new_slot))
-	{
-		inv_items[new_slot].set_amount(inv_items[new_slot].get_amount() + inv_items[old_slot].get_amount());
-		inv_items[old_slot].set_amount(0);
-	}
-	else {
-		inv_items[new_slot].set_item_id(inv_items[old_slot].get_id());
-		//inv_items[new_slot].set_id(inv_items[old_slot].get_id());
-		inv_items[new_slot].set_amount(inv_items[old_slot].get_amount());
+	if ((0 <= new_slot < 30) && (0 <= old_slot < 30)) {
+		Textures::ID temp_id = inv_items[new_slot].get_id();
+		int temp_amount = inv_items[new_slot].get_amount();
 
-		inv_items[old_slot].set_item_id(temp_id);
-		//inv_items[old_slot].set_id(temp_id);
-		inv_items[old_slot].set_amount(temp_amount);
+		if ((inv_items[new_slot].get_id() == inv_items[old_slot].get_id())
+			&& (old_slot != new_slot))
+		{
+			inv_items[new_slot].set_amount(inv_items[new_slot].get_amount() + inv_items[old_slot].get_amount());
+			inv_items[old_slot].set_amount(0);
+		}
+		else {
+			inv_items[new_slot].set_item_id(inv_items[old_slot].get_id());
+			//inv_items[new_slot].set_id(inv_items[old_slot].get_id());
+			inv_items[new_slot].set_amount(inv_items[old_slot].get_amount());
+
+			inv_items[old_slot].set_item_id(temp_id);
+			//inv_items[old_slot].set_id(temp_id);
+			inv_items[old_slot].set_amount(temp_amount);
+		}
 	}
 }
+
+void Inventory::insertInBake(int bakeSlot, int invSlot) {
+	Textures::ID temp_id = inv_items[bakeSlot].get_id();
+	int temp_amount = inv_items[bakeSlot].get_amount();
+
+	if ((bakeItems[bakeSlot].get_id() == inv_items[invSlot].get_id()))
+	{
+		bakeItems[bakeSlot].set_amount(bakeItems[bakeSlot].get_amount() + inv_items[invSlot].get_amount());
+		inv_items[invSlot].set_amount(0);
+	}
+	else {
+		bakeItems[bakeSlot].set_item_id(inv_items[invSlot].get_id());
+		//inv_items[new_slot].set_id(inv_items[old_slot].get_id());
+		bakeItems[bakeSlot].set_amount(inv_items[invSlot].get_amount());
+
+		inv_items[invSlot].set_item_id(temp_id);
+		//inv_items[old_slot].set_id(temp_id);
+		inv_items[invSlot].set_amount(temp_amount);
+	}
+}
+
 
 void Inventory::turnItemOptions(bool on) {
 	itemOptionsOn = on;
@@ -554,11 +642,24 @@ void Inventory::drawInventoryBack(sf::RenderWindow& window) {
 }
 
 void Inventory::turnGUI(bool on) {
-	inventory_on = on;
+	inventoryOn = on;
+	if (on == false) {
+		itemOptionsOn = false;
+		workbenchOn = false;
+		bakeOn = false;
+	}
+}
+
+bool Inventory::isBakeOn() {
+	return bakeOn;
+}
+
+void Inventory::turnBakeOn(bool on) {
+	bakeOn = on;
 }
 
 bool Inventory::get_invent_on() {
-	return inventory_on;
+	return inventoryOn;
 }
 
 bool Inventory::is_in_hand() {

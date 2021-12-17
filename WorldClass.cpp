@@ -798,9 +798,9 @@ bool World::isWorkbenchClose(int playerBlockX, int playerBlockY) {
 	bool workbench = false;
 	for (int i = blockX; i < blockX + 3; i++) {
 		for (int j = blockY; j < blockY + 5; j++) {
-			std::cout << "Checkin block x" << i << "y" << j << std::endl;
+			//std::cout << "Checkin block x" << i << "y" << j << std::endl;
 			if (tilemap[i][j] != nullptr) {
-				std::cout << "exist" << std::endl;
+				//std::cout << "exist" << std::endl;
 				if (tilemap[i][j]->get_id() == Textures::WORKBENCH)
 					workbench = true;
 			}

@@ -58,6 +58,7 @@ public:
 	void save_slot(int slot);
 	int get_save_slot();
 	void change_slots(int new_slot, int old_slot);
+	void insertInBake(int invSlot, int bakeSlot);
 	bool is_slot_empty(int slot);
 	bool inventoryContains(Textures::ID id, int numb);
 
@@ -66,6 +67,7 @@ public:
 
 	int getInvSlotNow(sf::Vector2i m_position);
 	int getCraftSlotNow(sf::Vector2i m_position);
+	int getBakeSlotNow(sf::Vector2i m_position);
 
 	void updateCrafts();
 	void craftItem(int slot);
@@ -78,6 +80,12 @@ public:
 	int getChoose(sf::Vector2i m_position);
 	void deleteSlotItems(int slot);
 
+	bool isWorkbenchOn();
+	void turnWorkbenchOn(bool on);
+
+	bool isBakeOn();
+	void turnBakeOn(bool on);
+
 private:
 	sf::Sprite invLine;
 	int current_item = 0;
@@ -86,17 +94,24 @@ private:
 	sf::Sprite inventory_sprite;
 	std::array<sf::Sprite, 30> slots;
 	sf::Sprite itemOptionsSprite;
+	sf::Sprite BackgroundGUI;
 
 	bool itemOptionsOn = false;
-	int optionsSlot;
+	bool inventoryOn = false;
+	bool workbenchOn = false;
+	bool bakeOn = false;
+	
 	bool in_hand = false;
-	bool inventory_on = false;
+
+	int optionsSlot;
 	int saved_slot;
 
-	sf::Sprite BackgroundGUI;
-	std::array<sf::RectangleShape, 10> craftSlots;
+	std::array<InvItem, 2> bakeItems;
+	std::array<sf::RectangleShape, 2> bakeSlots;
+	sf::Sprite arrow;
+
 	std::array<sf::Sprite, 10> craftItems;
-	bool workbenchOn = false;
+	std::array<sf::RectangleShape, 10> craftSlots;
 
 	std::array<InvItem, 4> armor_items; //i think we dont have time to realize armor
 	std::array<sf::Sprite, 4> armor_slots; //anyway i will leave it here for better times
