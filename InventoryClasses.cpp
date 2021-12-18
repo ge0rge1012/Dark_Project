@@ -210,6 +210,20 @@ void Inventory::update_statement()
 			craftItems[i].setPosition(craftSlots[i].getPosition() + sf::Vector2f(8.f, 8.f));
 		}
 
+		guiBackY = BackgroundGUI.getPosition().y + 3;
+		for (int i = 0; i < 2; i++) { //right code for slots
+			guiBackX = BackgroundGUI.getPosition().x + 15;
+			for (int j = 0; j < 5; j++) {
+				boxSlots[i * 5 + j].setPosition(guiBackX, guiBackY);
+				guiBackX += 52;
+			}
+			guiBackY += 43;
+		}
+
+		for (int i = 0; i < 10; i++) {
+			boxItems[i].set_position(boxSlots[i].getPosition() + sf::Vector2f(10.f, 12.f));
+		}
+
 		guiBackX = BackgroundGUI.getPosition().x+74;
 		guiBackY = BackgroundGUI.getPosition().y+21;
 
@@ -339,6 +353,18 @@ Inventory::Inventory()
 		bakeItems[i].set_amount(0);
 	}
 
+	for (int i = 0; i < 10; i++) {
+		boxSlots[i].setSize(sf::Vector2f(33.f, 33.f));
+		boxSlots[i].setFillColor(sf::Color(120, 83, 32));
+		boxSlots[i].setOutlineColor(sf::Color(0, 0, 0));
+		boxSlots[i].setOutlineThickness(1.f);
+	}
+
+	for (int i = 0; i < 10; i++) {
+		boxItems[i].set_item_id(Textures::ID::DIRT);
+		boxItems[i].set_amount(0);
+	}
+
 	for (int i = 0; i < 30; i++) {
 		inv_items[i].set_item_id(Textures::ID::DIRT);
 	}
@@ -385,6 +411,12 @@ void Inventory::setTempItem(std::string arr, int slot) {
 			bakeItems[slot].set_amount(0);
 		}
 	}
+	if (arr == "boxItem") {
+		if (boxItems[slot].get_amount() > 0) {
+			tempItem = boxItems[slot];
+			boxItems[slot].set_amount(0);
+		}
+	}
 }
 
 void Inventory::setFromTemp(std::string arr, int slot) { //smart item moving
@@ -414,6 +446,21 @@ void Inventory::setFromTemp(std::string arr, int slot) { //smart item moving
 			}
 			else {
 				bakeItems[slot] = tempItem;
+				tempItem.set_amount(0);
+			}
+		}
+	}
+	if (arr == "boxItem") {
+		if (tempItem.get_amount() > 0) {
+			if (boxItems[slot].get_amount() > 0) {
+				InvItem temp;
+				temp = boxItems[slot];
+				boxItems[slot] = tempItem;
+				tempItem = temp;
+				in_hand = true;
+			}
+			else {
+				boxItems[slot] = tempItem;
 				tempItem.set_amount(0);
 			}
 		}
@@ -481,7 +528,41 @@ void Inventory::drawBakeGUI(sf::RenderWindow& window) {
 			if (bakeItems[i].get_amount()>0)
 				bakeItems[i].drawU(window);
 		}
+
+		for (int i = 0; i < 2; i++) { //также отрисовывается циферка с количеством
+			if (bakeItems[i].get_amount() > 0) {
+				std::string kol = std::to_string(bakeItems[i].get_amount());
+				sf::Text text(kol, font_holder.get(Fonts::ID::OLD), 8);
+				text.setFillColor(sf::Color::Black);
+				text.setPosition(bakeItems[i].get_position() + sf::Vector2f(10.f, -12.f));
+				window.draw(text);
+			}
+		}
+
 		window.draw(arrow);
+	}
+}
+
+void Inventory::drawChestGUI(sf::RenderWindow& window) {
+	if (boxOn) {
+		drawGUIBack(window);
+		for (int i = 0; i < 10; i++) {
+			window.draw(boxSlots[i]);
+		}
+		for (int i = 0; i < 10; i++) {
+			if (boxItems[i].get_amount() > 0)
+				boxItems[i].drawU(window);
+		}
+
+		for (int i = 0; i < 10; i++) { //также отрисовывается циферка с количеством
+			if (boxItems[i].get_amount() > 0) {
+				std::string kol = std::to_string(boxItems[i].get_amount());
+				sf::Text text(kol, font_holder.get(Fonts::ID::OLD), 8);
+				text.setFillColor(sf::Color::Black);
+				text.setPosition(boxItems[i].get_position() + sf::Vector2f(10.f, -12.f));
+				window.draw(text);
+			}
+		}
 	}
 }
 
@@ -497,7 +578,6 @@ void Inventory::drawWorkbenchGUI(sf::RenderWindow& window) {
 			window.draw(craftItems[i]);
 		}
 		
-
 	}
 }
 
@@ -531,9 +611,19 @@ void Inventory::drawGUI(sf::RenderWindow& window, sf::Vector2f m_position) {
 			drawWorkbenchGUI(window);
 		if (bakeOn)
 			drawBakeGUI(window);
+		if (boxOn)
+			drawChestGUI(window);
 		if (is_in_hand() && tempItem.get_amount() > 0) {
 			tempItem.set_position(m_position - sf::Vector2f(12.f, 12.f));
 			tempItem.drawU(window);
+			if (tempItem.get_amount() > 0) {
+				std::string kol = std::to_string(tempItem.get_amount());
+				sf::Text text(kol, font_holder.get(Fonts::ID::OLD), 8);
+				text.setFillColor(sf::Color::Black);
+				text.setPosition(tempItem.get_position() + sf::Vector2f(10.f, -12.f));
+				window.draw(tempItem.get_sprite());
+				window.draw(text);
+			}
 		}
 		
 
@@ -566,10 +656,12 @@ void Inventory::turnWorkbenchOn(bool on) {
 
 int Inventory::getInvSlotNow(sf::Vector2i m_position) {
 	int slotNow = 31;
-	for (int i = 0; i < 30; i++) {
-		if ((slots[i].getPosition().x < m_position.x) && (slots[i].getPosition().x + 38 > m_position.x)
-			&& (slots[i].getPosition().y < m_position.y) && (slots[i].getPosition().y + 38 > m_position.y))
-			slotNow = i;
+	if (inventoryOn) {
+		for (int i = 0; i < 30; i++) {
+			if ((slots[i].getPosition().x < m_position.x) && (slots[i].getPosition().x + 38 > m_position.x)
+				&& (slots[i].getPosition().y < m_position.y) && (slots[i].getPosition().y + 38 > m_position.y))
+				slotNow = i;
+		}
 	}
 		return slotNow;
 }
@@ -587,14 +679,31 @@ int Inventory::getChoose(sf::Vector2i m_position) {
 	}
 }
 
+int Inventory::getBoxSlotNow(sf::Vector2i m_position) {
+	int slotNow = 11;
+	if (boxOn) {
+		for (int i = 0; i < 10; i++) {
+			if ((boxSlots[i].getPosition().x < m_position.x) &&
+				(boxSlots[i].getPosition().x + 38 > m_position.x)
+				&& (boxSlots[i].getPosition().y < m_position.y) &&
+				(boxSlots[i].getPosition().y + 38 > m_position.y))
+				slotNow = i;
+		}
+	}
+	//std::cout << slotNow << std::endl;
+	return slotNow;
+}
+
 int Inventory::getBakeSlotNow(sf::Vector2i m_position) {
 	int slotNow = 3;
-	for (int i = 0; i < 2; i++) {
-		if ((bakeSlots[i].getPosition().x < m_position.x) &&
-			(bakeSlots[i].getPosition().x + 38 > m_position.x)
-			&& (bakeSlots[i].getPosition().y < m_position.y) &&
-			(bakeSlots[i].getPosition().y + 38 > m_position.y))
-			slotNow = i;
+	if (bakeOn) {
+		for (int i = 0; i < 2; i++) {
+			if ((bakeSlots[i].getPosition().x < m_position.x) &&
+				(bakeSlots[i].getPosition().x + 38 > m_position.x)
+				&& (bakeSlots[i].getPosition().y < m_position.y) &&
+				(bakeSlots[i].getPosition().y + 38 > m_position.y))
+				slotNow = i;
+		}
 	}
 	return slotNow;
 }
@@ -639,51 +748,16 @@ void Inventory::deleteSlotItems(int slot) {
 	updateCrafts();
 }
 
-void Inventory::change_slots(int new_slot, int old_slot) {
-	if ((0 <= new_slot < 30) && (0 <= old_slot < 30)) {
-		Textures::ID temp_id = inv_items[new_slot].get_id();
-		int temp_amount = inv_items[new_slot].get_amount();
-
-		if ((inv_items[new_slot].get_id() == inv_items[old_slot].get_id())
-			&& (old_slot != new_slot))
-		{
-			inv_items[new_slot].set_amount(inv_items[new_slot].get_amount() + inv_items[old_slot].get_amount());
-			inv_items[old_slot].set_amount(0);
-		}
-		else {
-			tempItem = inv_items[new_slot];
-			inv_items[new_slot] = inv_items[old_slot];
-			inv_items[old_slot] = tempItem;
-		}
-	}
-}
-
-void Inventory::insertInBake(int bakeSlot, int invSlot) {
-	Textures::ID temp_id = inv_items[bakeSlot].get_id();
-	int temp_amount = inv_items[bakeSlot].get_amount();
-
-	if ((bakeItems[bakeSlot].get_id() == inv_items[invSlot].get_id()))
-	{
-		bakeItems[bakeSlot].set_amount(bakeItems[bakeSlot].get_amount() + inv_items[invSlot].get_amount());
-		inv_items[invSlot].set_amount(0);
-	}
-	else {
-		bakeItems[bakeSlot].set_item_id(inv_items[invSlot].get_id());
-		//inv_items[new_slot].set_id(inv_items[old_slot].get_id());
-		bakeItems[bakeSlot].set_amount(inv_items[invSlot].get_amount());
-
-		inv_items[invSlot].set_item_id(temp_id);
-		//inv_items[old_slot].set_id(temp_id);
-		inv_items[invSlot].set_amount(temp_amount);
-	}
-}
-
-
 void Inventory::turnItemOptions(bool on) {
 	itemOptionsOn = on;
 }
 
-
+bool Inventory::isBoxOn() {
+	return boxOn;
+}
+void Inventory::turnBoxOn(bool on) {
+	boxOn = on;
+}
 
 bool Inventory::isItemOptionsOn() {
 	return itemOptionsOn;
@@ -704,6 +778,7 @@ void Inventory::turnGUI(bool on) {
 		itemOptionsOn = false;
 		workbenchOn = false;
 		bakeOn = false;
+		boxOn = false;
 	}
 }
 
@@ -726,12 +801,14 @@ void Inventory::turn_in_hand(bool on) {
 	in_hand = on;
 }
 
-int Inventory::get_save_slot() {
-	return saved_slot;
-}
+void Inventory::addBoxCoords(sf::Vector2i m_pos) {
+	Coordinate coords;
+	coords.x = m_pos.y / 32;
+	coords.y = m_pos.x / 32;
 
-void Inventory::save_slot(int slot) {
-	saved_slot = slot;
+	boxesCoords.push_back(coords);
+
+	std::cout << "added chest at coors: " << boxesCoords[0].x << " " << boxesCoords[0].y << std::endl;
 }
 
 void Inventory::craftItem(int slot) {

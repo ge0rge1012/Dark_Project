@@ -737,7 +737,7 @@ Game::Game() : g_window(sf::VideoMode(mysetts.get_width(), mysetts.get_height())
 	inventory.add_item_fast(Textures::DIRT, 10);
 	inventory.add_item_fast(Textures::ORANGE, 666);
 	inventory.add_item_fast(Textures::WOOD, 666);
-	inventory.add_item_fast(Textures::IRON, 5);
+	inventory.add_item_fast(Textures::BOX, 5);
 	inventory.add_item_fast(Textures::ROCK, 40);
 	inventory.add_item_fast(Textures::LEAVES, 666);
 	inventory.add_item_fast(Textures::BAKE, 100);
@@ -860,7 +860,6 @@ void Game::handle_events(sf::Keyboard::Key key, bool isPressed)
 		}
 		else {
 			inventory.turnGUI(false);
-			inventory.turnWorkbenchOn(false);
 		}
 	}
 	if (inventory.get_invent_on() && key == sf::Keyboard::Escape && isPressed) {
@@ -886,18 +885,23 @@ void Game::mouse_processor()
 
 			int clickedSlot = inventory.getInvSlotNow(real_pos);
 			int clickedBake = inventory.getBakeSlotNow(real_pos);
+			int clickedBox = inventory.getBoxSlotNow(real_pos);
 
 			if (!inventory.is_in_hand() && !inventory.isItemOptionsOn()) {
-				if ((clickedSlot < 30 && clickedSlot >= 0)) {
+				if ((clickedSlot < 30) && (clickedSlot >= 0)) {
 					inventory.turn_in_hand(true);
 					inventory.setTempItem("invItem", clickedSlot);
 				}
-				if ((clickedBake < 2 && clickedBake >= 0)) {
+				if ((clickedBake < 2) && (clickedBake >= 0)) {
 					inventory.turn_in_hand(true);
 					inventory.setTempItem("bakeItem", clickedBake);
 				}
+				if ((clickedBox < 10) && (clickedBox >= 0)) {
+					inventory.turn_in_hand(true);
+					inventory.setTempItem("boxItem", clickedBox);
+				}
 			}
-			else {
+			else if (inventory.is_in_hand() && !inventory.isItemOptionsOn()) {
 				if ((clickedSlot < 30 && clickedSlot >= 0)) {
 					inventory.turn_in_hand(false);
 					inventory.setFromTemp("invItem", clickedSlot);
@@ -905,6 +909,10 @@ void Game::mouse_processor()
 				if ((clickedBake < 2 && clickedBake >= 0)) {
 					inventory.turn_in_hand(false);
 					inventory.setFromTemp("bakeItem", clickedBake);
+				}
+				if ((clickedBox < 10) && (clickedBox >= 0)) {
+					inventory.turn_in_hand(false);
+					inventory.setFromTemp("boxItem", clickedBox);
 				}
 			}
 
@@ -965,7 +973,7 @@ void Game::mouse_processor()
 			}
 			if (clickedSlot == 31)
 				inventory.turnItemOptions(false);
-
+			 
 		}
 		
 	}
@@ -981,8 +989,28 @@ void Game::mouse_processor()
 
 		if (chunk.tilemap[real_pos.y / 32][real_pos.x / 32] != nullptr)
 			if (chunk.tilemap[real_pos.y / 32][real_pos.x / 32]->get_id() == Textures::BAKE) {
-				inventory.turnGUI(true);
-				inventory.turnBakeOn(true);
+				if (!inventory.get_invent_on()) {
+					inventory.turnGUI(true);
+					//inventory.loadBake(real_pos);
+					inventory.turnBakeOn(true);
+				}
+			}
+
+		if (chunk.tilemap[real_pos.y / 32][real_pos.x / 32] != nullptr)
+			if (chunk.tilemap[real_pos.y / 32][real_pos.x / 32]->get_id() == Textures::BOX) {
+				if (!inventory.get_invent_on()) {
+					inventory.turnGUI(true);
+					//inventory.loadBox(real_pos);
+					inventory.turnBoxOn(true);
+				}
+			}
+
+		if (chunk.tilemap[real_pos.y / 32][real_pos.x / 32] != nullptr)
+			if (chunk.tilemap[real_pos.y / 32][real_pos.x / 32]->get_id() == Textures::WORKBENCH) {
+				if (!inventory.get_invent_on()) {
+					inventory.turnGUI(true);
+					inventory.turnWorkbenchOn(true);
+				}
 			}
 
 		//std::cout << "mx=" << real_pos.x / 32<< "my=" << real_pos.y / 32 << " px=" 
@@ -1002,6 +1030,9 @@ void Game::mouse_processor()
 			if (chunk.place_block(real_pos, inventory.get_current(), player->get_position()))
 			{
 				inventory.decrease_item();
+				if (inventory.get_current() == Textures::BOX) {
+					inventory.addBoxCoords(real_pos);
+				}
 			}
 		}
 		
