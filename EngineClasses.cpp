@@ -989,21 +989,27 @@ void Game::mouse_processor()
 
 		if (chunk.tilemap[real_pos.y / 32][real_pos.x / 32] != nullptr)
 			if (chunk.tilemap[real_pos.y / 32][real_pos.x / 32]->get_id() == Textures::BAKE) {
-				inventory.turnGUI(true);
-				inventory.turnBakeOn(true);
+				if (!inventory.get_invent_on()) {
+					inventory.turnGUI(true);
+					//inventory.loadBake(real_pos);
+					inventory.turnBakeOn(true);
+				}
 			}
+
+		if (chunk.tilemap[real_pos.y / 32][real_pos.x / 32] != nullptr)
+			if (chunk.tilemap[real_pos.y / 32][real_pos.x / 32]->get_id() == Textures::BOX) {
+				if (!inventory.get_invent_on()) {
+					inventory.turnGUI(true);
+					//inventory.loadBox(real_pos);
+					inventory.turnBoxOn(true);
+				}
+			}
+
 		if (chunk.tilemap[real_pos.y / 32][real_pos.x / 32] != nullptr)
 			if (chunk.tilemap[real_pos.y / 32][real_pos.x / 32]->get_id() == Textures::WORKBENCH) {
 				if (!inventory.get_invent_on()) {
 					inventory.turnGUI(true);
 					inventory.turnWorkbenchOn(true);
-				}
-			}
-		if (chunk.tilemap[real_pos.y / 32][real_pos.x / 32] != nullptr)
-			if (chunk.tilemap[real_pos.y / 32][real_pos.x / 32]->get_id() == Textures::BOX) {
-				if (!inventory.get_invent_on()) {
-					inventory.turnGUI(true);
-					inventory.turnBoxOn(true);
 				}
 			}
 
@@ -1024,6 +1030,9 @@ void Game::mouse_processor()
 			if (chunk.place_block(real_pos, inventory.get_current(), player->get_position()))
 			{
 				inventory.decrease_item();
+				if (inventory.get_current() == Textures::BOX) {
+					inventory.addBoxCoords(real_pos);
+				}
 			}
 		}
 		

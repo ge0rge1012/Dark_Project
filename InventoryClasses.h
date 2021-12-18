@@ -34,6 +34,15 @@ private:
 	int amount;
 };
 
+struct Coordinate {
+	int x; //same as in tilemap realization
+	int y;
+};
+
+struct BoxItems {
+	std::array<InvItem, 20> items;
+};
+
 class Inventory
 {
 public:
@@ -93,7 +102,14 @@ public:
 	void setTempItem(std::string arr, int slot);
 	void setFromTemp(std::string arr, int slot);
 
+	void addBoxCoords(sf::Vector2i m_position);
+
 private:
+	std::vector<Coordinate> boxesCoords;
+	std::vector<BoxItems> boxesItems;
+
+	std::vector<Coordinate> bakeCoords;
+
 	sf::Sprite invLine;
 	int current_item = 0;
 

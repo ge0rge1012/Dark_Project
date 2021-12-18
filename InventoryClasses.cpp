@@ -801,6 +801,16 @@ void Inventory::turn_in_hand(bool on) {
 	in_hand = on;
 }
 
+void Inventory::addBoxCoords(sf::Vector2i m_pos) {
+	Coordinate coords;
+	coords.x = m_pos.y / 32;
+	coords.y = m_pos.x / 32;
+
+	boxesCoords.push_back(coords);
+
+	std::cout << "added chest at coors: " << boxesCoords[0].x << " " << boxesCoords[0].y << std::endl;
+}
+
 void Inventory::craftItem(int slot) {
 	if (slot == 0 && isCraftable(Textures::WORKBENCH))
 	{
