@@ -777,6 +777,7 @@ Game::Game() : g_window(sf::VideoMode(mysetts.get_width(), mysetts.get_height())
 	inventory.add_item_fast(Textures::LEAVES, 666);
 	inventory.add_item_fast(Textures::BAKE, 100);
 	inventory.add_item_fast(Textures::WORKBENCH, 15);
+	inventory.add_item_fast(Textures::IRON, 15);
 	inventory.add_invent_item(Textures::WOOD, 23);
 	inventory.add_invent_item(Textures::ORANGE, 20);
 	inventory.add_invent_item(Textures::WOOD, 20);
@@ -885,7 +886,7 @@ void Game::handle_events(sf::Keyboard::Key key, bool isPressed)
 		key == sf::Keyboard::S ||
 		key == sf::Keyboard::D)
 		player->key_reaction(key, isPressed);
-	if ((static_cast<int>(key) >= sf::Keyboard::Num1 && static_cast<int>(key) <= static_cast<int>(sf::Keyboard::Num9)) && isPressed)
+	if ((static_cast<int>(key) >= sf::Keyboard::Num0 && static_cast<int>(key) <= static_cast<int>(sf::Keyboard::Num9)) && isPressed)
 		inventory.key_reaction(key);
 
 	if (key == sf::Keyboard::E && isPressed) { //Inventory on E button
