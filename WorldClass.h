@@ -22,9 +22,16 @@ class GroundItem;
 
 namespace Textures
 {
-	enum ID { NUL = 0, MENU, VAMPIRE, VAMPIRE1, VAMPIRE2, VAMPIRE3, VAMPIRE4, VAMPIRE5, VAMPIRE6, VAMPIRE7,
-		ORANGE, ITEMS, GREY, ROCK, DIRT, IRON, WOOD, LEAVES, LADDER_LEFT,
-		LADDER_RIGHT, LADDER, GRASS, IRON_ING, ORICHALCUM, ORICHALCUM_ING,
+	enum ID { NUL = 0, ORANGE, ROCK, DIRT, IRON, WOOD, LEAVES, GRASS, LADDER_LEFT,
+		ORANGE1, ORANGE2, ORANGE3, ORANGE4,
+		ROCK1, ROCK2, ROCK3, ROCK4,
+		DIRT1, DIRT2, DIRT3, DIRT4,
+		IRON1, IRON2, IRON3, IRON4,
+		WOOD1, WOOD2, WOOD3, WOOD4,
+		LEAVES1, LEAVES2, LEAVES3, LEAVES4,
+		GRASS1, GRASS2, GRASS3, GRASS4,
+		MENU, GREY, ITEMS, VAMPIRE, VAMPIRE1, VAMPIRE2, VAMPIRE3, VAMPIRE4, VAMPIRE5, VAMPIRE6, VAMPIRE7,
+		LADDER_RIGHT, LADDER, IRON_ING, ORICHALCUM, ORICHALCUM_ING,
 		WORKBENCH, BOX, BAKE, INVENTORY, SLOT, EARTHBACKGROUND, GUIBACK, LINE, 
 		STICK, PICK_TR, PICK_ST, PICK_IR, PICK_OR, SWORD_TR, SWORD_ST, 
 		SWORD_IR, SWORD_OR, ITEM_OPTIONS, ARROW };
@@ -73,6 +80,7 @@ public:
 	bool breakable();
 	Textures::ID get_id();
 	void set_id(Textures::ID id);
+	void set_frame_texture(sf::Texture& text);
 	bool functional();
 
 private:
@@ -90,6 +98,7 @@ public:
 	std::array<std::array<Block*, WORLD_WIDTH>, WORLD_HEIGHT> tilemap;
 	std::list <Enemy> enemies;
 	std::list<GroundItem> gitems;
+	std::array<std::array<sf::Texture, 5>, 7> blocks_frames;
 	int line_of_horizon = 49;
 
 	World();

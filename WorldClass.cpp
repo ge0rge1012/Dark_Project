@@ -134,6 +134,11 @@ void Block::set_id(Textures::ID id) {
 	}
 }
 
+void Block::set_frame_texture(sf::Texture& text)
+{
+	block.setTexture(text);
+}
+
 sf::FloatRect Block::getGlobalBound()
 {
 	return block.getGlobalBounds();
@@ -144,6 +149,48 @@ World::World()
 	for (int i = 0; i < WORLD_HEIGHT; ++i)
 		for (int j = 0; j < WORLD_WIDTH; ++j)
 			tilemap[i][j] = nullptr;
+
+	blocks_frames[static_cast<int>(Textures::ID::ORANGE) - 1][0] = texture_holder.get(Textures::ID::ORANGE);
+	blocks_frames[static_cast<int>(Textures::ID::ORANGE) - 1][1] = texture_holder.get(Textures::ID::ORANGE1);
+	blocks_frames[static_cast<int>(Textures::ID::ORANGE) - 1][2] = texture_holder.get(Textures::ID::ORANGE2);
+	blocks_frames[static_cast<int>(Textures::ID::ORANGE) - 1][3] = texture_holder.get(Textures::ID::ORANGE3);
+	blocks_frames[static_cast<int>(Textures::ID::ORANGE) - 1][4] = texture_holder.get(Textures::ID::ORANGE4);
+
+	blocks_frames[static_cast<int>(Textures::ID::ROCK) - 1][0] = texture_holder.get(Textures::ID::ROCK);
+	blocks_frames[static_cast<int>(Textures::ID::ROCK) - 1][1] = texture_holder.get(Textures::ID::ROCK1);
+	blocks_frames[static_cast<int>(Textures::ID::ROCK) - 1][2] = texture_holder.get(Textures::ID::ROCK2);
+	blocks_frames[static_cast<int>(Textures::ID::ROCK) - 1][3] = texture_holder.get(Textures::ID::ROCK3);
+	blocks_frames[static_cast<int>(Textures::ID::ROCK) - 1][4] = texture_holder.get(Textures::ID::ROCK4);
+
+	blocks_frames[static_cast<int>(Textures::ID::DIRT) - 1][0] = texture_holder.get(Textures::ID::DIRT);
+	blocks_frames[static_cast<int>(Textures::ID::DIRT) - 1][1] = texture_holder.get(Textures::ID::DIRT1);
+	blocks_frames[static_cast<int>(Textures::ID::DIRT) - 1][2] = texture_holder.get(Textures::ID::DIRT2);
+	blocks_frames[static_cast<int>(Textures::ID::DIRT) - 1][3] = texture_holder.get(Textures::ID::DIRT3);
+	blocks_frames[static_cast<int>(Textures::ID::DIRT) - 1][4] = texture_holder.get(Textures::ID::DIRT4);
+
+	blocks_frames[static_cast<int>(Textures::ID::IRON) - 1][0] = texture_holder.get(Textures::ID::IRON);
+	blocks_frames[static_cast<int>(Textures::ID::IRON) - 1][1] = texture_holder.get(Textures::ID::IRON1);
+	blocks_frames[static_cast<int>(Textures::ID::IRON) - 1][2] = texture_holder.get(Textures::ID::IRON2);
+	blocks_frames[static_cast<int>(Textures::ID::IRON) - 1][3] = texture_holder.get(Textures::ID::IRON3);
+	blocks_frames[static_cast<int>(Textures::ID::IRON) - 1][4] = texture_holder.get(Textures::ID::IRON4);
+
+	blocks_frames[static_cast<int>(Textures::ID::WOOD) - 1][0] = texture_holder.get(Textures::ID::WOOD);
+	blocks_frames[static_cast<int>(Textures::ID::WOOD) - 1][1] = texture_holder.get(Textures::ID::WOOD1);
+	blocks_frames[static_cast<int>(Textures::ID::WOOD) - 1][2] = texture_holder.get(Textures::ID::WOOD2);
+	blocks_frames[static_cast<int>(Textures::ID::WOOD) - 1][3] = texture_holder.get(Textures::ID::WOOD3);
+	blocks_frames[static_cast<int>(Textures::ID::WOOD) - 1][4] = texture_holder.get(Textures::ID::WOOD4);
+
+	blocks_frames[static_cast<int>(Textures::ID::LEAVES) - 1][0] = texture_holder.get(Textures::ID::LEAVES);
+	blocks_frames[static_cast<int>(Textures::ID::LEAVES) - 1][1] = texture_holder.get(Textures::ID::LEAVES1);
+	blocks_frames[static_cast<int>(Textures::ID::LEAVES) - 1][2] = texture_holder.get(Textures::ID::LEAVES2);
+	blocks_frames[static_cast<int>(Textures::ID::LEAVES) - 1][3] = texture_holder.get(Textures::ID::LEAVES3);
+	blocks_frames[static_cast<int>(Textures::ID::LEAVES) - 1][4] = texture_holder.get(Textures::ID::LEAVES4);
+
+	blocks_frames[static_cast<int>(Textures::ID::GRASS) - 1][0] = texture_holder.get(Textures::ID::GRASS);
+	blocks_frames[static_cast<int>(Textures::ID::GRASS) - 1][1] = texture_holder.get(Textures::ID::GRASS1);
+	blocks_frames[static_cast<int>(Textures::ID::GRASS) - 1][2] = texture_holder.get(Textures::ID::GRASS2);
+	blocks_frames[static_cast<int>(Textures::ID::GRASS) - 1][3] = texture_holder.get(Textures::ID::GRASS3);
+	blocks_frames[static_cast<int>(Textures::ID::GRASS) - 1][4] = texture_holder.get(Textures::ID::GRASS4);
 }
 
 std::string World::get_id_name(Textures::ID id)
@@ -195,7 +242,7 @@ std::string World::get_id_name(Textures::ID id)
 		break;
 
 	default:
-		return "ERRORID";
+		return "NUL";
 		break;
 	}
 }
@@ -379,6 +426,8 @@ void World::destroy_block(sf::Vector2i m_pos, sf::Vector2f p_pos)
 	// std::cout << std::endl << "distance " << sqrt(((p_pos.x - pos.x) * (p_pos.x - pos.x) + (p_pos.y - pos.y) * (p_pos.y - pos.y))) << std::endl;
 	if (static_cast<int>(sqrt((((p_pos.x - m_pos.x) * (p_pos.x - m_pos.x) + (p_pos.y - m_pos.y) * (p_pos.y - m_pos.y))))) > (7 * 32)) return;
 	// std::cout << std::endl << " destroying " << std::endl;
+
+
 
 	// choosing one of 4 corners of player to pull checking vector
 	// left-top, left-bot, right-top, right-bot
@@ -646,16 +695,55 @@ void World::destroy_block(sf::Vector2i m_pos, sf::Vector2f p_pos)
 		rb = true;
 	}
 
+	if (static_cast<int>(tilemap[m_pos.y / 32][m_pos.x / 32]->get_id() > 7))
+	{
+		std::cout << "prev fixed" << std::endl;
+		Textures::ID id_save = tilemap[m_pos.y / 32][m_pos.x / 32]->get_id();
+		delete tilemap[m_pos.y / 32][m_pos.x / 32];
+		tilemap[m_pos.y / 32][m_pos.x / 32] = nullptr;
+		add_ground_item(id_save, sf::Vector2f(m_pos.x, m_pos.y));
+		return;
+	}
 
+	static int time_slower = 0;
+	static bool prev_destroyed = false;
+	static int x_save = m_pos.y / 32, y_save = m_pos.x / 32;
+	static int counter = 0;
+	static Textures::ID id_save = tilemap[x_save][y_save]->get_id();
 
+	time_slower++;
 
+	if (time_slower == 5)
+	{
+		if (x_save != m_pos.y / 32 || y_save != m_pos.x / 32)
+		{
+			counter = 0;
+			if (!prev_destroyed) {
+				tilemap[x_save][y_save]->set_id(id_save);
+				prev_destroyed = false;
+			}
+			x_save = m_pos.y / 32;
+			y_save = m_pos.x / 32;
+			id_save = tilemap[m_pos.y / 32][m_pos.x / 32]->get_id();
+		}
 
+		if (counter == 4)
+		{
+			counter = 0;
+			delete tilemap[m_pos.y / 32][m_pos.x / 32];
+			tilemap[m_pos.y / 32][m_pos.x / 32] = nullptr;
+			add_ground_item(id_save, sf::Vector2f(m_pos.x, m_pos.y));
+			prev_destroyed = true;
+		}
 
-
-	Textures::ID id = tilemap[m_pos.y / 32][m_pos.x / 32]->get_id();
-	delete tilemap[m_pos.y / 32][m_pos.x / 32];
-	tilemap[m_pos.y / 32][m_pos.x / 32] = nullptr;
-	add_ground_item(id, sf::Vector2f(m_pos.x, m_pos.y));
+		else
+		{
+			prev_destroyed = false;
+			counter++;
+			tilemap[x_save][y_save]->set_frame_texture(blocks_frames[static_cast<int>(id_save) - 1][counter]);
+		}
+		time_slower = 0;
+	}
 }
 
 bool World::place_block(sf::Vector2i m_pos, Textures::ID id, sf::Vector2f p_pos)
