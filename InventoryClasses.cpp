@@ -720,7 +720,9 @@ bool Inventory::inventoryContains(Textures::ID id, int numb) {
 
 void Inventory::remove_invent_item(Textures::ID id, int count) {
 	for (int i = 0; i < 30; i++) {
-		if (inv_items[i].get_id() == id) {
+		if (inv_items[i].get_id() == id && inv_items[i].get_amount()>0) {
+			//std::cout << "Removing" << id << " " << count << std::endl;
+			//std::cout << "was" << inv_items[i].get_amount() << " become " << inv_items[i].get_amount() - count << std::endl;
 			inv_items[i].set_amount(inv_items[i].get_amount() - count);
 			updateCrafts();
 			break;
