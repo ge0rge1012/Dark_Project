@@ -675,15 +675,50 @@ void Game::start_game()
 	texture_holder.load(Textures::STICK, "media/textures/instruments/stickv2.png", 1);
 
 	texture_holder.load(Textures::ORANGE,   "media/textures/blocks/block_orange/block_orange_32_32.png", 2);
+	texture_holder.load(Textures::ORANGE1, "media/textures/blocks/block_orange/frames_block_orange/block_orange_2.png", 2);
+	texture_holder.load(Textures::ORANGE2, "media/textures/blocks/block_orange/frames_block_orange/block_orange_3.png", 2);
+	texture_holder.load(Textures::ORANGE3, "media/textures/blocks/block_orange/frames_block_orange/block_orange_4.png", 2);
+	texture_holder.load(Textures::ORANGE4, "media/textures/blocks/block_orange/frames_block_orange/block_orange_5.png", 2);
+
 	texture_holder.load(Textures::ROCK,     "media/textures/blocks/block_rock/block_rock_32_32v2.png", 2);
+	texture_holder.load(Textures::ROCK1, "media/textures/blocks/block_rock/frames_block_rock/block_rock_2.png", 2);
+	texture_holder.load(Textures::ROCK2, "media/textures/blocks/block_rock/frames_block_rock/block_rock_3.png", 2);
+	texture_holder.load(Textures::ROCK3, "media/textures/blocks/block_rock/frames_block_rock/block_rock_4.png", 2);
+	texture_holder.load(Textures::ROCK4, "media/textures/blocks/block_rock/frames_block_rock/block_rock_5.png", 2);
+
 	texture_holder.load(Textures::DIRT,     "media/textures/blocks/block_dirt/block_dirt_32_32.png", 2);
-	texture_holder.load(Textures::IRON,		"media/textures/blocks/block_iron/block_iron_32_32.png",2);
-	texture_holder.load(Textures::WOOD,     "media/textures/blocks/block_tree/block_tree.png",2);
-	texture_holder.load(Textures::LEAVES,   "media/textures/blocks/block_leaves/leaves_orange/leaves_orange.png",2);
+	texture_holder.load(Textures::DIRT1, "media/textures/blocks/block_dirt/frames_block_dirt/block_dirt_2.png", 2);
+	texture_holder.load(Textures::DIRT2, "media/textures/blocks/block_dirt/frames_block_dirt/block_dirt_3.png", 2);
+	texture_holder.load(Textures::DIRT3, "media/textures/blocks/block_dirt/frames_block_dirt/block_dirt_4.png", 2);
+	texture_holder.load(Textures::DIRT4, "media/textures/blocks/block_dirt/frames_block_dirt/block_dirt_5.png", 2);
+
+	texture_holder.load(Textures::IRON,		"media/textures/blocks/block_rock_iron/block_rock_iron.png", 2);
+	texture_holder.load(Textures::IRON1, "media/textures/blocks/block_rock_iron/frames_block_rock_iron/block_rock_iron_2.png", 2);
+	texture_holder.load(Textures::IRON2, "media/textures/blocks/block_rock_iron/frames_block_rock_iron/block_rock_iron_3.png", 2);
+	texture_holder.load(Textures::IRON3, "media/textures/blocks/block_rock_iron/frames_block_rock_iron/block_rock_iron_4.png", 2);
+	texture_holder.load(Textures::IRON4, "media/textures/blocks/block_rock_iron/frames_block_rock_iron/block_rock_iron_5.png", 2);
+
+	texture_holder.load(Textures::WOOD,     "media/textures/blocks/block_tree/block_tree.png", 2);
+	texture_holder.load(Textures::WOOD1, "media/textures/blocks/block_tree/frames_tree_dark/block_tree_2.png", 2);
+	texture_holder.load(Textures::WOOD2, "media/textures/blocks/block_tree/frames_tree_dark/block_tree_3.png", 2);
+	texture_holder.load(Textures::WOOD3, "media/textures/blocks/block_tree/frames_tree_dark/block_tree_4.png", 2);
+	texture_holder.load(Textures::WOOD4, "media/textures/blocks/block_tree/frames_tree_dark/block_tree_5.png", 2);
+
+	texture_holder.load(Textures::LEAVES,   "media/textures/blocks/block_leaves/leaves_orange/leaves_orange.png", 2);
+	texture_holder.load(Textures::LEAVES1, "media/textures/blocks/block_leaves/leaves_orange/frames_block_leaves_orange/leaves_orange_2.png", 2);
+	texture_holder.load(Textures::LEAVES2, "media/textures/blocks/block_leaves/leaves_orange/frames_block_leaves_orange/leaves_orange_3.png", 2);
+	texture_holder.load(Textures::LEAVES3, "media/textures/blocks/block_leaves/leaves_orange/frames_block_leaves_orange/leaves_orange_4.png", 2);
+	texture_holder.load(Textures::LEAVES4, "media/textures/blocks/block_leaves/leaves_orange/frames_block_leaves_orange/leaves_orange_5.png", 2);
+
+	texture_holder.load(Textures::GRASS, "media/textures/blocks/grass/grass_32_32.png", 2);
+	texture_holder.load(Textures::GRASS1, "media/textures/blocks/grass/frames_grass/grass_1.png", 2);
+	texture_holder.load(Textures::GRASS2, "media/textures/blocks/grass/frames_grass/grass_2.png", 2);
+	texture_holder.load(Textures::GRASS3, "media/textures/blocks/grass/frames_grass/grass_3.png", 2);
+	texture_holder.load(Textures::GRASS4, "media/textures/blocks/grass/frames_grass/grass_4.png", 2);
+
 	texture_holder.load(Textures::LADDER_LEFT, "media/textures/blocks/ladder/ladder_left.png", 2);
 	texture_holder.load(Textures::LADDER_RIGHT, "media/textures/blocks/ladder/ladder_right.png", 2);
 	texture_holder.load(Textures::LADDER, "media/textures/blocks/ladder/ladder.png", 2);
-	texture_holder.load(Textures::GRASS, "media/textures/blocks/grass/grass_32_32.png", 2);
 	texture_holder.load(Textures::WORKBENCH, "media/textures/blocks/block_workbench/workbench.png", 2);
 	texture_holder.load(Textures::BOX, "media/textures/blocks/block_box/box.png", 2);
 	texture_holder.load(Textures::BAKE, "media/textures/blocks/block_bake/bake.png", 2);
@@ -742,6 +777,7 @@ Game::Game() : g_window(sf::VideoMode(mysetts.get_width(), mysetts.get_height())
 	inventory.add_item_fast(Textures::LEAVES, 666);
 	inventory.add_item_fast(Textures::BAKE, 100);
 	inventory.add_item_fast(Textures::WORKBENCH, 15);
+	inventory.add_item_fast(Textures::IRON, 15);
 	inventory.add_invent_item(Textures::WOOD, 23);
 	inventory.add_invent_item(Textures::ORANGE, 20);
 	inventory.add_invent_item(Textures::WOOD, 20);
@@ -850,7 +886,7 @@ void Game::handle_events(sf::Keyboard::Key key, bool isPressed)
 		key == sf::Keyboard::S ||
 		key == sf::Keyboard::D)
 		player->key_reaction(key, isPressed);
-	if ((static_cast<int>(key) >= sf::Keyboard::Num1 && static_cast<int>(key) <= static_cast<int>(sf::Keyboard::Num9)) && isPressed)
+	if ((static_cast<int>(key) >= sf::Keyboard::Num0 && static_cast<int>(key) <= static_cast<int>(sf::Keyboard::Num9)) && isPressed)
 		inventory.key_reaction(key);
 
 	if (key == sf::Keyboard::E && isPressed) { //Inventory on E button

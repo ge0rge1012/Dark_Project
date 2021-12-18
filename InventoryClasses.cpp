@@ -117,34 +117,19 @@ void Inventory::key_reaction(sf::Keyboard::Key key)
 {
 	if (!inventoryOn)
 	{
-		bool first_current = false;
-		if (current_item < 0 || current_item > 10)
-		{
-			current_item = key;
-			if (current_item == 0) current_item = 10;
-			first_current = true;
-		}
+		int prev_cur = current_item;
+		current_item = static_cast<int>(key) - 26;
+		if (current_item == 0) current_item = 10;
 
-		if (first_current)
+		for (int j = 20; j < 30; j++)
 		{
-			current_item = static_cast<int>(key) - 26;
-			if (current_item == 0) current_item = 10;
-		}
-
-		else
-		{
-			int prev_cur = current_item;
-			current_item = static_cast<int>(key) - 26;
-
-			for (int j = 20; j < 30; j++)
+			if (j == prev_cur)
 			{
-				if (j == prev_cur)
-				{
-					inv_items[j].set_scale(sf::Vector2f(0.3, 0.3));
-					break;
-				}
+				inv_items[j].set_scale(sf::Vector2f(0.3, 0.3));
+				break;
 			}
 		}
+		
 
 		for (int j = 20; j < 30; j++)
 		{
@@ -311,7 +296,7 @@ int Inventory::set_current(int num)
 
 Textures::ID Inventory::get_current()
 {
-	if (current_item > 9 || current_item < 0 || inv_items[current_item + 19].get_amount() == 0)
+	if (current_item > 10 || current_item < 1 || inv_items[current_item + 19].get_amount() == 0)
 		return Textures::ID::NUL;
 
 	return inv_items[current_item + 19].get_id();
