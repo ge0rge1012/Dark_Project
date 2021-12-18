@@ -58,8 +58,7 @@ public:
 	bool get_invent_on();
 	bool is_in_hand();
 
-	void change_slots(int new_slot, int old_slot);
-	void insertInBake(int invSlot, int bakeSlot);
+
 	bool is_slot_empty(int slot);
 	bool inventoryContains(Textures::ID id, int numb);
 
@@ -69,7 +68,8 @@ public:
 	int getInvSlotNow(sf::Vector2i m_position);
 	int getCraftSlotNow(sf::Vector2i m_position);
 	int getBakeSlotNow(sf::Vector2i m_position);
-
+	int getBoxSlotNow(sf::Vector2i m_position);
+	
 	void updateCrafts();
 	void craftItem(int slot);
 	bool isCraftable(Textures::ID id);
@@ -86,6 +86,9 @@ public:
 
 	bool isBakeOn();
 	void turnBakeOn(bool on);
+
+	bool isBoxOn();
+	void turnBoxOn(bool on);
 
 	void setTempItem(std::string arr, int slot);
 	void setFromTemp(std::string arr, int slot);
@@ -104,6 +107,7 @@ private:
 	bool inventoryOn = false;
 	bool workbenchOn = false;
 	bool bakeOn = false;
+	bool boxOn = false;
 	
 	bool in_hand = false;
 
@@ -112,7 +116,7 @@ private:
 	InvItem tempItem;
 
 	std::array<InvItem, 10> boxItems;
-	std::array<sf::RectangleShape, 2> boxSlots;
+	std::array<sf::RectangleShape, 10> boxSlots;
 
 	std::array<InvItem, 2> bakeItems;
 	std::array<sf::RectangleShape, 2> bakeSlots;
