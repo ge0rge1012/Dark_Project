@@ -844,6 +844,16 @@ void Game::process_events()
 		case  sf::Event::Closed:
 			g_window.close();
 			break;
+		
+		case sf::Event::MouseButtonPressed:
+			mouse_flagger(event.key.code, true);
+			mouse_processor();
+			break;
+
+		case sf::Event::MouseButtonReleased:
+			mouse_flagger(event.key.code, false);
+			mouse_processor();
+			break;
 
 		default:
 			mouse_processor();
@@ -852,8 +862,15 @@ void Game::process_events()
 	}
 }
 
+void Game::mouse_flagger(sf::Keyboard::Key key, bool isPressed)
+{
+	if (key == sf::Mouse::Button::Left)
+		left_is_pressed = isPressed;
+}
+
 void Game::update(const sf::Time delta_time)
 {
+	dest_bl();
 	raising_items();
 	merging_ground_items();
 	player->screen_collision(mysetts.get_width(), mysetts.get_height());
@@ -901,6 +918,17 @@ void Game::handle_events(sf::Keyboard::Key key, bool isPressed)
 	if (inventory.get_invent_on() && key == sf::Keyboard::Escape && isPressed) {
 		inventory.turnGUI(false);
 	}
+}
+
+void Game::dest_bl(bool changed, sf::Vector2i pos)
+{
+	static sf::Vector2i real_pos;
+	if (changed)		
+	{
+		real_pos = pos;
+	}
+	if (!inventory.get_invent_on() && chunk.tilemap[real_pos.y / 32][real_pos.x / 32] != nullptr && left_is_pressed)
+		chunk.destroy_block(real_pos, player->get_position());
 }
 
 void Game::mouse_processor()
@@ -1013,11 +1041,11 @@ void Game::mouse_processor()
 		}
 		
 	}
-	else if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	else if (chunk.tilemap[real_pos.y / 32][real_pos.x / 32] != nullptr && left_is_pressed)
 	{
 		//std::cout << "mousecoord " << mouse_pos.x << " " << mouse_pos.y << std::endl;
 		//std::cout << "realcoord " << real_pos.x << " " << real_pos.y << std::endl;
-		chunk.destroy_block(real_pos, player->get_position());
+		dest_bl(true, real_pos);
 	}
 
 	else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))

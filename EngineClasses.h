@@ -104,6 +104,8 @@ private:
 
 	void handle_events(sf::Keyboard::Key key, bool isPressed);
 	void mouse_processor();
+	void mouse_flagger(sf::Keyboard::Key key, bool isPressed);
+	void dest_bl(bool changed = false, sf::Vector2i pos = sf::Vector2i(0, 0));
 
 
 private:
@@ -114,6 +116,7 @@ private:
 	NickName nick_under_head;
 	sf::Sprite menu;
 	sf::Sprite earthbackground;
+	bool left_is_pressed = false;
 
 	// can be vectors of different objects
 	Player* player;
