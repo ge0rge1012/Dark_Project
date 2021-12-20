@@ -395,7 +395,25 @@ void World::spawn_resources() {
 }
 
 void World::spawn_dungeon() {
-	//stmnd dont know how dung should looks like, so waiting for info from Said.
+	int dungeon_rand_y = random_number.get_random(0, 2);
+	int dungeon_rand_x = random_number.get_random(60, WORLD_HEIGHT - 69);
+	for (int i = 0; i < 10; i++) {
+		dungeon_rand_x = dungeon_rand_x + 1;
+		dungeon_rand_y = 0;
+		 for (int j = 0; j < 15; j++) 
+			{
+	if (tilemap[dungeon_rand_x][dungeon_rand_y] != nullptr)
+		 if ((tilemap[dungeon_rand_x][dungeon_rand_y]->get_id() == Textures::ID::ROCK)||
+			 (tilemap[dungeon_rand_x][dungeon_rand_y]->get_id() == Textures::ID::IRON))
+		 {
+				delete_block(dungeon_rand_x, dungeon_rand_y);
+				
+				dungeon_rand_y = dungeon_rand_y + 1;		 
+		 }
+		
+			}
+	}
+	add_enemy(sf::Vector2f( (dungeon_rand_y -10) * 32.f, dungeon_rand_x * 32.f), Textures::ID::BOSS);
 }
 
 void World::generate_world() {
@@ -409,6 +427,7 @@ void World::generate_world() {
 	for (int i = 0; i < random_number.get_random(10, 20); i++) {
 		create_mountain();
 	}
+	spawn_dungeon();
 	spawn_resources();
 	create_cave_right(40, random_number.get_random(25, 60));
 
@@ -910,6 +929,10 @@ Enemy::Enemy(sf::Vector2f position, Textures::ID id)
 	if (type == Textures::ID::GREY)
 	{
 		character.setTextureRect(sf::IntRect(0, 0, 32, 29));
+		enemy_speed /= 2;
+	}
+	if (type == Textures::ID::BOSS)
+	{
 		enemy_speed /= 2;
 	}
 }
