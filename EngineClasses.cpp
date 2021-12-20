@@ -182,7 +182,7 @@ void Player::update_statement(const sf::Time delta_time, const World& chunk)
 		movement.x -= player_speed;
 		character.setTexture(*it);
 		// character.setTexture(plL);
-		character.setTextureRect(sf::IntRect(32, 0, -32, 60));
+		if (!moving_by_enemie) character.setTextureRect(sf::IntRect(32, 0, -32, 60));
 		time_counter += 16 * delta_time.asSeconds();
 	}
 	if (isMovingRigth) {
@@ -194,7 +194,7 @@ void Player::update_statement(const sf::Time delta_time, const World& chunk)
 
 		movement.x += player_speed;
 		character.setTexture(*it);
-		character.setTextureRect(sf::IntRect(0, 0, 32, 60));
+		if (!moving_by_enemie) character.setTextureRect(sf::IntRect(0, 0, 32, 60));
 		time_counter += 16 * delta_time.asSeconds();
 	}
 
@@ -349,6 +349,70 @@ void Player::screen_collision(int win_width, int win_height)
 Game* Game::game_ptr = nullptr;  // because we can't initialize static nonconst variables inside of a class
 
 Game::~Game() { delete game_ptr;  game_ptr = nullptr; }
+
+void Game::enemy_crashing()
+{
+	static int frames_counter = 0;
+	static bool intersectedR = false;
+	static bool intersectedL = false;
+	static bool once = false;
+	for (auto it = chunk.enemies.begin(); it != chunk.enemies.end(); it++)
+	{
+		if (player->getGlobalBounds().intersects((*it).getGlobalBounds()))
+		{
+			if (player->getplayercoordinateX() < (*it).getenemycoordinateX())
+			{
+				player->key_reaction(sf::Keyboard::A, true);
+				player->key_reaction(sf::Keyboard::W, true);
+				intersectedR = true;
+				intersectedL = false;
+				once = true;
+				player->moving_by_enemie = true;
+				break;
+			}
+			
+			else if (player->getplayercoordinateX() > (*it).getenemycoordinateX())
+			{
+				player->key_reaction(sf::Keyboard::D, true);
+				player->key_reaction(sf::Keyboard::W, true); 
+				intersectedL = true;
+				intersectedR = false;
+				once = true;
+				player->moving_by_enemie = true;
+				break;
+			}
+			
+			else
+			{
+				intersectedR = false;
+				intersectedL = false;
+			}
+		}
+	}
+	
+	if (frames_counter >= 5 && once)
+	{
+		frames_counter = 0;
+		if (!intersectedR)
+		{
+			player->key_reaction(sf::Keyboard::D, false);
+			player->key_reaction(sf::Keyboard::W, false);
+			std::cout << "workingR" << "std::endl";
+		}
+
+		if (!intersectedL)
+		{
+			player->key_reaction(sf::Keyboard::A, false);
+			player->key_reaction(sf::Keyboard::W, false);
+			std::cout << "workingL" << "std::endl";
+		}
+		once = false;
+		player->moving_by_enemie = false;
+	}
+
+	else if (frames_counter == 1000) frames_counter = 0;
+	frames_counter++;
+}
 
 void Game::raising_items()
 {
@@ -873,6 +937,7 @@ void Game::update(const sf::Time delta_time)
 	dest_bl();
 	raising_items();
 	merging_ground_items();
+	enemy_crashing();
 	player->screen_collision(mysetts.get_width(), mysetts.get_height());
 	player->update_statement(delta_time, chunk);
 

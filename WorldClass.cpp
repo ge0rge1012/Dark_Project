@@ -1392,3 +1392,8 @@ void GroundItem::update_statement(const sf::Time delta_time, const World& chunk)
 		}
 	sprite.move(movement* delta_time.asSeconds());
 }
+
+sf::FloatRect Enemy::getGlobalBounds()
+{
+	return sf::FloatRect(character.getGlobalBounds());
+}

@@ -137,6 +137,8 @@ private:
 	bool isMovingLeft = false;
 	bool isMovingRigth = false;
 	bool onGround = false;
+	
+	int hp = 50;
 
 	float gravity = 9;             // velocity of gravityAccum increasing
 	float gravityAccum = 0;        // the speed of falling down because of gravitation, is increasing
@@ -157,6 +159,7 @@ public:
 	void key_reaction(sf::Keyboard::Key key, bool isPressed);
 	float getenemycoordinateX();
 	float getenemycoordinateY();
+	sf::FloatRect getGlobalBounds();
 };
 
 //____________________________________________________________________
