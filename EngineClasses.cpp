@@ -1131,7 +1131,9 @@ void Game::mouse_processor()
 				if (!inventory.get_invent_on()) {
 					inventory.turnGUI(true);
 					//inventory.loadBox(real_pos);
+					inventory.setOpenedBoxID(real_pos);
 					inventory.turnBoxOn(true);
+
 				}
 			}
 

@@ -744,6 +744,10 @@ bool Inventory::isBoxOn() {
 }
 void Inventory::turnBoxOn(bool on) {
 	boxOn = on;
+	if (on == false)
+		loadFromOpenedBox();
+	if (on == true)
+		loadInOpenedBox();
 }
 
 bool Inventory::isItemOptionsOn() {
@@ -762,10 +766,10 @@ void Inventory::drawInventoryBack(sf::RenderWindow& window) {
 void Inventory::turnGUI(bool on) {
 	inventoryOn = on;
 	if (on == false) {
-		itemOptionsOn = false;
-		workbenchOn = false;
-		bakeOn = false;
-		boxOn = false;
+		turnItemOptions(false);
+		turnWorkbenchOn(false);
+		turnBakeOn(false);
+		turnBoxOn(false);
 	}
 }
 
@@ -793,9 +797,40 @@ void Inventory::addBoxCoords(sf::Vector2i m_pos) {
 	coords.x = m_pos.y / 32;
 	coords.y = m_pos.x / 32;
 
-	boxesCoords.push_back(coords);
+	BoxItems items;
+	InvItem invItem(Textures::DIRT, 0);
+	for (int i = 0; i < 10; i++) {
+		items.items[i] = invItem;
+	}
 
-	std::cout << "added chest at coors: " << boxesCoords[0].x << " " << boxesCoords[0].y << std::endl;
+	boxesCoords.push_back(coords);
+	boxesItems.push_back(items);
+
+	std::cout << "added chest at coors: " << boxesCoords[boxesCoords.size()-1].x 
+		<< " " << boxesCoords[boxesCoords.size() - 1].y << std::endl;
+	std::cout << "with items:" << std::endl;
+	for (int i = 0; i < 10; i++) {
+		std::cout << boxesItems[boxesCoords.size() - 1].items[i].get_amount() << std::endl;
+	}
+}
+
+void Inventory::setOpenedBoxID(sf::Vector2i m_pos) {
+	for (int i = 0; i < boxesCoords.size(); i++) {
+		if (boxesCoords[i].x == m_pos.y / 32 && boxesCoords[i].y == m_pos.x / 32)
+			openedBoxID = i;
+	}
+}
+
+void Inventory::loadInOpenedBox() { //loading items from boxHolder to drawing slots
+	for (int i = 0; i < 10; i++) {
+		boxItems[i] = boxesItems[openedBoxID].items[i];
+	}
+}
+
+void Inventory::loadFromOpenedBox() { //loading items from drawing slots to the boxHolder
+	for (int i = 0; i < 10; i++) {
+		boxesItems[openedBoxID].items[i] = boxItems[i];
+	}
 }
 
 void Inventory::craftItem(int slot) {
