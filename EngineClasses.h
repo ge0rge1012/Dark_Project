@@ -73,6 +73,8 @@ public:
 	float getplayercoordinateY();
 	sf::Vector2f get_position();
 	sf::FloatRect getGlobalBounds();
+
+	bool moving_by_enemie = false;
 };
 
 class Game
@@ -85,8 +87,7 @@ public:
 	static Game* get_game_object();        // for singleton
 	Game(Game& other) = delete;            // to prevent copies for singleton
 	void operator=(const Game&) = delete;  // for singleton
-	void raising_items();
-	void merging_ground_items();
+	
 
 private:
 	void run();                  // starting game loop (main loop)
@@ -101,6 +102,11 @@ private:
 	void update(const sf::Time delta_time);                // making changes in objects (if smth happens or keys are pressed)
 	void render();                                         // main rendering function, drawing everything
 	void draw_objects();
+
+	void raising_items();
+	void merging_ground_items();
+
+	void enemy_crashing();
 
 	void handle_events(sf::Keyboard::Key key, bool isPressed);
 	void mouse_processor();
