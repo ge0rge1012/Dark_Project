@@ -310,9 +310,9 @@ void World::create_cave_right(int x, int y) {
 	for (int i = x; i < x + cave_height; i++) {
 		int cave_width = random_number.get_random(6, 8);
 		for (int j = y; j < y + cave_width; j++) {
-			if (i>0 && i<145 && j>0 && j<1000)
+			if (i>1 && i<145 && j>1 && j<998)
 				delete_block(i-1, j-1);
-			if (i>0 && i<145 && j>0 && j < 1000)
+			if (i>0 && i<145 && j>0 && j < 998)
 				delete_block(i, j);
 		}	
 
@@ -333,9 +333,9 @@ void World::create_cave_left(int x, int y) {
 	for (int i = x; i < x + cave_height; i++) {
 		int cave_width = random_number.get_random(6, 8);
 		for (int j = y; j > y - cave_width; j--) {
-			if (i > 0 && i < 145 && j>0 && j < 1000)
+			if (i > 1 && i < 145 && j>1 && j < 998)
 				delete_block(i - 1, j + 1);
-			if (i > 0 && i < 145 && j>0 && j < 1000)
+			if (i > 0 && i < 145 && j>0 && j < 998)
 				delete_block(i, j);
 		}
 
@@ -444,8 +444,10 @@ void World::generate_world() {
 
 void World::delete_block(int x, int y)
 {
-	delete tilemap[x][y];
-	tilemap[x][y] = nullptr;
+	if ((x > 0 && x < 150) && (y > 0 && y < 1000)) {
+		delete tilemap[x][y];
+		tilemap[x][y] = nullptr;
+	}
 }
 
 void World::destroy_block(sf::Vector2i m_pos, sf::Vector2f p_pos)
