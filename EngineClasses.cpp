@@ -658,6 +658,7 @@ void Game::start_game()
 	texture_holder.load(Textures::VAMPIRE7, "media/textures/animals/frames_gg_go/gg_go_8.png", 0);
 
 	texture_holder.load(Textures::GREY,     "media/textures/animals/skeleton_grey.png", 0);
+	texture_holder.load(Textures::BOSS,     "media/textures/animals/penisman.png", 0);
 	texture_holder.load(Textures::MENU, "media/images/backgroundv1.png", 0);
 	texture_holder.load(Textures::INVENTORY, "media/inventory_450_250.png", 0);
 	texture_holder.load(Textures::SLOT, "media/textures/instruments/inventory_set.png", 0);
