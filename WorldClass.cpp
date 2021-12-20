@@ -713,7 +713,7 @@ void World::destroy_block(sf::Vector2i m_pos, sf::Vector2f p_pos)
 
 	time_slower++;
 
-	if (time_slower == 5)
+	if (time_slower == 6)
 	{
 		if (x_save != m_pos.y / 32 || y_save != m_pos.x / 32)
 		{
