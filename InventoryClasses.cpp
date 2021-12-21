@@ -822,15 +822,17 @@ void Inventory::setOpenedBoxID(sf::Vector2i m_pos) {
 }
 
 void Inventory::loadInOpenedBox() { //loading items from boxHolder to drawing slots
-	for (int i = 0; i < 10; i++) {
-		boxItems[i] = boxesItems[openedBoxID].items[i];
-	}
+	if (openedBoxID < boxesItems.size())
+		for (int i = 0; i < 10; i++) {
+			boxItems[i] = boxesItems[openedBoxID].items[i];
+		}
 }
 
 void Inventory::loadFromOpenedBox() { //loading items from drawing slots to the boxHolder
-	for (int i = 0; i < 10; i++) {
-		boxesItems[openedBoxID].items[i] = boxItems[i];
-	}
+	if (openedBoxID<boxesItems.size())
+		for (int i = 0; i < 10; i++) {
+			boxesItems[openedBoxID].items[i] = boxItems[i];
+		}
 }
 
 void Inventory::deleteBox() {
