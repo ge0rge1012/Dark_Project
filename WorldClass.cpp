@@ -806,6 +806,7 @@ void World::add_ground_item(Textures::ID id, sf::Vector2f coord, int kolvo)
 	gitems.push_back(GroundItem(id, coord, kolvo));
 }
 
+
 void World::add_ground_item(Textures::ID id, sf::Vector2f coord)
 {
 	gitems.push_back(GroundItem(id, coord));
@@ -1232,6 +1233,8 @@ GroundItem::GroundItem(Textures::ID id, sf::Vector2f coord) : id(id)
 
 GroundItem::GroundItem(Textures::ID id, sf::Vector2f coord, int kolvo)
 {
+
+	std::cout << World::get_id_name(id) << std::endl;
 	amount = kolvo;
 
 	sf::Texture& texture = texture_holder.get(id);

@@ -833,6 +833,17 @@ void Inventory::loadFromOpenedBox() { //loading items from drawing slots to the 
 	}
 }
 
+void Inventory::deleteBox() {
+
+	boxesCoords.erase(boxesCoords.begin()+openedBoxID);
+
+	boxesItems.erase(boxesItems.begin() + openedBoxID);
+}
+
+InvItem Inventory::getItemByIterator(int iterator) {
+	return boxesItems[openedBoxID].items[iterator];
+}
+
 void Inventory::craftItem(int slot) {
 	if (slot == 0 && isCraftable(Textures::WORKBENCH))
 	{

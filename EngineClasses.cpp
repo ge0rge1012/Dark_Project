@@ -993,8 +993,32 @@ void Game::dest_bl(bool changed, sf::Vector2i pos)
 	{
 		real_pos = pos;
 	}
-	if (!inventory.get_invent_on() && chunk.tilemap[real_pos.y / 32][real_pos.x / 32] != nullptr && left_is_pressed)
+	sf::Vector2f fRealPos;
+	fRealPos.x = real_pos.x;
+	fRealPos.y = real_pos.y;
+
+	if (!inventory.get_invent_on() && chunk.tilemap[real_pos.y / 32][real_pos.x / 32] != nullptr && left_is_pressed) {
+		if (chunk.tilemap[real_pos.y / 32][real_pos.x / 32]->get_id() == Textures::BOX) {
+			inventory.setOpenedBoxID(real_pos);
+			std::array<InvItem, 10> dropItems;
+			InvItem item(Textures::DIRT, 0);
+			for (int i = 0; i < 10; i++) {
+				dropItems[i] = item;
+			}
+			for (int i = 0; i < 10; i++) {
+				dropItems[i] = inventory.getItemByIterator(i);
+			}
+			for (int i = 0; i < 10; i++) {
+				if (dropItems[i].get_amount() > 0) {
+					chunk.add_ground_item(Textures::WOOD, fRealPos, dropItems[i].get_amount());
+					std::cout << "added grItem " << dropItems[i].get_amount() << std::endl;
+				}
+			}
+			inventory.deleteBox();
+		}
+
 		chunk.destroy_block(real_pos, player->get_position());
+	}
 }
 
 void Game::mouse_processor()

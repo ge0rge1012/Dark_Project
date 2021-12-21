@@ -103,6 +103,8 @@ public:
 	void setFromTemp(std::string arr, int slot);
 
 	void addBoxCoords(sf::Vector2i m_position);
+	void deleteBox();
+	InvItem getItemByIterator(int iterator);
 
 	void setOpenedBoxID(sf::Vector2i m_position);
 	void loadInOpenedBox();
