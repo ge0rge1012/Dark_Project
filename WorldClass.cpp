@@ -1231,7 +1231,7 @@ GroundItem::GroundItem(Textures::ID id, sf::Vector2f coord) : id(id)
 	sprite.setPosition(coord);
 }
 
-GroundItem::GroundItem(Textures::ID id, sf::Vector2f coord, int kolvo)
+GroundItem::GroundItem(Textures::ID id, sf::Vector2f coord, int kolvo) : id(id)
 {
 
 	std::cout << World::get_id_name(id) << std::endl;
