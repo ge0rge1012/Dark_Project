@@ -137,8 +137,10 @@ private:
 	bool isMovingLeft = false;
 	bool isMovingRigth = false;
 	bool onGround = false;
+	bool isALive = true;
 	
-	int hp = 50;
+	int HP = 50;
+	int base_damage = 5;
 
 	float gravity = 9;             // velocity of gravityAccum increasing
 	float gravityAccum = 0;        // the speed of falling down because of gravitation, is increasing
@@ -153,6 +155,7 @@ public:
 
 	void drawU(sf::RenderWindow& window);
 	void update_statement(const sf::Time delta_time, const World& chunk, sf::Vector2f p_coor);
+	void deal_damage(int damage = 0);
 	static bool may_jump_left(const World& chunk, sf::Vector2f p_coor);
 	static bool may_jump_right(const World& chunk, sf::Vector2f p_coor);
 	void screen_collision(int win_width, int win_height);
@@ -160,6 +163,8 @@ public:
 	float getenemycoordinateX();
 	float getenemycoordinateY();
 	sf::FloatRect getGlobalBounds();
+	bool is_alive();
+	Textures::ID get_type();
 };
 
 //____________________________________________________________________

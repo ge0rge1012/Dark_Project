@@ -395,8 +395,8 @@ void World::spawn_resources() {
 }
 
 void World::spawn_dungeon() {
-	int dungeon_rand_y = random_number.get_random(0, 2);
-	int dungeon_rand_x = random_number.get_random(60, WORLD_HEIGHT - 69);
+	int dungeon_rand_y = random_number.get_random(5, 10);
+	int dungeon_rand_x = random_number.get_random(60, 70);
 	for (int i = 0; i < 10; i++) {
 		dungeon_rand_x = dungeon_rand_x + 1;
 		dungeon_rand_y = 0;
@@ -942,11 +942,20 @@ Enemy::Enemy(sf::Vector2f position, Textures::ID id)
 	{
 		character.setTextureRect(sf::IntRect(0, 0, 32, 29));
 		enemy_speed /= 2;
+		HP = 50;
+		base_damage = 5;
 	}
 	if (type == Textures::ID::BOSS)
 	{
 		enemy_speed /= 2;
+		HP = 300;
+		base_damage = 10;
 	}
+}
+
+Textures::ID Enemy::get_type()
+{
+	return type;
 }
 
 void Enemy::drawU(sf::RenderWindow& window)
@@ -1214,6 +1223,23 @@ void Enemy::update_statement(const sf::Time delta_time, const World& chunk, sf::
 	enemy_position.y = character.getGlobalBounds().top;
 }
 
+sf::FloatRect Enemy::getGlobalBounds()
+{
+	return sf::FloatRect(character.getGlobalBounds());
+}
+
+bool Enemy::is_alive()
+{
+	return isALive;
+}
+
+void Enemy::deal_damage(int damage)
+{
+	std::cout << "damaging" << std::endl;
+	HP -= damage;
+	if (HP <= 0) isALive = false;
+}
+
 //____________________________________________________________________
 
 Textures::ID GroundItem::get_id()
@@ -1428,9 +1454,4 @@ void GroundItem::update_statement(const sf::Time delta_time, const World& chunk)
 			}
 		}
 	sprite.move(movement* delta_time.asSeconds());
-}
-
-sf::FloatRect Enemy::getGlobalBounds()
-{
-	return sf::FloatRect(character.getGlobalBounds());
 }

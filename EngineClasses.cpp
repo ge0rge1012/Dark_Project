@@ -65,7 +65,7 @@ Player::Player()
 
 	character.setTexture(*(texts.begin()));
 	character.setTextureRect(sf::IntRect(0, 0, 32, 60));
-	player_position = sf::Vector2f(5*32.f, 45*32.f);
+	player_position = sf::Vector2f(5*32.f, 35*32.f);
 	character.setPosition(player_position);
 
 	//p_hitbox = sf::FloatRect();
@@ -79,6 +79,42 @@ void Player::drawU(sf::RenderWindow& window)
 sf::Vector2f Player::get_position()
 {
 	return player_position;
+}
+
+bool Player::is_alive()
+{
+	return isALive;
+}
+
+void Player::deal_damage(int damage)
+{
+	HP -= damage;
+	if (HP <= 0) isALive = false;
+}
+
+int Player::get_base_damage()
+{
+	return base_damage;
+}
+
+int Player::get_time_after_attack()
+{
+	return time_after_attack;
+}
+
+void Player::set_time_after_attack(int time)
+{
+	time_after_attack = time;
+}
+
+bool Player::is_looking_left()
+{
+	return isLookingLeft;
+}
+
+bool Player::is_looking_right()
+{
+	return isLookingRight;
 }
 
 sf::FloatRect Player::getGlobalBounds()
@@ -104,6 +140,8 @@ void Player::key_reaction(sf::Keyboard::Key key, bool isPressed)
 
 void Player::update_statement(const sf::Time delta_time, const World& chunk)
 {
+	time_after_attack++;
+	if (time_after_attack == 1000) time_after_attack = 0;
 	sf::Vector2f movement(0.f, 0.f);
 	sf::FloatRect nextPos;
 	bool jump = false;
@@ -174,7 +212,7 @@ void Player::update_statement(const sf::Time delta_time, const World& chunk)
 	// if (isMovingDown)  movement.y += player_speed;   // going down by pressing keys, when we have gravity? lol
 	if (isMovingLeft) {
 		if (time_counter >= 8) time_counter = 0;
-		std::cout << std::endl << time_counter << std::endl;
+		// std::cout << std::endl << time_counter << std::endl;
 		auto it = texts.begin();
 		for (int i = 1; i <= time_counter; ++i)
 			it++;
@@ -182,19 +220,29 @@ void Player::update_statement(const sf::Time delta_time, const World& chunk)
 		movement.x -= player_speed;
 		character.setTexture(*it);
 		// character.setTexture(plL);
-		if (!moving_by_enemie) character.setTextureRect(sf::IntRect(32, 0, -32, 60));
+		if (!moving_by_enemie)
+		{
+			character.setTextureRect(sf::IntRect(32, 0, -32, 60));
+			isLookingLeft = true;
+			isLookingRight = false;
+		}
 		time_counter += 16 * delta_time.asSeconds();
 	}
 	if (isMovingRigth) {
 		if (time_counter >= 8) time_counter = 0;
-		std::cout << std::endl << time_counter << std::endl;
+		// std::cout << std::endl << time_counter << std::endl;
 		auto it = texts.begin();
 		for (int i = 1; i <= time_counter; ++i)
 			it++;
 
 		movement.x += player_speed;
 		character.setTexture(*it);
-		if (!moving_by_enemie) character.setTextureRect(sf::IntRect(0, 0, 32, 60));
+		if (!moving_by_enemie)
+		{
+			character.setTextureRect(sf::IntRect(0, 0, 32, 60));
+			isLookingLeft = false;
+			isLookingRight = true;
+		}
 		time_counter += 16 * delta_time.asSeconds();
 	}
 
@@ -339,7 +387,7 @@ void Player::screen_collision(int win_width, int win_height)
 
 	if (character.getPosition().y + character.getGlobalBounds().height > WORLD_HEIGHT*32)
 	{
-		std::cout << "worked";
+		// std::cout << "worked";
 		character.setPosition(character.getPosition().x, WORLD_HEIGHT*32 - character.getGlobalBounds().height);
 	}
 }
@@ -349,6 +397,43 @@ void Player::screen_collision(int win_width, int win_height)
 Game* Game::game_ptr = nullptr;  // because we can't initialize static nonconst variables inside of a class
 
 Game::~Game() { delete game_ptr;  game_ptr = nullptr; }
+
+void Game::remove_dead_enemies()
+{
+	for (auto it = chunk.enemies.begin(); it != chunk.enemies.end(); it++)
+	{
+		if (!(*it).is_alive())
+		{
+			if ( (*it).get_type() == Textures::ID::GREY) 
+				chunk.add_ground_item(Textures::ID::IRON_ING, sf::Vector2f((*it).getenemycoordinateX(), (*it).getenemycoordinateY()));
+
+			else if ((*it).get_type() == Textures::ID::BOSS)
+				chunk.add_ground_item(Textures::ID::ORICHALCUM_ING, sf::Vector2f((*it).getenemycoordinateX(), (*it).getenemycoordinateY()), 5);
+
+			chunk.enemies.erase(it);
+			break;
+		}
+	}
+}
+
+void Game::attack_enemie(sf::Vector2i pos)
+{
+	if (pos == sf::Vector2i(0, 0)) return;
+	if (player->get_time_after_attack() < 5) return;
+	if ( (player->is_looking_left() && pos.x > player->getplayercoordinateX()) 
+	  || (player->is_looking_right() && pos.x < player->getplayercoordinateX()) )
+		return;
+
+	sf::FloatRect attacking_area(pos.x - 10, pos.y - 10, 20, 20);
+	for (auto it = chunk.enemies.begin(); it != chunk.enemies.end(); it++)
+	{
+		if ((*it).getGlobalBounds().intersects(attacking_area))
+		{
+			(*it).deal_damage(player->get_base_damage());
+		}
+	}
+	player->set_time_after_attack(0);
+}
 
 void Game::enemy_crashing()
 {
@@ -397,14 +482,14 @@ void Game::enemy_crashing()
 		{
 			player->key_reaction(sf::Keyboard::D, false);
 			player->key_reaction(sf::Keyboard::W, false);
-			std::cout << "workingR" << "std::endl";
+			// std::cout << "workingR" << "std::endl";
 		}
 
 		if (!intersectedL)
 		{
 			player->key_reaction(sf::Keyboard::A, false);
 			player->key_reaction(sf::Keyboard::W, false);
-			std::cout << "workingL" << "std::endl";
+			// std::cout << "workingL" << "std::endl";
 		}
 		once = false;
 		player->moving_by_enemie = false;
@@ -829,10 +914,10 @@ Game::Game() : g_window(sf::VideoMode(mysetts.get_width(), mysetts.get_height())
 	// chunk.test_world();
 	chunk.generate_world();
 	//chunk.test_world();
-	chunk.add_enemy(sf::Vector2f(5*32.f, 40*32.f), Textures::ID::GREY);
+	// chunk.add_enemy(sf::Vector2f(5*32.f, 40*32.f), Textures::ID::GREY);
 
-	chunk.set_block(42, 5, Textures::ID::LADDER_LEFT);
-	chunk.set_block(43, 5, Textures::ID::LADDER_LEFT);
+	// chunk.set_block(42, 5, Textures::ID::LADDER_LEFT);
+	// chunk.set_block(43, 5, Textures::ID::LADDER_LEFT);
 
 	inventory.add_item_fast(Textures::DIRT, 10);
 	inventory.add_item_fast(Textures::ORANGE, 666);
@@ -939,6 +1024,7 @@ void Game::update(const sf::Time delta_time)
 	raising_items();
 	merging_ground_items();
 	enemy_crashing();
+	remove_dead_enemies();
 	player->screen_collision(mysetts.get_width(), mysetts.get_height());
 	player->update_statement(delta_time, chunk);
 
@@ -1136,6 +1222,11 @@ void Game::mouse_processor()
 		//std::cout << "mousecoord " << mouse_pos.x << " " << mouse_pos.y << std::endl;
 		//std::cout << "realcoord " << real_pos.x << " " << real_pos.y << std::endl;
 		dest_bl(true, real_pos);
+	}
+
+	else if (left_is_pressed)
+	{
+		attack_enemie(real_pos);
 	}
 
 	else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))

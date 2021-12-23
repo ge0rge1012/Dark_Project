@@ -50,9 +50,14 @@ private:
 	bool isMovingLeft = false;
 	bool isMovingRigth = false;
 	bool onGround = false;
+	bool isALive = true;
+	bool isLookingRight = true;
+	bool isLookingLeft = false;
 
 	int HP = 100;
 	int Mind = 100;
+	int base_damage = 10;
+	int time_after_attack = 0;
 
 	float gravity = 9;             // velocity of gravityAccum increasing
 	float gravityAccum = 0;        // the speed of falling down because of gravitation, is increasing
@@ -73,8 +78,15 @@ public:
 	float getplayercoordinateY();
 	sf::Vector2f get_position();
 	sf::FloatRect getGlobalBounds();
+	void deal_damage(int damage = 0);
+	int get_base_damage();
+	int get_time_after_attack();
+	void set_time_after_attack(int time);
 
 	bool moving_by_enemie = false;
+	bool is_looking_left();
+	bool is_looking_right();
+	bool is_alive();
 };
 
 class Game
@@ -107,11 +119,13 @@ private:
 	void merging_ground_items();
 
 	void enemy_crashing();
+	void remove_dead_enemies();
 
 	void handle_events(sf::Keyboard::Key key, bool isPressed);
 	void mouse_processor();
 	void mouse_flagger(sf::Keyboard::Key key, bool isPressed);
 	void dest_bl(bool changed = false, sf::Vector2i pos = sf::Vector2i(0, 0));
+	void attack_enemie(sf::Vector2i pos = sf::Vector2i(0, 0));
 
 
 private:
