@@ -1275,7 +1275,7 @@ void Game::mouse_processor()
 
 		else
 		{
-			if (chunk.place_block(real_pos, inventory.get_current(), player->get_position()))
+			if (texture_holder.get_type(inventory.get_current()) == 2 && chunk.place_block(real_pos, inventory.get_current(), player->get_position()))
 			{
 				inventory.decrease_item();
 				if (inventory.get_current() == Textures::BOX) {
