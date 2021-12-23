@@ -44,7 +44,6 @@ class Player
 {
 private:
 	sf::Sprite character;
-	sf::Sprite hp_bar;
 
 	bool isMovingUp = false;
 	bool isMovingDown = false;

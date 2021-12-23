@@ -155,9 +155,6 @@ private:
 	std::list<sf::Texture> textsBoss1;
 	std::list<sf::Texture> textsGrey;
 
-	std::string name = "";
-	NickName name_under_head;
-
 public:
 	Enemy(sf::Vector2f position, Textures::ID id);
 
