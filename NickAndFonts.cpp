@@ -55,7 +55,7 @@ void NickName::set_coordinates(float x, float y)
 
 	if (nick_length <= 9) x_offset += 10 - nick_length + 3;
 	else x_offset -= (nick_length % 10) / 2;
-	text.setPosition(x + x_offset, y - 10);
+	text.setPosition(x + x_offset - 5, y - 10);
 	// std::cout << std::endl << x << " " << y << std::endl;
 }
 
