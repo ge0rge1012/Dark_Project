@@ -8,7 +8,7 @@ Randomizer::Randomizer() {
 	srand(time(NULL));
 }
 
-//testcom4
+//testcom5
 
 void Randomizer::initialize() {
 	unsigned value = unsigned(std::time(nullptr));
