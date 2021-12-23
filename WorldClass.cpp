@@ -395,7 +395,7 @@ void World::spawn_resources() {
 }
 
 void World::spawn_dungeon() {
-	int dungeon_rand_y = random_number.get_random(0, 2);
+	int dungeon_rand_y = random_number.get_random(5, 10);
 	int dungeon_rand_x = random_number.get_random(60, WORLD_HEIGHT - 69);
 	for (int i = 0; i < 10; i++) {
 		dungeon_rand_x = dungeon_rand_x + 1;
