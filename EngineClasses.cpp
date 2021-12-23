@@ -83,13 +83,13 @@ sf::Vector2f Player::get_position()
 
 bool Player::is_alive()
 {
-	return IsALive;
+	return isALive;
 }
 
 void Player::deal_damage(int damage)
 {
 	HP -= damage;
-	if (HP <= 0) IsALive = false;
+	if (HP <= 0) isALive = false;
 }
 
 int Player::get_base_damage()
@@ -105,6 +105,16 @@ int Player::get_time_after_attack()
 void Player::set_time_after_attack(int time)
 {
 	time_after_attack = time;
+}
+
+bool Player::is_looking_left()
+{
+	return isLookingLeft;
+}
+
+bool Player::is_looking_right()
+{
+	return isLookingRight;
 }
 
 sf::FloatRect Player::getGlobalBounds()
@@ -210,7 +220,12 @@ void Player::update_statement(const sf::Time delta_time, const World& chunk)
 		movement.x -= player_speed;
 		character.setTexture(*it);
 		// character.setTexture(plL);
-		if (!moving_by_enemie) character.setTextureRect(sf::IntRect(32, 0, -32, 60));
+		if (!moving_by_enemie)
+		{
+			character.setTextureRect(sf::IntRect(32, 0, -32, 60));
+			isLookingLeft = true;
+			isLookingRight = false;
+		}
 		time_counter += 16 * delta_time.asSeconds();
 	}
 	if (isMovingRigth) {
@@ -222,7 +237,12 @@ void Player::update_statement(const sf::Time delta_time, const World& chunk)
 
 		movement.x += player_speed;
 		character.setTexture(*it);
-		if (!moving_by_enemie) character.setTextureRect(sf::IntRect(0, 0, 32, 60));
+		if (!moving_by_enemie)
+		{
+			character.setTextureRect(sf::IntRect(0, 0, 32, 60));
+			isLookingLeft = false;
+			isLookingRight = true;
+		}
 		time_counter += 16 * delta_time.asSeconds();
 	}
 
@@ -394,6 +414,9 @@ void Game::attack_enemie(sf::Vector2i pos)
 {
 	if (pos == sf::Vector2i(0, 0)) return;
 	if (player->get_time_after_attack() < 5) return;
+	if ( (player->is_looking_left() && pos.x > player->getplayercoordinateX()) 
+	  || (player->is_looking_right() && pos.x < player->getplayercoordinateX()) )
+		return;
 
 	sf::FloatRect attacking_area(pos.x - 10, pos.y - 10, 20, 20);
 	for (auto it = chunk.enemies.begin(); it != chunk.enemies.end(); it++)

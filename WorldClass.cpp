@@ -1225,14 +1225,14 @@ sf::FloatRect Enemy::getGlobalBounds()
 
 bool Enemy::is_alive()
 {
-	return IsALive;
+	return isALive;
 }
 
 void Enemy::deal_damage(int damage)
 {
 	std::cout << "damaging" << std::endl;
 	HP -= damage;
-	if (HP <= 0) IsALive = false;
+	if (HP <= 0) isALive = false;
 }
 
 //____________________________________________________________________

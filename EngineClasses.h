@@ -50,7 +50,9 @@ private:
 	bool isMovingLeft = false;
 	bool isMovingRigth = false;
 	bool onGround = false;
-	bool IsALive = true;
+	bool isALive = true;
+	bool isLookingRight = true;
+	bool isLookingLeft = false;
 
 	int HP = 100;
 	int Mind = 100;
@@ -82,6 +84,8 @@ public:
 	void set_time_after_attack(int time);
 
 	bool moving_by_enemie = false;
+	bool is_looking_left();
+	bool is_looking_right();
 	bool is_alive();
 };
 

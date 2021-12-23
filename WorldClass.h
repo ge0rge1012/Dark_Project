@@ -137,7 +137,7 @@ private:
 	bool isMovingLeft = false;
 	bool isMovingRigth = false;
 	bool onGround = false;
-	bool IsALive = true;
+	bool isALive = true;
 	
 	int HP = 50;
 	int base_damage = 5;
