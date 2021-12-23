@@ -286,7 +286,7 @@ void Inventory::decrease_item()
 	 if (inv_items[current_item + 19].get_amount() == 0) return;
 
 	inv_items[current_item + 19].substract_one();
-	updateCrafts();
+	//updateCrafts();
 }
 
 int Inventory::set_current(int num)
@@ -462,7 +462,7 @@ bool Inventory::add_item_fast(Textures::ID id, int kolvo)
 		if (inv_items[i].get_id() == id && inv_items[i].get_amount() != 0)
 		{
 			inv_items[i].add_plenty(kolvo);
-			updateCrafts();
+			//updateCrafts();
 			return true;
 		}
 	}
@@ -470,7 +470,7 @@ bool Inventory::add_item_fast(Textures::ID id, int kolvo)
 			if (inv_items[i].get_id() == Textures::NUL || inv_items[i].get_amount() == 0) {
 				inv_items[i].set_item_id(id);
 				inv_items[i].set_amount(kolvo);
-				updateCrafts();
+				//updateCrafts();
 				return true;
 			}
 		}
@@ -483,7 +483,7 @@ bool Inventory::add_invent_item(Textures::ID id, int count) {
 		if (inv_items[i].get_id() == id && inv_items[i].get_amount() != 0)
 		{
 			inv_items[i].add_plenty(count);
-			updateCrafts();
+			//updateCrafts();
 			return true;
 		}
 	}
@@ -491,7 +491,7 @@ bool Inventory::add_invent_item(Textures::ID id, int count) {
 		if (inv_items[i].get_id() == Textures::NUL || inv_items[i].get_amount() == 0) {
 			inv_items[i].set_item_id(id);
 			inv_items[i].set_amount(count);
-			updateCrafts();
+			//updateCrafts();
 			return true;
 		}
 	}
@@ -592,8 +592,10 @@ void Inventory::drawGUI(sf::RenderWindow& window, sf::Vector2f m_position) {
 		if (isItemOptionsOn()) {
 			drawItemOptions(window);
 		}
-		if (workbenchOn)
+		if (workbenchOn) {
+			updateCrafts();
 			drawWorkbenchGUI(window);
+		}
 		if (bakeOn)
 			drawBakeGUI(window);
 		if (boxOn)
@@ -724,7 +726,7 @@ void Inventory::remove_invent_item(Textures::ID id, int count) {
 			//std::cout << "Removing" << id << " " << count << std::endl;
 			//std::cout << "was" << inv_items[i].get_amount() << " become " << inv_items[i].get_amount() - count << std::endl;
 			inv_items[i].set_amount(inv_items[i].get_amount() - count);
-			updateCrafts();
+			//updateCrafts();
 			break;
 		}
 	}
@@ -732,7 +734,7 @@ void Inventory::remove_invent_item(Textures::ID id, int count) {
 
 void Inventory::deleteSlotItems(int slot) {
 	inv_items[slot].set_amount(0);
-	updateCrafts();
+	//updateCrafts();
 }
 
 void Inventory::turnItemOptions(bool on) {
