@@ -12,6 +12,7 @@
 #include <string>
 #include <memory>
 #include "settings.h"
+#include "NickAndFonts.h"
 
 const int WORLD_WIDTH = 1000;
 const int WORLD_HEIGHT = 150;
@@ -149,6 +150,9 @@ private:
 	sf::Vector2f enemy_position;
 	sf::FloatRect e_hitbox;
 	Textures::ID type;
+
+	std::string name = "";
+	NickName name_under_head;
 
 public:
 	Enemy(sf::Vector2f position, Textures::ID id);

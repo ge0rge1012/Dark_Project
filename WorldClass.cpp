@@ -938,19 +938,25 @@ Enemy::Enemy(sf::Vector2f position, Textures::ID id)
 	character.setTexture(texture);
 	enemy_position = position;
 	character.setPosition(enemy_position);
+
 	if (type == Textures::ID::GREY)
 	{
 		character.setTextureRect(sf::IntRect(0, 0, 32, 29));
 		enemy_speed /= 2;
 		HP = 50;
 		base_damage = 5;
+		name = "skeleton";
 	}
+
 	if (type == Textures::ID::BOSS)
 	{
 		enemy_speed /= 2;
 		HP = 300;
 		base_damage = 10;
+		name = "first boss";
 	}
+
+	name_under_head.set_string(name);
 }
 
 Textures::ID Enemy::get_type()
@@ -961,6 +967,7 @@ Textures::ID Enemy::get_type()
 void Enemy::drawU(sf::RenderWindow& window)
 {
 	window.draw(character);
+	name_under_head.drawU(window);
 }
 
 float Enemy::getenemycoordinateX()
@@ -1017,6 +1024,8 @@ bool Enemy::may_jump_right(const World& chunk, sf::Vector2f p_coor)
 
 void Enemy::update_statement(const sf::Time delta_time, const World& chunk, sf::Vector2f p_coor)
 {
+	name_under_head.set_coordinates(getenemycoordinateX(), getenemycoordinateY());
+
 	const int AIarea = 4 * 32; // area of mobs working. After set a higher value.
 	const int AIstop = 18;
 	sf::Vector2f movement(0.f, 0.f);
