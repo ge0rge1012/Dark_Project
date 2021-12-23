@@ -8,7 +8,6 @@ Randomizer::Randomizer() {
 	srand(time(NULL));
 }
 
-//dsdsdsds
 
 void Randomizer::initialize() {
 	unsigned value = unsigned(std::time(nullptr));
