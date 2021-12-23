@@ -69,16 +69,11 @@ Player::Player()
 	character.setPosition(player_position);
 
 	//p_hitbox = sf::FloatRect();
-	hp_bar.setTexture(texture_holder.get(Textures::ID::HPBAR));
-	hp_bar.setTextureRect(sf::IntRect(24, 0, 102, 20));
-	hp_bar.setScale(0.5, 0.5);
-	hp_bar.setPosition(player_position.x - 5, player_position.y - 5);
 }
 
 void Player::drawU(sf::RenderWindow& window)
 {
 	window.draw(character);
-	window.draw(hp_bar);
 }
 
 sf::Vector2f Player::get_position()
@@ -374,8 +369,6 @@ void Player::update_statement(const sf::Time delta_time, const World& chunk)
 	character.move(movement * delta_time.asSeconds());
 	player_position.x = character.getGlobalBounds().left;
 	player_position.y = character.getGlobalBounds().top;
-
-	hp_bar.setPosition(player_position.x - 8, player_position.y - 10);
 
 	set_view(player_position.x, player_position.y);
 }
@@ -684,6 +677,9 @@ void Game::end_screen()
 				space = true;
 				break;
 			}
+
+			if (event.type == sf::Event::Closed)
+				g_window.close();
 
 		}
 		if (space) g_window.close();
