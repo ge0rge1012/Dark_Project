@@ -1217,7 +1217,8 @@ void Game::mouse_processor()
 		}
 		
 	}
-	else if (chunk.tilemap[real_pos.y / 32][real_pos.x / 32] != nullptr && left_is_pressed)
+	else if ((real_pos.y/32<150 && real_pos.y/32>=0) && (real_pos.x/32>=0 && real_pos.x/32<1000)
+		&& chunk.tilemap[real_pos.y / 32][real_pos.x / 32] != nullptr && left_is_pressed)
 	{
 		//std::cout << "mousecoord " << mouse_pos.x << " " << mouse_pos.y << std::endl;
 		//std::cout << "realcoord " << real_pos.x << " " << real_pos.y << std::endl;
