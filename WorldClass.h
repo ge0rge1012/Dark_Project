@@ -164,6 +164,7 @@ public:
 	float getenemycoordinateY();
 	sf::FloatRect getGlobalBounds();
 	bool is_alive();
+	Textures::ID get_type();
 };
 
 //____________________________________________________________________

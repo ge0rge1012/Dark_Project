@@ -404,6 +404,12 @@ void Game::remove_dead_enemies()
 	{
 		if (!(*it).is_alive())
 		{
+			if ( (*it).get_type() == Textures::ID::GREY) 
+				chunk.add_ground_item(Textures::ID::IRON_ING, sf::Vector2f((*it).getenemycoordinateX(), (*it).getenemycoordinateY()));
+
+			else if ((*it).get_type() == Textures::ID::BOSS)
+				chunk.add_ground_item(Textures::ID::ORICHALCUM_ING, sf::Vector2f((*it).getenemycoordinateX(), (*it).getenemycoordinateY()), 5);
+
 			chunk.enemies.erase(it);
 			break;
 		}

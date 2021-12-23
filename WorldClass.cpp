@@ -953,6 +953,11 @@ Enemy::Enemy(sf::Vector2f position, Textures::ID id)
 	}
 }
 
+Textures::ID Enemy::get_type()
+{
+	return type;
+}
+
 void Enemy::drawU(sf::RenderWindow& window)
 {
 	window.draw(character);
