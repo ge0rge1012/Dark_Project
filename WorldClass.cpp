@@ -946,6 +946,10 @@ Enemy::Enemy(sf::Vector2f position, Textures::ID id)
 		HP = 50;
 		base_damage = 5;
 		name = "skeleton";
+		textsGrey.push_back(texture_holder.get(Textures::ID::GREY));
+		textsGrey.push_back(texture_holder.get(Textures::ID::GREY1));
+		textsGrey.push_back(texture_holder.get(Textures::ID::GREY2));
+		textsGrey.push_back(texture_holder.get(Textures::ID::GREY3));
 	}
 
 	if (type == Textures::ID::BOSS)
@@ -954,6 +958,11 @@ Enemy::Enemy(sf::Vector2f position, Textures::ID id)
 		HP = 300;
 		base_damage = 10;
 		name = "first boss";
+
+		textsBoss1.push_back(texture_holder.get(Textures::ID::BOSS));
+		textsBoss1.push_back(texture_holder.get(Textures::ID::BOSS1));
+		textsBoss1.push_back(texture_holder.get(Textures::ID::BOSS2));
+		textsBoss1.push_back(texture_holder.get(Textures::ID::BOSS3));
 	}
 
 	name_under_head.set_string(name);
@@ -1032,6 +1041,8 @@ void Enemy::update_statement(const sf::Time delta_time, const World& chunk, sf::
 	sf::FloatRect nextPos;
 	bool jump = false;
 	const float x_crop = 10.f;
+	static float time_counter = 0;
+	bool mov_dir_changed = false;
 
 	float e_movement_x =  p_coor.x - enemy_position.x;
 
@@ -1117,8 +1128,61 @@ void Enemy::update_statement(const sf::Time delta_time, const World& chunk, sf::
 	// if (isMovingUp)    movement.y -= player_speed;   // isn't needed untill we have vertical stairs, jumping by negative gravity
 	// if (isMovingDown)  movement.y += player_speed;   // going down by pressing keys, when we have gravity? lol
 
-	if (isMovingLeft)  movement.x -= enemy_speed;
-	if (isMovingRigth) movement.x += enemy_speed;
+	if (isMovingLeft)
+	{
+		if (time_counter >= 4) time_counter = 0;
+
+		if (get_type() == Textures::ID::GREY)
+		{
+			auto it = textsGrey.begin();
+			for (int i = 1; i <= time_counter; ++i)
+				it++;
+
+			character.setTexture(*it);
+			character.setTextureRect(sf::IntRect(32, 0, -32, 29));
+		}
+
+		if (get_type() == Textures::ID::BOSS)
+		{
+			auto it = textsBoss1.begin();
+			for (int i = 1; i <= time_counter; ++i)
+				it++;
+
+			character.setTexture(*it);
+			character.setTextureRect(sf::IntRect(32, 0, -32, 60));
+		}
+
+		time_counter += 10 * delta_time.asSeconds();
+		movement.x -= enemy_speed;
+	}
+
+	if (isMovingRigth)
+	{
+		if (time_counter >= 4) time_counter = 0;
+
+		if (get_type() == Textures::ID::GREY)
+		{
+			auto it = textsGrey.begin();
+			for (int i = 1; i <= time_counter; ++i)
+				it++;
+
+			character.setTexture(*it);
+			character.setTextureRect(sf::IntRect(0, 0, 32, 29));
+		}
+
+		if (get_type() == Textures::ID::BOSS)
+		{
+			auto it = textsBoss1.begin();
+			for (int i = 1; i <= time_counter; ++i)
+				it++;
+
+			character.setTexture(*it);
+			character.setTextureRect(sf::IntRect(0, 0, 32, 60));
+		}
+
+		time_counter += 10 * delta_time.asSeconds();
+		movement.x += enemy_speed;
+	}
 
 	if (!onGround) { movement.y += gravityAccum; gravityAccum += gravity; }
 

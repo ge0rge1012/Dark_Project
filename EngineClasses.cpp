@@ -806,8 +806,16 @@ void Game::start_game()
 	texture_holder.load(Textures::VAMPIRE6, "media/textures/animals/frames_gg_go/gg_go_7.png", 0);
 	texture_holder.load(Textures::VAMPIRE7, "media/textures/animals/frames_gg_go/gg_go_8.png", 0);
 
-	texture_holder.load(Textures::GREY,     "media/textures/animals/skeleton_grey.png", 0);
-	texture_holder.load(Textures::BOSS,     "media/textures/animals/penisman.png", 0);
+	texture_holder.load(Textures::BOSS, "media/textures/animals/frames_zombie_go/zombie_go_1.png", 0);
+	texture_holder.load(Textures::BOSS1, "media/textures/animals/frames_zombie_go/zombie_go_2.png", 0);
+	texture_holder.load(Textures::BOSS2, "media/textures/animals/frames_zombie_go/zombie_go_3.png", 0);
+	texture_holder.load(Textures::BOSS3, "media/textures/animals/frames_zombie_go/zombie_go_4.png", 0);
+
+	texture_holder.load(Textures::GREY,     "media/textures/animals/frames_skeleton_grey_go/skeleton_grey_go_1.png", 0);
+	texture_holder.load(Textures::GREY1, "media/textures/animals/frames_skeleton_grey_go/skeleton_grey_go_2.png", 0);
+	texture_holder.load(Textures::GREY2, "media/textures/animals/frames_skeleton_grey_go/skeleton_grey_go_3.png", 0);
+	texture_holder.load(Textures::GREY3, "media/textures/animals/frames_skeleton_grey_go/skeleton_grey_go_4.png", 0);
+
 	texture_holder.load(Textures::MENU, "media/images/backgroundv1.png", 0);
 	texture_holder.load(Textures::INVENTORY, "media/inventory_450_250.png", 0);
 	texture_holder.load(Textures::SLOT, "media/textures/instruments/inventory_set.png", 0);
@@ -913,7 +921,7 @@ Game::Game() : g_window(sf::VideoMode(mysetts.get_width(), mysetts.get_height())
 
 	// chunk.test_world();
 	chunk.generate_world();
-	//chunk.test_world();
+	// chunk.test_world();
 	 chunk.add_enemy(sf::Vector2f(5*32.f, 40*32.f), Textures::ID::GREY);
 
 	// chunk.set_block(42, 5, Textures::ID::LADDER_LEFT);
