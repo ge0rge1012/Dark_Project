@@ -7,7 +7,7 @@ settings mysetts;
 Randomizer::Randomizer() {
 	srand(time(NULL));
 }
-
+//d/sadsadasasddasasdsa
 
 void Randomizer::initialize() {
 	unsigned value = unsigned(std::time(nullptr));
