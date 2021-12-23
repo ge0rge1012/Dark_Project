@@ -40,7 +40,7 @@ struct Coordinate {
 };
 
 struct BoxItems {
-	std::array<InvItem, 20> items;
+	std::array<InvItem, 10> items;
 };
 
 class Inventory
@@ -103,10 +103,17 @@ public:
 	void setFromTemp(std::string arr, int slot);
 
 	void addBoxCoords(sf::Vector2i m_position);
+	void deleteBox();
+	InvItem getItemByIterator(int iterator);
+
+	void setOpenedBoxID(sf::Vector2i m_position);
+	void loadInOpenedBox();
+	void loadFromOpenedBox();
 
 private:
 	std::vector<Coordinate> boxesCoords;
 	std::vector<BoxItems> boxesItems;
+	int openedBoxID = 0;
 
 	std::vector<Coordinate> bakeCoords;
 

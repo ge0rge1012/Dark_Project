@@ -310,9 +310,9 @@ void World::create_cave_right(int x, int y) {
 	for (int i = x; i < x + cave_height; i++) {
 		int cave_width = random_number.get_random(6, 8);
 		for (int j = y; j < y + cave_width; j++) {
-			if (i>0 && i<145 && j>0 && j<1000)
+			if (i>1 && i<145 && j>1 && j<998)
 				delete_block(i-1, j-1);
-			if (i>0 && i<145 && j>0 && j < 1000)
+			if (i>0 && i<145 && j>0 && j < 998)
 				delete_block(i, j);
 		}	
 
@@ -333,9 +333,9 @@ void World::create_cave_left(int x, int y) {
 	for (int i = x; i < x + cave_height; i++) {
 		int cave_width = random_number.get_random(6, 8);
 		for (int j = y; j > y - cave_width; j--) {
-			if (i > 0 && i < 145 && j>0 && j < 1000)
+			if (i > 1 && i < 145 && j>1 && j < 998)
 				delete_block(i - 1, j + 1);
-			if (i > 0 && i < 145 && j>0 && j < 1000)
+			if (i > 0 && i < 145 && j>0 && j < 998)
 				delete_block(i, j);
 		}
 
@@ -429,14 +429,25 @@ void World::generate_world() {
 	}
 	spawn_dungeon();
 	spawn_resources();
-	create_cave_right(40, random_number.get_random(25, 60));
+	int randY = random_number.get_random(40, 65);
+
+	for (int i=0; i<10; i++) {
+		randY += random_number.get_random(60, 110);
+		if (randY > 999) 
+			break;
+		int X = 40;
+		create_cave_right(X, randY);
+	}
+
 
 }
 
 void World::delete_block(int x, int y)
 {
-	delete tilemap[x][y];
-	tilemap[x][y] = nullptr;
+	if ((x > 0 && x < 150) && (y > 0 && y < 1000)) {
+		delete tilemap[x][y];
+		tilemap[x][y] = nullptr;
+	}
 }
 
 void World::destroy_block(sf::Vector2i m_pos, sf::Vector2f p_pos)
@@ -794,6 +805,7 @@ void World::add_ground_item(Textures::ID id, sf::Vector2f coord, int kolvo)
 {
 	gitems.push_back(GroundItem(id, coord, kolvo));
 }
+
 
 void World::add_ground_item(Textures::ID id, sf::Vector2f coord)
 {
@@ -1219,8 +1231,10 @@ GroundItem::GroundItem(Textures::ID id, sf::Vector2f coord) : id(id)
 	sprite.setPosition(coord);
 }
 
-GroundItem::GroundItem(Textures::ID id, sf::Vector2f coord, int kolvo)
+GroundItem::GroundItem(Textures::ID id, sf::Vector2f coord, int kolvo) : id(id)
 {
+
+	std::cout << World::get_id_name(id) << std::endl;
 	amount = kolvo;
 
 	sf::Texture& texture = texture_holder.get(id);
