@@ -948,6 +948,8 @@ Enemy::Enemy(sf::Vector2f position, Textures::ID id)
 	if (type == Textures::ID::BOSS)
 	{
 		enemy_speed /= 2;
+		HP = 300;
+		base_damage = 10;
 	}
 }
 
@@ -1228,6 +1230,7 @@ bool Enemy::is_alive()
 
 void Enemy::deal_damage(int damage)
 {
+	std::cout << "damaging" << std::endl;
 	HP -= damage;
 	if (HP <= 0) IsALive = false;
 }
