@@ -12,6 +12,7 @@
 #include <string>
 #include <memory>
 #include "settings.h"
+#include "NickAndFonts.h"
 
 const int WORLD_WIDTH = 1000;
 const int WORLD_HEIGHT = 150;
@@ -30,11 +31,13 @@ namespace Textures
 		WOOD1, WOOD2, WOOD3, WOOD4,
 		LEAVES1, LEAVES2, LEAVES3, LEAVES4,
 		GRASS1, GRASS2, GRASS3, GRASS4,
-		MENU, GREY, ITEMS, VAMPIRE, VAMPIRE1, VAMPIRE2, VAMPIRE3, VAMPIRE4, VAMPIRE5, VAMPIRE6, VAMPIRE7,
-		LADDER_RIGHT, LADDER, IRON_ING, ORICHALCUM, ORICHALCUM_ING,
+	    VAMPIRE, VAMPIRE1, VAMPIRE2, VAMPIRE3, VAMPIRE4, VAMPIRE5, VAMPIRE6, VAMPIRE7,
+		GREY, GREY1, GREY2, GREY3,
+		BOSS, BOSS1, BOSS2, BOSS3,
+		MENU, ITEMS, LADDER_RIGHT, LADDER, IRON_ING, ORICHALCUM, ORICHALCUM_ING,
 		WORKBENCH, BOX, BAKE, INVENTORY, SLOT, EARTHBACKGROUND, GUIBACK, LINE, 
 		STICK, PICK_TR, PICK_ST, PICK_IR, PICK_OR, SWORD_TR, SWORD_ST, 
-		SWORD_IR, SWORD_OR, ITEM_OPTIONS, ARROW, BOSS };
+		SWORD_IR, SWORD_OR, ITEM_OPTIONS, ARROW, };
 }
 
 class Randomizer {
@@ -149,6 +152,11 @@ private:
 	sf::Vector2f enemy_position;
 	sf::FloatRect e_hitbox;
 	Textures::ID type;
+	std::list<sf::Texture> textsBoss1;
+	std::list<sf::Texture> textsGrey;
+
+	std::string name = "";
+	NickName name_under_head;
 
 public:
 	Enemy(sf::Vector2f position, Textures::ID id);
