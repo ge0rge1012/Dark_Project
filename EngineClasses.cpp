@@ -887,8 +887,8 @@ Game::Game() : g_window(sf::VideoMode(mysetts.get_width(), mysetts.get_height())
 	//chunk.test_world();
 	// chunk.add_enemy(sf::Vector2f(5*32.f, 40*32.f), Textures::ID::GREY);
 
-	chunk.set_block(42, 5, Textures::ID::LADDER_LEFT);
-	chunk.set_block(43, 5, Textures::ID::LADDER_LEFT);
+	// chunk.set_block(42, 5, Textures::ID::LADDER_LEFT);
+	// chunk.set_block(43, 5, Textures::ID::LADDER_LEFT);
 
 	inventory.add_item_fast(Textures::DIRT, 10);
 	inventory.add_item_fast(Textures::ORANGE, 666);
