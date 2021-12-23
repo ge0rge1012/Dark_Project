@@ -942,6 +942,8 @@ Enemy::Enemy(sf::Vector2f position, Textures::ID id)
 	{
 		character.setTextureRect(sf::IntRect(0, 0, 32, 29));
 		enemy_speed /= 2;
+		HP = 50;
+		base_damage = 5;
 	}
 	if (type == Textures::ID::BOSS)
 	{
@@ -1214,6 +1216,22 @@ void Enemy::update_statement(const sf::Time delta_time, const World& chunk, sf::
 	enemy_position.y = character.getGlobalBounds().top;
 }
 
+sf::FloatRect Enemy::getGlobalBounds()
+{
+	return sf::FloatRect(character.getGlobalBounds());
+}
+
+bool Enemy::is_alive()
+{
+	return IsALive;
+}
+
+void Enemy::deal_damage(int damage)
+{
+	HP -= damage;
+	if (HP <= 0) IsALive = false;
+}
+
 //____________________________________________________________________
 
 Textures::ID GroundItem::get_id()
@@ -1428,9 +1446,4 @@ void GroundItem::update_statement(const sf::Time delta_time, const World& chunk)
 			}
 		}
 	sprite.move(movement* delta_time.asSeconds());
-}
-
-sf::FloatRect Enemy::getGlobalBounds()
-{
-	return sf::FloatRect(character.getGlobalBounds());
 }
