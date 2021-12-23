@@ -914,7 +914,7 @@ void Game::start_game()
 	texture_holder.load(Textures::DIRT3, "media/textures/blocks/block_dirt/frames_block_dirt/block_dirt_4.png", 2);
 	texture_holder.load(Textures::DIRT4, "media/textures/blocks/block_dirt/frames_block_dirt/block_dirt_5.png", 2);
 
-	texture_holder.load(Textures::IRON,		"media/textures/blocks/block_rock_iron/block_rock_iron.png", 2);
+	texture_holder.load(Textures::IRON,		"media/textures/blocks/block_rock_iron/block_rock_ironv2.png", 2);
 	texture_holder.load(Textures::IRON1, "media/textures/blocks/block_rock_iron/frames_block_rock_iron/block_rock_iron_2.png", 2);
 	texture_holder.load(Textures::IRON2, "media/textures/blocks/block_rock_iron/frames_block_rock_iron/block_rock_iron_3.png", 2);
 	texture_holder.load(Textures::IRON3, "media/textures/blocks/block_rock_iron/frames_block_rock_iron/block_rock_iron_4.png", 2);
@@ -1293,11 +1293,11 @@ void Game::mouse_processor()
 	}
 	else if ((real_pos.y/32<150 && real_pos.y/32>=0) && (real_pos.x/32>=0 && real_pos.x/32<1000)
 		&& chunk.tilemap[real_pos.y / 32][real_pos.x / 32] != nullptr && left_is_pressed)
-	{
+		{
 		//std::cout << "mousecoord " << mouse_pos.x << " " << mouse_pos.y << std::endl;
 		//std::cout << "realcoord " << real_pos.x << " " << real_pos.y << std::endl;
 		dest_bl(true, real_pos);
-	}
+		}
 
 	else if (left_is_pressed)
 	{
