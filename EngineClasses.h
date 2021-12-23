@@ -44,6 +44,7 @@ class Player
 {
 private:
 	sf::Sprite character;
+	sf::Sprite hp_bar;
 
 	bool isMovingUp = false;
 	bool isMovingDown = false;
@@ -55,6 +56,7 @@ private:
 	bool isLookingLeft = false;
 
 	int HP = 100;
+	int max_HP = 100;
 	int Mind = 100;
 	int base_damage = 10;
 	int time_after_attack = 0;
@@ -104,6 +106,7 @@ public:
 private:
 	void run();                  // starting game loop (main loop)
 	void boot_screen();
+	void end_screen();
 	void main_menu();
 	void menu_settings();
 	std::vector<std::vector<std::string>> tiles;
