@@ -947,7 +947,6 @@ Enemy::Enemy(sf::Vector2f position, Textures::ID id)
 		enemy_speed /= 2;
 		HP = 50;
 		base_damage = 5;
-		name = "skeleton";
 		textsGrey.push_back(texture_holder.get(Textures::ID::GREY));
 		textsGrey.push_back(texture_holder.get(Textures::ID::GREY1));
 		textsGrey.push_back(texture_holder.get(Textures::ID::GREY2));
@@ -959,15 +958,12 @@ Enemy::Enemy(sf::Vector2f position, Textures::ID id)
 		enemy_speed /= 2;
 		HP = 300;
 		base_damage = 10;
-		name = "first boss";
 
 		textsBoss1.push_back(texture_holder.get(Textures::ID::BOSS));
 		textsBoss1.push_back(texture_holder.get(Textures::ID::BOSS1));
 		textsBoss1.push_back(texture_holder.get(Textures::ID::BOSS2));
 		textsBoss1.push_back(texture_holder.get(Textures::ID::BOSS3));
 	}
-
-	name_under_head.set_string(name);
 }
 
 Textures::ID Enemy::get_type()
@@ -978,7 +974,6 @@ Textures::ID Enemy::get_type()
 void Enemy::drawU(sf::RenderWindow& window)
 {
 	window.draw(character);
-	name_under_head.drawU(window);
 }
 
 float Enemy::getenemycoordinateX()
@@ -1035,8 +1030,6 @@ bool Enemy::may_jump_right(const World& chunk, sf::Vector2f p_coor)
 
 void Enemy::update_statement(const sf::Time delta_time, const World& chunk, sf::Vector2f p_coor)
 {
-	name_under_head.set_coordinates(getenemycoordinateX(), getenemycoordinateY());
-
 	const int AIarea = 4 * 32; // area of mobs working. After set a higher value.
 	const int AIstop = 18;
 	sf::Vector2f movement(0.f, 0.f);
