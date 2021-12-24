@@ -161,9 +161,12 @@ void Player::update_statement(const sf::Time delta_time, const World& chunk)
 	const float x_crop = 8.f;
 	static float time_counter = 0;
 	static int hp_regen_time_counter = 0;
+	static int falling_time = 0;
+	bool fell = false;
 	bool mov_dir_changed = false;
 
 	bool smth_is_under = false;
+	static bool first_falling;
 
 	// getting left top coordinate of little chunk to check block collisions only there
 	// lots of validation
@@ -220,7 +223,12 @@ void Player::update_statement(const sf::Time delta_time, const World& chunk)
 		}
 	if (!smth_is_under) onGround = false;
 
-	
+	if (!onGround) falling_time++;
+	if (onGround) {
+		if (falling_time >= 60) fell = true;
+		falling_time = 0;
+	}
+	std::cout << fell;
 	
 	// if (isMovingDown)  movement.y += player_speed;   // going down by pressing keys, when we have gravity? lol
 	if (isMovingLeft) {
@@ -411,6 +419,14 @@ void Player::update_statement(const sf::Time delta_time, const World& chunk)
 		hp_regen_time_counter = 0;
 	}
 	hp_regen_time_counter++;
+
+	//std::cout << first_falling;
+	if (fell)
+	{
+		if (first_falling) first_falling = false;
+		else deal_damage(20);
+	}
+
  }
 
 void Player::screen_collision(int win_width, int win_height)

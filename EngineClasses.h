@@ -60,7 +60,7 @@ private:
 	int base_damage = 10;
 	int time_after_attack = 0;
 
-	float gravity = 9;             // velocity of gravityAccum increasing
+	float gravity = 10;             // velocity of gravityAccum increasing
 	float gravityAccum = 0;        // the speed of falling down because of gravitation, is increasing
 	float player_speed = 200;      // just speed of character, stable and must not (in theory) depend on processor
 	float jumpVelocity = 230;
