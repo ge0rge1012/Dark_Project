@@ -1173,6 +1173,24 @@ void Game::dest_bl(bool changed, sf::Vector2i pos)
 			inventory.deleteBox();
 		}
 
+		if (chunk.tilemap[real_pos.y / 32][real_pos.x / 32]->get_id() == Textures::BAKE) {
+			inventory.setOpenedBakeID(real_pos);
+			std::array<InvItem, 2> dropItems;
+			InvItem item(Textures::DIRT, 0);
+			for (int i = 0; i < 2; i++) {
+				dropItems[i] = item;
+			}
+			for (int i = 0; i < 2; i++) {
+				dropItems[i] = inventory.getBakeItem(i);
+			}
+			for (int i = 0; i < 2; i++) {
+				if (dropItems[i].get_amount() > 0) {
+					chunk.add_ground_item(dropItems[i].get_id(), sf::Vector2f(real_pos.x, real_pos.y), dropItems[i].get_amount());
+				}
+			}
+			inventory.deleteBake();
+		}
+
 		chunk.destroy_block(real_pos, player->get_position());
 	}
 }
@@ -1307,7 +1325,7 @@ void Game::mouse_processor()
 			if (chunk.tilemap[real_pos.y / 32][real_pos.x / 32]->get_id() == Textures::BAKE) {
 				if (!inventory.get_invent_on()) {
 					inventory.turnGUI(true);
-					//inventory.loadBake(real_pos);
+					inventory.setOpenedBakeID(real_pos);
 					inventory.turnBakeOn(true);
 				}
 			}
@@ -1316,7 +1334,6 @@ void Game::mouse_processor()
 			if (chunk.tilemap[real_pos.y / 32][real_pos.x / 32]->get_id() == Textures::BOX) {
 				if (!inventory.get_invent_on()) {
 					inventory.turnGUI(true);
-					//inventory.loadBox(real_pos);
 					inventory.setOpenedBoxID(real_pos);
 					inventory.turnBoxOn(true);
 
@@ -1348,8 +1365,12 @@ void Game::mouse_processor()
 			if (texture_holder.get_type(inventory.get_current()) == 2 && chunk.place_block(real_pos, inventory.get_current(), player->get_position()))
 			{
 				inventory.decrease_item();
+
 				if (inventory.get_current() == Textures::BOX) {
 					inventory.addBoxCoords(real_pos);
+				}
+				if (inventory.get_current() == Textures::BAKE) {
+					inventory.addBakeCoords(real_pos);
 				}
 			}
 		}

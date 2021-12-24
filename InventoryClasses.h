@@ -118,7 +118,6 @@ public:
 	void deleteBake();
 	InvItem getBakeItem(int iterator);
 
-
 	void setOpenedBakeID(sf::Vector2i m_position);
 	void loadInOpenedBake();
 	void loadFromOpenedBake();
@@ -146,7 +145,6 @@ private:
 	bool workbenchOn = false;
 	bool bakeOn = false;
 	bool boxOn = false;
-	
 	bool in_hand = false;
 
 	int optionsSlot;

@@ -781,6 +781,10 @@ bool Inventory::isBakeOn() {
 
 void Inventory::turnBakeOn(bool on) {
 	bakeOn = on;
+	if (on == false)
+		loadFromOpenedBake();
+	if (on == true)
+		loadInOpenedBake();
 }
 
 bool Inventory::get_invent_on() {
