@@ -421,17 +421,17 @@ void Inventory::setFromTemp(std::string arr, int slot) { //smart item moving
 		}
 	}
 	if (arr == "bakeItem") {
-		if (tempItem.get_amount() > 0) {
+		if (tempItem.get_amount() > 0 && tempItem.get_id()==Textures::IRON) {
 			if (bakeItems[slot].get_amount() > 0) {
 				InvItem temp;
 				temp = bakeItems[slot];
 				bakeItems[slot] = tempItem;
 				tempItem = temp;
-				in_hand = true;
 			}
 			else {
 				bakeItems[slot] = tempItem;
 				tempItem.set_amount(0);
+				turn_in_hand(false);
 			}
 		}
 	}

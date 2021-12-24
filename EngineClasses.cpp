@@ -1234,8 +1234,7 @@ void Game::mouse_processor()
 					inventory.turn_in_hand(false);
 					inventory.setFromTemp("invItem", clickedSlot);
 				}
-				if ((clickedBake < 2 && clickedBake >= 0)) {
-					inventory.turn_in_hand(false);
+				if (clickedBake == 0) {
 					inventory.setFromTemp("bakeItem", clickedBake);
 				}
 				if ((clickedBox < 10) && (clickedBox >= 0)) {
