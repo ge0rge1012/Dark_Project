@@ -270,6 +270,49 @@ void Inventory::update_statement()
 			itemOptionsSprite.setPosition(slots[optionsSlot].getPosition());
 		}
 	}
+
+	if (bakeTimer < 300) {
+		bakeTimer++;
+		int bakeSecondsTimer = bakeTimer / 60;
+		//if (bakeTimer%60 == 0) 
+			//std::cout << "bakeTimer in secs:" << bakeSecondsTimer << std::endl;
+	}
+	else {
+		bakeTimer = 0;
+		//std::cout << "baked" << std::endl;
+
+		if (bakeOn) {
+			if (bakeItems[0].get_id() == Textures::IRON && bakeItems[0].get_amount()>0 &&
+				(bakeItems[1].get_id() == Textures::IRON_ING || bakeItems[1].get_amount() == 0)) {
+				bakeItems[0].substract_one();
+				bakeItems[1].set_item_id(Textures::IRON_ING);
+				bakeItems[1].add_one();
+			}
+
+			if (bakeItems[0].get_id() == Textures::ORICHALCUM && bakeItems[0].get_amount() > 0 &&
+				(bakeItems[1].get_id() == Textures::ORICHALCUM_ING || bakeItems[1].get_amount() == 0)) {
+				bakeItems[0].substract_one();
+				bakeItems[1].set_item_id(Textures::ORICHALCUM_ING);
+				bakeItems[1].add_one();
+			}
+		}
+
+		for (int i = 0; i < bakesItems.size(); i++) {
+			if (bakesItems[i].items[0].get_id() == Textures::IRON && bakeItems[0].get_amount() > 0 &&
+				(bakesItems[i].items[1].get_id()==Textures::IRON_ING || bakesItems[i].items[1].get_amount()==0)) {
+				bakesItems[i].items[0].substract_one();
+				bakesItems[i].items[1].set_item_id(Textures::IRON_ING);
+				bakesItems[i].items[1].add_one();
+			}
+
+			if (bakesItems[i].items[0].get_id() == Textures::ORICHALCUM && bakeItems[0].get_amount() > 0 &&
+				(bakesItems[i].items[1].get_id() == Textures::ORICHALCUM_ING || bakesItems[i].items[1].get_amount() == 0)) {
+				bakesItems[i].items[0].substract_one();
+				bakesItems[i].items[1].set_item_id(Textures::ORICHALCUM_ING);
+				bakesItems[i].items[1].add_one();
+			}
+		}
+	}
 }
 
 
@@ -286,7 +329,7 @@ void Inventory::decrease_item()
 	 if (inv_items[current_item + 19].get_amount() == 0) return;
 
 	inv_items[current_item + 19].substract_one();
-	updateCrafts();
+	//updateCrafts();
 }
 
 int Inventory::set_current(int num)
@@ -380,7 +423,11 @@ Inventory::Inventory()
 	for (int i = 0; i < 10; i++) {
 		craftItems[i].setScale(0.48, 0.48);
 	}
+	//InvItem item(Textures::IRON, 10);
 
+	//inv_items[5] = item;
+	//inv_items[6] = item;
+	//inv_items[7] = item;
 }
 
 void Inventory::setTempItem(std::string arr, int slot) {
@@ -408,11 +455,16 @@ void Inventory::setFromTemp(std::string arr, int slot) { //smart item moving
 	if (arr == "invItem") {
 		if (tempItem.get_amount() > 0) {
 			if (inv_items[slot].get_amount() > 0) {
-				InvItem temp;
-				temp = inv_items[slot];
-				inv_items[slot] = tempItem;
-				tempItem = temp;
-				in_hand = true;
+				if (inv_items[slot].get_id() == tempItem.get_id()) {
+					inv_items[slot].add_plenty(tempItem.get_amount());
+				}
+				else {
+					InvItem temp;
+					temp = inv_items[slot];
+					inv_items[slot] = tempItem;
+					tempItem = temp;
+					in_hand = true;
+				}
 			}
 			else {
 				inv_items[slot] = tempItem;
@@ -421,17 +473,17 @@ void Inventory::setFromTemp(std::string arr, int slot) { //smart item moving
 		}
 	}
 	if (arr == "bakeItem") {
-		if (tempItem.get_amount() > 0) {
+		if (tempItem.get_amount() > 0 && (tempItem.get_id()==Textures::IRON || tempItem.get_id() == Textures::ORICHALCUM)) {
 			if (bakeItems[slot].get_amount() > 0) {
 				InvItem temp;
 				temp = bakeItems[slot];
 				bakeItems[slot] = tempItem;
 				tempItem = temp;
-				in_hand = true;
 			}
 			else {
 				bakeItems[slot] = tempItem;
 				tempItem.set_amount(0);
+				turn_in_hand(false);
 			}
 		}
 	}
@@ -462,7 +514,7 @@ bool Inventory::add_item_fast(Textures::ID id, int kolvo)
 		if (inv_items[i].get_id() == id && inv_items[i].get_amount() != 0)
 		{
 			inv_items[i].add_plenty(kolvo);
-			updateCrafts();
+			//updateCrafts();
 			return true;
 		}
 	}
@@ -470,7 +522,7 @@ bool Inventory::add_item_fast(Textures::ID id, int kolvo)
 			if (inv_items[i].get_id() == Textures::NUL || inv_items[i].get_amount() == 0) {
 				inv_items[i].set_item_id(id);
 				inv_items[i].set_amount(kolvo);
-				updateCrafts();
+				//updateCrafts();
 				return true;
 			}
 		}
@@ -483,7 +535,7 @@ bool Inventory::add_invent_item(Textures::ID id, int count) {
 		if (inv_items[i].get_id() == id && inv_items[i].get_amount() != 0)
 		{
 			inv_items[i].add_plenty(count);
-			updateCrafts();
+			//updateCrafts();
 			return true;
 		}
 	}
@@ -491,7 +543,7 @@ bool Inventory::add_invent_item(Textures::ID id, int count) {
 		if (inv_items[i].get_id() == Textures::NUL || inv_items[i].get_amount() == 0) {
 			inv_items[i].set_item_id(id);
 			inv_items[i].set_amount(count);
-			updateCrafts();
+			//updateCrafts();
 			return true;
 		}
 	}
@@ -592,8 +644,10 @@ void Inventory::drawGUI(sf::RenderWindow& window, sf::Vector2f m_position) {
 		if (isItemOptionsOn()) {
 			drawItemOptions(window);
 		}
-		if (workbenchOn)
+		if (workbenchOn) {
+			updateCrafts();
 			drawWorkbenchGUI(window);
+		}
 		if (bakeOn)
 			drawBakeGUI(window);
 		if (boxOn)
@@ -724,7 +778,7 @@ void Inventory::remove_invent_item(Textures::ID id, int count) {
 			//std::cout << "Removing" << id << " " << count << std::endl;
 			//std::cout << "was" << inv_items[i].get_amount() << " become " << inv_items[i].get_amount() - count << std::endl;
 			inv_items[i].set_amount(inv_items[i].get_amount() - count);
-			updateCrafts();
+			//updateCrafts();
 			break;
 		}
 	}
@@ -732,7 +786,7 @@ void Inventory::remove_invent_item(Textures::ID id, int count) {
 
 void Inventory::deleteSlotItems(int slot) {
 	inv_items[slot].set_amount(0);
-	updateCrafts();
+	//updateCrafts();
 }
 
 void Inventory::turnItemOptions(bool on) {
@@ -779,6 +833,10 @@ bool Inventory::isBakeOn() {
 
 void Inventory::turnBakeOn(bool on) {
 	bakeOn = on;
+	if (on == false)
+		loadFromOpenedBake();
+	if (on == true)
+		loadInOpenedBake();
 }
 
 bool Inventory::get_invent_on() {
@@ -806,12 +864,35 @@ void Inventory::addBoxCoords(sf::Vector2i m_pos) {
 	boxesCoords.push_back(coords);
 	boxesItems.push_back(items);
 
-	std::cout << "added chest at coors: " << boxesCoords[boxesCoords.size()-1].x 
+	std::cout << "added chest at coords: " << boxesCoords[boxesCoords.size()-1].x 
 		<< " " << boxesCoords[boxesCoords.size() - 1].y << std::endl;
 	std::cout << "with items:" << std::endl;
 	for (int i = 0; i < 10; i++) {
-		std::cout << boxesItems[boxesCoords.size() - 1].items[i].get_amount() << std::endl;
+		std::cout << boxesItems[boxesItems.size() - 1].items[i].get_amount() << std::endl;
 	}
+}
+
+void Inventory::addBakeCoords(sf::Vector2i m_pos) {
+	Coordinate coords;
+	coords.x = m_pos.y / 32;
+	coords.y = m_pos.x / 32;
+
+	BakeItems items;
+	InvItem invItem(Textures::DIRT, 0);
+	for (int i = 0; i < 2; i++) {
+		items.items[i] = invItem;
+	}
+
+	bakesCoords.push_back(coords);
+	bakesItems.push_back(items);
+
+	std::cout << "added bake at coords: " << bakesCoords[bakesCoords.size() - 1].x
+		<< " " << bakesCoords[bakesCoords.size() - 1].y << std::endl;
+	std::cout << "with items:" << std::endl;
+	for (int i = 0; i < 2; i++) {
+		std::cout << bakesItems[bakesItems.size() - 1].items[i].get_amount() << std::endl;
+	}
+
 }
 
 void Inventory::setOpenedBoxID(sf::Vector2i m_pos) {
@@ -837,13 +918,44 @@ void Inventory::loadFromOpenedBox() { //loading items from drawing slots to the 
 
 void Inventory::deleteBox() {
 
-	boxesCoords.erase(boxesCoords.begin()+openedBoxID);
+	boxesCoords.erase(boxesCoords.begin() + openedBoxID);
 
 	boxesItems.erase(boxesItems.begin() + openedBoxID);
 }
 
-InvItem Inventory::getItemByIterator(int iterator) {
+void Inventory::deleteBake() {
+	bakesCoords.erase(bakesCoords.begin() + openedBakeID);
+
+	bakesItems.erase(bakesItems.begin() + openedBakeID);
+}
+
+InvItem Inventory::getBoxItem(int iterator) {
 	return boxesItems[openedBoxID].items[iterator];
+}
+
+InvItem Inventory::getBakeItem(int iterator) {
+	return bakesItems[openedBakeID].items[iterator];
+}
+
+void Inventory::setOpenedBakeID(sf::Vector2i m_pos) {
+	for (int i = 0; i < bakesCoords.size(); i++) {
+		if (bakesCoords[i].x == m_pos.y / 32 && bakesCoords[i].y == m_pos.x / 32)
+			openedBakeID = i;
+	}
+}
+
+void Inventory::loadInOpenedBake() {
+	if (openedBakeID<bakesItems.size())
+		for (int i = 0; i < 2; i++) {
+			bakeItems[i] = bakesItems[openedBakeID].items[i];
+		}
+}
+
+void Inventory::loadFromOpenedBake() {
+	if (openedBakeID<bakesItems.size()) 
+		for (int i = 0; i < 2; i++) {
+			bakesItems[openedBakeID].items[i] = bakeItems[i];
+		}
 }
 
 void Inventory::craftItem(int slot) {
@@ -915,7 +1027,7 @@ void Inventory::updateCrafts() {
 	else craftSlots[1].setOutlineColor(sf::Color(178, 0, 0));
 
 	if (isCraftable(Textures::BAKE)) {//BAKE
-		std::cout << "SETTED WHITE" << std::endl;
+		//std::cout << "SETTED WHITE" << std::endl;
 		craftSlots[2].setOutlineColor(sf::Color(20, 105, 20));
 	}
 	else craftSlots[2].setOutlineColor(sf::Color(178, 0, 0));

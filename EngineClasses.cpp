@@ -966,11 +966,17 @@ void Game::start_game()
 	texture_holder.load(Textures::DIRT3, "media/textures/blocks/block_dirt/frames_block_dirt/block_dirt_4.png", 2);
 	texture_holder.load(Textures::DIRT4, "media/textures/blocks/block_dirt/frames_block_dirt/block_dirt_5.png", 2);
 
-	texture_holder.load(Textures::IRON,		"media/textures/blocks/block_rock_iron/block_rock_iron.png", 2);
+	texture_holder.load(Textures::IRON,		"media/textures/blocks/block_rock_iron/block_rock_ironv2.png", 2);
 	texture_holder.load(Textures::IRON1, "media/textures/blocks/block_rock_iron/frames_block_rock_iron/block_rock_iron_2.png", 2);
 	texture_holder.load(Textures::IRON2, "media/textures/blocks/block_rock_iron/frames_block_rock_iron/block_rock_iron_3.png", 2);
 	texture_holder.load(Textures::IRON3, "media/textures/blocks/block_rock_iron/frames_block_rock_iron/block_rock_iron_4.png", 2);
 	texture_holder.load(Textures::IRON4, "media/textures/blocks/block_rock_iron/frames_block_rock_iron/block_rock_iron_5.png", 2);
+
+	texture_holder.load(Textures::ORICHALCUM, "media/textures/blocks/block_orichalcum/block_orichalcumv2.png", 2);
+	texture_holder.load(Textures::ORICHALCUM1, "media/textures/blocks/block_orichalcum/frames_block_orichalcum/block_orichalcum_2.png", 2);
+	texture_holder.load(Textures::ORICHALCUM2, "media/textures/blocks/block_orichalcum/frames_block_orichalcum/block_orichalcum_3.png", 2);
+	texture_holder.load(Textures::ORICHALCUM3, "media/textures/blocks/block_orichalcum/frames_block_orichalcum/block_orichalcum_4.png", 2);
+	texture_holder.load(Textures::ORICHALCUM4, "media/textures/blocks/block_orichalcum/frames_block_orichalcum/block_orichalcum_5.png", 2);
 
 	texture_holder.load(Textures::WOOD,     "media/textures/blocks/block_tree/block_tree.png", 2);
 	texture_holder.load(Textures::WOOD1, "media/textures/blocks/block_tree/frames_tree_dark/block_tree_2.png", 2);
@@ -1218,7 +1224,7 @@ void Game::dest_bl(bool changed, sf::Vector2i pos)
 				dropItems[i] = item;
 			}
 			for (int i = 0; i < 10; i++) {
-				dropItems[i] = inventory.getItemByIterator(i);
+				dropItems[i] = inventory.getBoxItem(i);
 			}
 			for (int i = 0; i < 10; i++) {
 				if (dropItems[i].get_amount() > 0) {
@@ -1227,6 +1233,24 @@ void Game::dest_bl(bool changed, sf::Vector2i pos)
 				}
 			}
 			inventory.deleteBox();
+		}
+
+		if (chunk.tilemap[real_pos.y / 32][real_pos.x / 32]->get_id() == Textures::BAKE) {
+			inventory.setOpenedBakeID(real_pos);
+			std::array<InvItem, 2> dropItems;
+			InvItem item(Textures::DIRT, 0);
+			for (int i = 0; i < 2; i++) {
+				dropItems[i] = item;
+			}
+			for (int i = 0; i < 2; i++) {
+				dropItems[i] = inventory.getBakeItem(i);
+			}
+			for (int i = 0; i < 2; i++) {
+				if (dropItems[i].get_amount() > 0) {
+					chunk.add_ground_item(dropItems[i].get_id(), sf::Vector2f(real_pos.x, real_pos.y), dropItems[i].get_amount());
+				}
+			}
+			inventory.deleteBake();
 		}
 
 		chunk.destroy_block(real_pos, player->get_position());
@@ -1272,8 +1296,7 @@ void Game::mouse_processor()
 					inventory.turn_in_hand(false);
 					inventory.setFromTemp("invItem", clickedSlot);
 				}
-				if ((clickedBake < 2 && clickedBake >= 0)) {
-					inventory.turn_in_hand(false);
+				if (clickedBake == 0) {
 					inventory.setFromTemp("bakeItem", clickedBake);
 				}
 				if ((clickedBox < 10) && (clickedBox >= 0)) {
@@ -1343,12 +1366,13 @@ void Game::mouse_processor()
 		}
 		
 	}
-	else if (chunk.tilemap[real_pos.y / 32][real_pos.x / 32] != nullptr && left_is_pressed)
-	{
+	else if ((real_pos.y/32<150 && real_pos.y/32>=0) && (real_pos.x/32>=0 && real_pos.x/32<1000)
+		&& chunk.tilemap[real_pos.y / 32][real_pos.x / 32] != nullptr && left_is_pressed)
+		{
 		//std::cout << "mousecoord " << mouse_pos.x << " " << mouse_pos.y << std::endl;
 		//std::cout << "realcoord " << real_pos.x << " " << real_pos.y << std::endl;
 		dest_bl(true, real_pos);
-	}
+		}
 
 	else if (left_is_pressed)
 	{
@@ -1362,7 +1386,7 @@ void Game::mouse_processor()
 			if (chunk.tilemap[real_pos.y / 32][real_pos.x / 32]->get_id() == Textures::BAKE) {
 				if (!inventory.get_invent_on()) {
 					inventory.turnGUI(true);
-					//inventory.loadBake(real_pos);
+					inventory.setOpenedBakeID(real_pos);
 					inventory.turnBakeOn(true);
 				}
 			}
@@ -1371,7 +1395,6 @@ void Game::mouse_processor()
 			if (chunk.tilemap[real_pos.y / 32][real_pos.x / 32]->get_id() == Textures::BOX) {
 				if (!inventory.get_invent_on()) {
 					inventory.turnGUI(true);
-					//inventory.loadBox(real_pos);
 					inventory.setOpenedBoxID(real_pos);
 					inventory.turnBoxOn(true);
 
@@ -1403,8 +1426,12 @@ void Game::mouse_processor()
 			if (texture_holder.get_type(inventory.get_current()) == 2 && chunk.place_block(real_pos, inventory.get_current(), player->get_position()))
 			{
 				inventory.decrease_item();
+
 				if (inventory.get_current() == Textures::BOX) {
 					inventory.addBoxCoords(real_pos);
+				}
+				if (inventory.get_current() == Textures::BAKE) {
+					inventory.addBakeCoords(real_pos);
 				}
 			}
 		}
