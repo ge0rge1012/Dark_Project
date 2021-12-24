@@ -1033,8 +1033,12 @@ void Game::start_game()
 }
 
 // is needed to make configurating constructors in future 
-Game::Game() : g_window(sf::VideoMode(mysetts.get_width(), mysetts.get_height()), "game_project")
+Game::Game() : g_window(sf::VideoMode(mysetts.get_width(), mysetts.get_height()), "Dark_Mind")
 {
+	sf::Image icon;
+	icon.loadFromFile("media/textures/animals/gg_32_32.png");
+	g_window.setIcon(32, 32, icon.getPixelsPtr());
+
 	player = new Player();
 	g_view.reset(sf::FloatRect(0, 0, mysetts.get_width(), mysetts.get_height()));
 	g_view.setCenter(player->getplayercoordinateX() + 100, player->getplayercoordinateY());
