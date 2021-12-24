@@ -289,7 +289,12 @@ void Inventory::update_statement()
 				bakeItems[1].add_one();
 			}
 
-			//same if for orichalcum
+			if (bakeItems[0].get_id() == Textures::ORICHALCUM && bakeItems[0].get_amount() > 0 &&
+				(bakeItems[1].get_id() == Textures::ORICHALCUM_ING || bakeItems[1].get_amount() == 0)) {
+				bakeItems[0].substract_one();
+				bakeItems[1].set_item_id(Textures::ORICHALCUM_ING);
+				bakeItems[1].add_one();
+			}
 		}
 
 		for (int i = 0; i < bakesItems.size(); i++) {
@@ -300,7 +305,12 @@ void Inventory::update_statement()
 				bakesItems[i].items[1].add_one();
 			}
 
-			//same if for orichalcum
+			if (bakesItems[i].items[0].get_id() == Textures::ORICHALCUM && bakeItems[0].get_amount() > 0 &&
+				(bakesItems[i].items[1].get_id() == Textures::ORICHALCUM_ING || bakesItems[i].items[1].get_amount() == 0)) {
+				bakesItems[i].items[0].substract_one();
+				bakesItems[i].items[1].set_item_id(Textures::ORICHALCUM_ING);
+				bakesItems[i].items[1].add_one();
+			}
 		}
 	}
 }
@@ -463,7 +473,7 @@ void Inventory::setFromTemp(std::string arr, int slot) { //smart item moving
 		}
 	}
 	if (arr == "bakeItem") {
-		if (tempItem.get_amount() > 0 && tempItem.get_id()==Textures::IRON) {
+		if (tempItem.get_amount() > 0 && (tempItem.get_id()==Textures::IRON || tempItem.get_id() == Textures::ORICHALCUM)) {
 			if (bakeItems[slot].get_amount() > 0) {
 				InvItem temp;
 				temp = bakeItems[slot];
