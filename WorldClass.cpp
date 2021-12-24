@@ -731,8 +731,8 @@ void World::destroy_block(sf::Vector2i m_pos, sf::Vector2f p_pos)
 				{
 					intersected = true;
 					intersected_cor = start_pos;
-					std::cout << std::endl << " intersected " << std::endl;
-					std::cout << std::endl << "_________________________" << std::endl;
+					//std::cout << std::endl << " intersected " << std::endl;
+					//std::cout << std::endl << "_________________________" << std::endl;
 					break;
 				}
 			}
@@ -742,7 +742,7 @@ void World::destroy_block(sf::Vector2i m_pos, sf::Vector2f p_pos)
 
 	if (static_cast<int>(tilemap[m_pos.y / 32][m_pos.x / 32]->get_id() > blocks_frames.size()))
 	{
-		std::cout << "prev fixed" << std::endl;
+		//std::cout << "prev fixed" << std::endl;
 		Textures::ID id_save = tilemap[m_pos.y / 32][m_pos.x / 32]->get_id();
 		delete tilemap[m_pos.y / 32][m_pos.x / 32];
 		tilemap[m_pos.y / 32][m_pos.x / 32] = nullptr;
@@ -1316,7 +1316,7 @@ bool Enemy::is_alive()
 
 void Enemy::deal_damage(int damage)
 {
-	std::cout << "damaging" << std::endl;
+	//std::cout << "damaging" << std::endl;
 	HP -= damage;
 	if (HP <= 0) isALive = false;
 }
@@ -1341,7 +1341,7 @@ GroundItem::GroundItem(Textures::ID id, sf::Vector2f coord) : id(id)
 GroundItem::GroundItem(Textures::ID id, sf::Vector2f coord, int kolvo) : id(id)
 {
 
-	std::cout << World::get_id_name(id) << std::endl;
+	//std::cout << World::get_id_name(id) << std::endl;
 	amount = kolvo;
 
 	sf::Texture& texture = texture_holder.get(id);

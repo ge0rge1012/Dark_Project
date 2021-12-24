@@ -1234,7 +1234,7 @@ void Game::dest_bl(bool changed, sf::Vector2i pos)
 			for (int i = 0; i < 10; i++) {
 				if (dropItems[i].get_amount() > 0) {
 					chunk.add_ground_item(dropItems[i].get_id(), sf::Vector2f(real_pos.x,real_pos.y), dropItems[i].get_amount());
-					std::cout << "added grItem " << dropItems[i].get_amount() << std::endl;
+					//std::cout << "added grItem " << dropItems[i].get_amount() << std::endl;
 				}
 			}
 			inventory.deleteBox();
@@ -1422,7 +1422,7 @@ void Game::mouse_processor()
 			   ((real_pos.y / 32 == static_cast<int>(player->getplayercoordinateY()) / 32) ||
 				(real_pos.y / 32 == static_cast<int>(player->getplayercoordinateY()) / 32 + 1)))
 		{
-			std::cout << "Dont place";
+			//std::cout << "Dont place";
 			chunk.place_block(real_pos, Textures::NUL, player->get_position());
 		}
 

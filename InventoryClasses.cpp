@@ -279,7 +279,7 @@ void Inventory::update_statement()
 	}
 	else {
 		bakeTimer = 0;
-		//std::cout << "baked" << std::endl;
+		std::cout << "baked" << std::endl;
 
 		if (bakeOn) {
 			if (bakeItems[0].get_id() == Textures::IRON && bakeItems[0].get_amount()>0 &&
@@ -864,12 +864,12 @@ void Inventory::addBoxCoords(sf::Vector2i m_pos) {
 	boxesCoords.push_back(coords);
 	boxesItems.push_back(items);
 
-	std::cout << "added chest at coords: " << boxesCoords[boxesCoords.size()-1].x 
-		<< " " << boxesCoords[boxesCoords.size() - 1].y << std::endl;
-	std::cout << "with items:" << std::endl;
-	for (int i = 0; i < 10; i++) {
-		std::cout << boxesItems[boxesItems.size() - 1].items[i].get_amount() << std::endl;
-	}
+	//std::cout << "added chest at coords: " << boxesCoords[boxesCoords.size()-1].x 
+	//	<< " " << boxesCoords[boxesCoords.size() - 1].y << std::endl;
+	//std::cout << "with items:" << std::endl;
+	//for (int i = 0; i < 10; i++) {
+	//	//std::cout << boxesItems[boxesItems.size() - 1].items[i].get_amount() << std::endl;
+	//}
 }
 
 void Inventory::addBakeCoords(sf::Vector2i m_pos) {
@@ -886,12 +886,12 @@ void Inventory::addBakeCoords(sf::Vector2i m_pos) {
 	bakesCoords.push_back(coords);
 	bakesItems.push_back(items);
 
-	std::cout << "added bake at coords: " << bakesCoords[bakesCoords.size() - 1].x
-		<< " " << bakesCoords[bakesCoords.size() - 1].y << std::endl;
-	std::cout << "with items:" << std::endl;
-	for (int i = 0; i < 2; i++) {
-		std::cout << bakesItems[bakesItems.size() - 1].items[i].get_amount() << std::endl;
-	}
+	//std::cout << "added bake at coords: " << bakesCoords[bakesCoords.size() - 1].x
+	//	<< " " << bakesCoords[bakesCoords.size() - 1].y << std::endl;
+	//std::cout << "with items:" << std::endl;
+	//for (int i = 0; i < 2; i++) {
+	//	std::cout << bakesItems[bakesItems.size() - 1].items[i].get_amount() << std::endl;
+	//}
 
 }
 
