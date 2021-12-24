@@ -275,11 +275,11 @@ void Inventory::update_statement()
 		bakeTimer++;
 		int bakeSecondsTimer = bakeTimer / 60;
 		if (bakeTimer%60 == 0) 
-			std::cout << "bakeTimer in secs:" << bakeSecondsTimer << std::endl;
+			//std::cout << "bakeTimer in secs:" << bakeSecondsTimer << std::endl;
 	}
 	else {
 		bakeTimer = 0;
-		std::cout << "baked" << std::endl;
+		//std::cout << "baked" << std::endl;
 
 		if (bakeOn) {
 			if (bakeItems[0].get_id() == Textures::IRON && bakeItems[0].get_amount()>0 &&
@@ -413,6 +413,11 @@ Inventory::Inventory()
 	for (int i = 0; i < 10; i++) {
 		craftItems[i].setScale(0.48, 0.48);
 	}
+	InvItem item(Textures::IRON, 10);
+
+	inv_items[5] = item;
+	inv_items[6] = item;
+	inv_items[7] = item;
 
 }
 
@@ -1013,7 +1018,7 @@ void Inventory::updateCrafts() {
 	else craftSlots[1].setOutlineColor(sf::Color(178, 0, 0));
 
 	if (isCraftable(Textures::BAKE)) {//BAKE
-		std::cout << "SETTED WHITE" << std::endl;
+		//std::cout << "SETTED WHITE" << std::endl;
 		craftSlots[2].setOutlineColor(sf::Color(20, 105, 20));
 	}
 	else craftSlots[2].setOutlineColor(sf::Color(178, 0, 0));
