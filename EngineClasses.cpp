@@ -68,12 +68,24 @@ Player::Player()
 	player_position = sf::Vector2f(5*32.f, 35*32.f);
 	character.setPosition(player_position);
 
+	for (int i = 0; i < 10; ++i)
+	{
+		hearts[i].setTexture(texture_holder.get(Textures::ID::REDHEART));
+		hearts[i].setScale(0.5, 0.5);
+	}
+
 	//p_hitbox = sf::FloatRect();
 }
 
 void Player::drawU(sf::RenderWindow& window)
 {
 	window.draw(character);
+}
+
+void Player::drawHearts(sf::RenderWindow& window)
+{
+	for (int i = 0; i < 10; ++i)
+		window.draw(hearts[i]);
 }
 
 sf::Vector2f Player::get_position()
@@ -90,6 +102,7 @@ void Player::deal_damage(int damage)
 {
 	HP -= damage;
 	if (HP <= 0) isALive = false;
+	if (HP > 100) HP = 100;
 }
 
 int Player::get_base_damage()
@@ -147,6 +160,7 @@ void Player::update_statement(const sf::Time delta_time, const World& chunk)
 	bool jump = false;
 	const float x_crop = 8.f;
 	static float time_counter = 0;
+	static int hp_regen_time_counter = 0;
 	bool mov_dir_changed = false;
 
 	bool smth_is_under = false;
@@ -371,7 +385,33 @@ void Player::update_statement(const sf::Time delta_time, const World& chunk)
 	player_position.y = character.getGlobalBounds().top;
 
 	set_view(player_position.x, player_position.y);
-}
+
+	int y = 10;
+	for (int i = 0; i < 10; ++i)
+	{
+		hearts[i].setPosition(g_view.getCenter().x + 290, g_view.getCenter().y - 210 + y);
+		y += 20;
+	}
+
+	for (int i = 10 - HP/10; i < 10; ++i)
+	{
+		hearts[i].setTexture(texture_holder.get(Textures::ID::REDHEART));
+		hearts[i].setScale(0.5, 0.5);
+	}
+
+	for (int i = 0; i < (100 - HP) / 10; ++i)
+	{
+		hearts[i].setTexture(texture_holder.get(Textures::ID::BLACKHEART));
+		hearts[i].setScale(0.5, 0.5);
+	}
+
+	if (hp_regen_time_counter == 30)
+	{
+		deal_damage(-1);
+		hp_regen_time_counter = 0;
+	}
+	hp_regen_time_counter++;
+ }
 
 void Player::screen_collision(int win_width, int win_height)
 {
@@ -885,8 +925,8 @@ void Game::start_game()
 	texture_holder.load(Textures::ITEM_OPTIONS, "media/textures/item_options.png", 0);
 	texture_holder.load(Textures::ARROW, "media/textures/arrow.png", 0);
 	texture_holder.load(Textures::HPBAR, "media/textures/instruments/hp/hp_band_126_20.png", 0);
-
-
+	texture_holder.load(Textures::REDHEART, "media/textures/instruments/hp/hp.png", 0);
+	texture_holder.load(Textures::BLACKHEART, "media/textures/instruments/hp/hp_black.png", 0);
 
 	texture_holder.load(Textures::IRON_ING, "media/textures/instruments/iron_ingot.png", 1);
 	texture_holder.load(Textures::ORICHALCUM_ING, "media/textures/instruments/orichalcum_ingot.png", 1);
@@ -1370,6 +1410,7 @@ void Game::draw_objects()              // so here we can order for all objects t
 		(*it).drawU(g_window);
 
 	nick_under_head.drawU(g_window);
+	player->drawHearts(g_window);
 
 
 	sf::Vector2i mouse_pos = sf::Mouse::getPosition(g_window);
