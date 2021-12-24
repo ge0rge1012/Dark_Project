@@ -413,12 +413,11 @@ Inventory::Inventory()
 	for (int i = 0; i < 10; i++) {
 		craftItems[i].setScale(0.48, 0.48);
 	}
-	InvItem item(Textures::IRON, 10);
+	//InvItem item(Textures::IRON, 10);
 
-	inv_items[5] = item;
-	inv_items[6] = item;
-	inv_items[7] = item;
-
+	//inv_items[5] = item;
+	//inv_items[6] = item;
+	//inv_items[7] = item;
 }
 
 void Inventory::setTempItem(std::string arr, int slot) {
