@@ -193,6 +193,12 @@ World::World()
 	blocks_frames[static_cast<int>(Textures::ID::GRASS) - 1][2] = texture_holder.get(Textures::ID::GRASS2);
 	blocks_frames[static_cast<int>(Textures::ID::GRASS) - 1][3] = texture_holder.get(Textures::ID::GRASS3);
 	blocks_frames[static_cast<int>(Textures::ID::GRASS) - 1][4] = texture_holder.get(Textures::ID::GRASS4);
+
+	blocks_frames[static_cast<int>(Textures::ID::ORICHALCUM) - 1][0] = texture_holder.get(Textures::ID::ORICHALCUM);
+	blocks_frames[static_cast<int>(Textures::ID::ORICHALCUM) - 1][1] = texture_holder.get(Textures::ID::ORICHALCUM1);
+	blocks_frames[static_cast<int>(Textures::ID::ORICHALCUM) - 1][2] = texture_holder.get(Textures::ID::ORICHALCUM2);
+	blocks_frames[static_cast<int>(Textures::ID::ORICHALCUM) - 1][3] = texture_holder.get(Textures::ID::ORICHALCUM3);
+	blocks_frames[static_cast<int>(Textures::ID::ORICHALCUM) - 1][4] = texture_holder.get(Textures::ID::ORICHALCUM4);
 }
 
 std::string World::get_id_name(Textures::ID id)
@@ -734,7 +740,7 @@ void World::destroy_block(sf::Vector2i m_pos, sf::Vector2f p_pos)
 		rb = true;
 	}
 
-	if (static_cast<int>(tilemap[m_pos.y / 32][m_pos.x / 32]->get_id() > 7))
+	if (static_cast<int>(tilemap[m_pos.y / 32][m_pos.x / 32]->get_id() > blocks_frames.size()))
 	{
 		std::cout << "prev fixed" << std::endl;
 		Textures::ID id_save = tilemap[m_pos.y / 32][m_pos.x / 32]->get_id();
