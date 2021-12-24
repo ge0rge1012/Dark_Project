@@ -270,6 +270,39 @@ void Inventory::update_statement()
 			itemOptionsSprite.setPosition(slots[optionsSlot].getPosition());
 		}
 	}
+
+	if (bakeTimer < 300) {
+		bakeTimer++;
+		int bakeSecondsTimer = bakeTimer / 60;
+		if (bakeTimer%60 == 0) 
+			std::cout << "bakeTimer in secs:" << bakeSecondsTimer << std::endl;
+	}
+	else {
+		bakeTimer = 0;
+		std::cout << "baked" << std::endl;
+
+		if (bakeOn) {
+			if (bakeItems[0].get_id() == Textures::IRON && bakeItems[0].get_amount()>0 &&
+				(bakeItems[1].get_id() == Textures::IRON_ING || bakeItems[1].get_amount() == 0)) {
+				bakeItems[0].substract_one();
+				bakeItems[1].set_item_id(Textures::IRON_ING);
+				bakeItems[1].add_one();
+			}
+
+			//same if for orichalcum
+		}
+
+		for (int i = 0; i < bakesItems.size(); i++) {
+			if (bakesItems[i].items[0].get_id() == Textures::IRON && bakeItems[0].get_amount() > 0 &&
+				(bakesItems[i].items[1].get_id()==Textures::IRON_ING || bakesItems[i].items[1].get_amount()==0)) {
+				bakesItems[i].items[0].substract_one();
+				bakesItems[i].items[1].set_item_id(Textures::IRON_ING);
+				bakesItems[i].items[1].add_one();
+			}
+
+			//same if for orichalcum
+		}
+	}
 }
 
 
@@ -408,11 +441,16 @@ void Inventory::setFromTemp(std::string arr, int slot) { //smart item moving
 	if (arr == "invItem") {
 		if (tempItem.get_amount() > 0) {
 			if (inv_items[slot].get_amount() > 0) {
-				InvItem temp;
-				temp = inv_items[slot];
-				inv_items[slot] = tempItem;
-				tempItem = temp;
-				in_hand = true;
+				if (inv_items[slot].get_id() == tempItem.get_id()) {
+					inv_items[slot].add_plenty(tempItem.get_amount());
+				}
+				else {
+					InvItem temp;
+					temp = inv_items[slot];
+					inv_items[slot] = tempItem;
+					tempItem = temp;
+					in_hand = true;
+				}
 			}
 			else {
 				inv_items[slot] = tempItem;

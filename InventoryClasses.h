@@ -130,6 +130,7 @@ private:
 	std::vector<Coordinate> bakesCoords;
 	std::vector<BakeItems> bakesItems;
 	int openedBakeID = 0;
+	int bakeTimer = 0;
 
 	sf::Sprite invLine;
 	int current_item = 0;
