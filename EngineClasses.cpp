@@ -143,6 +143,12 @@ float Player::getplayercoordinateY() {
 	return player_position.y;
 }
 
+void Player::make_alive()
+{
+	isALive = true;
+	HP = 100;
+}
+
 void Player::key_reaction(sf::Keyboard::Key key, bool isPressed)
 {
 	if (key == sf::Keyboard::W)        isMovingUp = isPressed;
@@ -228,7 +234,7 @@ void Player::update_statement(const sf::Time delta_time, const World& chunk)
 		if (falling_time >= 60) fell = true;
 		falling_time = 0;
 	}
-	std::cout << fell;
+	//std::cout << fell;
 	
 	// if (isMovingDown)  movement.y += player_speed;   // going down by pressing keys, when we have gravity? lol
 	if (isMovingLeft) {
@@ -1080,7 +1086,6 @@ Game::Game() : g_window(sf::VideoMode(mysetts.get_width(), mysetts.get_height())
 void Game::run()
 {
 	// boot_screen();
-
 	main_menu();
 
 	/*UserInput inp;
