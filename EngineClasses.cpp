@@ -972,6 +972,12 @@ void Game::start_game()
 	texture_holder.load(Textures::IRON3, "media/textures/blocks/block_rock_iron/frames_block_rock_iron/block_rock_iron_4.png", 2);
 	texture_holder.load(Textures::IRON4, "media/textures/blocks/block_rock_iron/frames_block_rock_iron/block_rock_iron_5.png", 2);
 
+	texture_holder.load(Textures::ORICHALCUM, "media/textures/blocks/block_orichalcum/block_orichalcumv2.png", 2);
+	texture_holder.load(Textures::ORICHALCUM1, "media/textures/blocks/block_orichalcum/frames_block_orichalcum/block_orichalcum_2.png", 2);
+	texture_holder.load(Textures::ORICHALCUM2, "media/textures/blocks/block_orichalcum/frames_block_orichalcum/block_orichalcum_3.png", 2);
+	texture_holder.load(Textures::ORICHALCUM3, "media/textures/blocks/block_orichalcum/frames_block_orichalcum/block_orichalcum_4.png", 2);
+	texture_holder.load(Textures::ORICHALCUM4, "media/textures/blocks/block_orichalcum/frames_block_orichalcum/block_orichalcum_5.png", 2);
+
 	texture_holder.load(Textures::WOOD,     "media/textures/blocks/block_tree/block_tree.png", 2);
 	texture_holder.load(Textures::WOOD1, "media/textures/blocks/block_tree/frames_tree_dark/block_tree_2.png", 2);
 	texture_holder.load(Textures::WOOD2, "media/textures/blocks/block_tree/frames_tree_dark/block_tree_3.png", 2);
