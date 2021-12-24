@@ -1162,7 +1162,7 @@ void Game::dest_bl(bool changed, sf::Vector2i pos)
 				dropItems[i] = item;
 			}
 			for (int i = 0; i < 10; i++) {
-				dropItems[i] = inventory.getItemByIterator(i);
+				dropItems[i] = inventory.getBoxItem(i);
 			}
 			for (int i = 0; i < 10; i++) {
 				if (dropItems[i].get_amount() > 0) {

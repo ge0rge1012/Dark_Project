@@ -808,12 +808,35 @@ void Inventory::addBoxCoords(sf::Vector2i m_pos) {
 	boxesCoords.push_back(coords);
 	boxesItems.push_back(items);
 
-	std::cout << "added chest at coors: " << boxesCoords[boxesCoords.size()-1].x 
+	std::cout << "added chest at coords: " << boxesCoords[boxesCoords.size()-1].x 
 		<< " " << boxesCoords[boxesCoords.size() - 1].y << std::endl;
 	std::cout << "with items:" << std::endl;
 	for (int i = 0; i < 10; i++) {
-		std::cout << boxesItems[boxesCoords.size() - 1].items[i].get_amount() << std::endl;
+		std::cout << boxesItems[boxesItems.size() - 1].items[i].get_amount() << std::endl;
 	}
+}
+
+void Inventory::addBakeCoords(sf::Vector2i m_pos) {
+	Coordinate coords;
+	coords.x = m_pos.y / 32;
+	coords.y = m_pos.x / 32;
+
+	BakeItems items;
+	InvItem invItem(Textures::DIRT, 0);
+	for (int i = 0; i < 2; i++) {
+		items.items[i] = invItem;
+	}
+
+	bakesCoords.push_back(coords);
+	bakesItems.push_back(items);
+
+	std::cout << "added bake at coords: " << bakesCoords[bakesCoords.size() - 1].x
+		<< " " << bakesCoords[bakesCoords.size() - 1].y << std::endl;
+	std::cout << "with items:" << std::endl;
+	for (int i = 0; i < 2; i++) {
+		std::cout << bakesItems[bakesItems.size() - 1].items[i].get_amount() << std::endl;
+	}
+
 }
 
 void Inventory::setOpenedBoxID(sf::Vector2i m_pos) {
@@ -839,13 +862,44 @@ void Inventory::loadFromOpenedBox() { //loading items from drawing slots to the 
 
 void Inventory::deleteBox() {
 
-	boxesCoords.erase(boxesCoords.begin()+openedBoxID);
+	boxesCoords.erase(boxesCoords.begin() + openedBoxID);
 
 	boxesItems.erase(boxesItems.begin() + openedBoxID);
 }
 
-InvItem Inventory::getItemByIterator(int iterator) {
+void Inventory::deleteBake() {
+	bakesCoords.erase(bakesCoords.begin() + openedBakeID);
+
+	bakesItems.erase(bakesItems.begin() + openedBakeID);
+}
+
+InvItem Inventory::getBoxItem(int iterator) {
 	return boxesItems[openedBoxID].items[iterator];
+}
+
+InvItem Inventory::getBakeItem(int iterator) {
+	return bakesItems[openedBakeID].items[iterator];
+}
+
+void Inventory::setOpenedBakeID(sf::Vector2i m_pos) {
+	for (int i = 0; i < boxesCoords.size(); i++) {
+		if (bakesCoords[i].x == m_pos.y / 32 && bakesCoords[i].y == m_pos.x / 32)
+			openedBakeID = i;
+	}
+}
+
+void Inventory::loadInOpenedBake() {
+	if (openedBakeID<bakesItems.size())
+		for (int i = 0; i < 2; i++) {
+			bakeItems[i] = bakesItems[openedBakeID].items[i];
+		}
+}
+
+void Inventory::loadFromOpenedBake() {
+	if (openedBakeID<bakesItems.size()) 
+		for (int i = 0; i < 2; i++) {
+			bakesItems[openedBakeID].items[i] = bakeItems[i];
+		}
 }
 
 void Inventory::craftItem(int slot) {

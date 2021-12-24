@@ -43,6 +43,10 @@ struct BoxItems {
 	std::array<InvItem, 10> items;
 };
 
+struct BakeItems {
+	std::array<InvItem, 2> items;
+};
+
 class Inventory
 {
 public:
@@ -104,18 +108,29 @@ public:
 
 	void addBoxCoords(sf::Vector2i m_position);
 	void deleteBox();
-	InvItem getItemByIterator(int iterator);
+	InvItem getBoxItem(int iterator);
 
 	void setOpenedBoxID(sf::Vector2i m_position);
 	void loadInOpenedBox();
 	void loadFromOpenedBox();
+
+	void addBakeCoords(sf::Vector2i m_position);
+	void deleteBake();
+	InvItem getBakeItem(int iterator);
+
+
+	void setOpenedBakeID(sf::Vector2i m_position);
+	void loadInOpenedBake();
+	void loadFromOpenedBake();
 
 private:
 	std::vector<Coordinate> boxesCoords;
 	std::vector<BoxItems> boxesItems;
 	int openedBoxID = 0;
 
-	std::vector<Coordinate> bakeCoords;
+	std::vector<Coordinate> bakesCoords;
+	std::vector<BakeItems> bakesItems;
+	int openedBakeID = 0;
 
 	sf::Sprite invLine;
 	int current_item = 0;
