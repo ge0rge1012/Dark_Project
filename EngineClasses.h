@@ -90,6 +90,7 @@ public:
 	bool is_looking_left();
 	bool is_looking_right();
 	bool is_alive();
+	void make_alive();
 };
 
 class Game
