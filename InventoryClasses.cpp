@@ -274,7 +274,7 @@ void Inventory::update_statement()
 	if (bakeTimer < 300) {
 		bakeTimer++;
 		int bakeSecondsTimer = bakeTimer / 60;
-		if (bakeTimer%60 == 0) 
+		//if (bakeTimer%60 == 0) 
 			//std::cout << "bakeTimer in secs:" << bakeSecondsTimer << std::endl;
 	}
 	else {
