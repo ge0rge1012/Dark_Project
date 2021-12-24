@@ -886,7 +886,7 @@ InvItem Inventory::getBakeItem(int iterator) {
 }
 
 void Inventory::setOpenedBakeID(sf::Vector2i m_pos) {
-	for (int i = 0; i < boxesCoords.size(); i++) {
+	for (int i = 0; i < bakesCoords.size(); i++) {
 		if (bakesCoords[i].x == m_pos.y / 32 && bakesCoords[i].y == m_pos.x / 32)
 			openedBakeID = i;
 	}
